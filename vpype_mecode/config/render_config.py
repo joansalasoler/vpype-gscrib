@@ -35,20 +35,28 @@ class RenderConfig(BaseModel, BaseConfig):
     engravers, and 3D printers.
     """
 
-    time_units: TimeUnits = Field(TimeUnits.SECONDS)
+    # Length and time units
     length_units: LengthUnits = Field(LengthUnits.MILLIMETERS)
-    rack_mode: RackMode = Field(RackMode.MANUAL)
+    time_units: TimeUnits = Field(TimeUnits.SECONDS)
 
+    # Machine components modes
+    coolant_mode: CoolantMode = Field(CoolantMode.OFF)
     head_mode: HeadMode = Field(HeadMode.BASIC)
+    rack_mode: RackMode = Field(RackMode.MANUAL)
+    spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
     tool_mode: ToolMode = Field(ToolMode.MARKER)
+
+    # Tool parameters
+    power_level: int = Field(50.0, ge=0)
+    spindle_rpm: int = Field(1000, ge=0)
+    warmup_delay: float = Field(2.0, ge=0.001)
+
+    # Motion parameters
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)
     plunge_speed: float = Field(vp.convert_length('100mm'), ge=0)
     travel_speed: float = Field(vp.convert_length('1000mm'), ge=0)
-    power_level: int = Field(50.0, ge=0)
-    spindle_rpm: int = Field(1000, ge=0)
-    spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
-    coolant_mode: CoolantMode = Field(CoolantMode.OFF)
-    warmup_delay: float = Field(2.0, ge=0.001)
+
+    # Predefined Z-axis positions
     work_z: float = Field(vp.convert_length('0mm'))
     plunge_z: float = Field(vp.convert_length('1mm'))
     safe_z: float = Field(vp.convert_length('10mm'))

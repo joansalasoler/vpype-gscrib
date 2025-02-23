@@ -32,8 +32,51 @@ from ..config import *
 
 
 class GRenderer(DocumentRenderer):
+    """Converts vector graphics to G-Code machine instructions.
+
+    This class implements the `DocumentRenderer` interface by delegating
+    specific machine operations to specialized components:
+
+    - Head: Controls machine head movements (travel, plunge, retract)
+    - Tool: Manages tool operations (tool activation/deactivation)
+    - Coolant: Handles coolant system control (turn on/off)
+    - Rack: Manages tool changes and rack operations
+
+    Each component is created through its respective factory based on
+    the configuration modes, allowing different strategies to be swapped
+    without changing the renderer's core logic. This allows for:
+
+    - Easy addition of new machine head types
+    - Support for different tool systems (laser, spindle, etc.)
+    - Flexible coolant control strategies
+    - Various tool rack configurations
+
+    The renderer coordinates these components to process the document
+    hierarchy: Document → Layers → Paths → Segments, generating
+    appropriate G-code commands through the `GBuilder` instance.
+
+    Args:
+        builder (GBuilder): G-code builder instance
+        config (RenderConfig): Configuration parameters
+
+    Attributes:
+        _g (GBuilder): G-code command builder instance
+        _config (RenderConfig): Rendering configuration parameters
+        _context (GContext): Rendering context parameters
+        _head (Head): Machine head controller
+        _tool (Tool): Tool controller (laser, spindle, etc.)
+        _coolant (Coolant): Coolant system controller
+        _rack (Rack): Tool rack controller
+    """
 
     def __init__(self, builder: GBuilder, config: RenderConfig):
+        """G-code renderer initialization.
+
+        Args:
+            builder (GBuilder): G-code builder instance
+            config (RenderConfig): Configuration parameters
+        """
+
         self._g = builder
         self._config = config
         self._context = GContext(builder, config)
@@ -43,6 +86,21 @@ class GRenderer(DocumentRenderer):
         self._rack = RackFactory.create(config.rack_mode)
 
     def begin_document(self, document: Document):
+        """This method is invoked once per document before any of the
+        document layers are processed.
+
+        Initializes the G-code generation environment by:
+
+        - Setting up the coordinate system
+        - Configuring absolute positioning
+        - Setting the appropriate unit system
+        - Establishing the XY plane
+        - Applying initial transformations for document orientation
+
+        Args:
+            document (Document): Document being processed
+        """
+
         length_units = self._context.length_units
         width, height = document.page_size
 
@@ -56,6 +114,20 @@ class GRenderer(DocumentRenderer):
         self._g.scale(length_units.scale_factor)
 
     def begin_layer(self, layer: LineCollection):
+        """Each layer is composed of one or more paths. This method is
+        invoked once per layer before any paths are processed.
+
+        Prepares the machine for processing a new layer by:
+
+        - Moving to service position for tool changes
+        - Performing necessary tool changes
+        - Positioning at the layer start point
+        - Activating the tool and coolant systems
+
+        Args:
+            layer (LineCollection): Layer being processed
+        """
+
         first_path = self._first_path_of_layer(layer)
         x, y = self._first_point_of_path(first_path)
         self._write_layer_header(layer)
@@ -69,6 +141,20 @@ class GRenderer(DocumentRenderer):
         self._coolant.turn_on(self._context)
 
     def begin_path(self, path: array):
+        """Each path is composed of one or more segments. This method is
+        invoked once per path before any of its segments are processed.
+
+        Prepares for machining operations by:
+
+        - Retracting the tool head
+        - Moving to the path start position
+        - Plunging to working depth
+        - Activating tool power
+
+        Args:
+            path (array): Path being processed
+        """
+
         x, y = self._first_point_of_path(path)
 
         self._head.retract(self._context)
@@ -77,41 +163,107 @@ class GRenderer(DocumentRenderer):
         self._tool.power_on(self._context)
 
     def trace_segment(self, path: array, x: float, y: float):
+        """This method is called once per segment within a path,
+        receiving the segment's x and y coordinates.
+
+        Generates G-code movement commands to trace the segment at the
+        configured work speed with active tool settings.
+
+        Args:
+            path (array): Complete path being traced
+            x (float): Target X coordinate of the segment
+            y (float): Target Y coordinate of the segment
+        """
+
         self._head.trace_to(self._context, x, y)
 
     def end_path(self, path: array):
+        """This method is invoked once per path after all segments of
+        the path have been processed.
+
+        Performs path completion operations:
+
+        - Turning off tool power
+        - Retracting the tool head to safe height
+
+        Args:
+            path (array): Path being processed
+        """
+
         self._tool.power_off(self._context)
         self._head.retract(self._context)
 
     def end_layer(self, layer: LineCollection):
+        """This method is invoked once per layer after all paths on the
+        layer have been processed.
+
+        Performs layer cleanup operations:
+
+        - Retracting to safe height
+        - Deactivating the tool
+        - Turning off coolant systems
+
+        Args:
+            layer (LineCollection): Layer being processed
+        """
+
         self._head.safe_retract(self._context)
         self._tool.deactivate(self._context)
         self._coolant.turn_off(self._context)
 
     def end_document(self, document: Document):
+        """This method is invoked once per document after all layers on
+        the document have been processed.
+
+        Finalizes G-code generation by:
+
+        - Moving to final park position
+        - Adding program end commands
+        - Performing cleanup operations
+
+        Args:
+            document (Document): Document being processed
+        """
+
         self._head.park_for_service(self._context)
         self._g.halt_program(HaltMode.END_WITH_RESET)
         self._g.teardown()
 
     def process_error(self, e: Exception):
+        """Invoked if an error occurs during the processing.
+
+        Handles error conditions by:
+
+        - Generating emergency stop commands
+        - Performing safe shutdown procedures
+        - Adding error information to the G-code output
+
+        Args:
+            e (Exception): The exception that occurred
+        """
+
         self._g.emergency_halt(str(e))
         self._g.teardown()
 
     def _first_path_of_layer(self, layer: LineCollection) -> array:
+        """Get the first path to render from a layer."""
+
         return layer.lines[0]
 
     def _first_point_of_path(self, path: array) -> Tuple[float, float]:
+        """Coordinates of the first point to render from a path."""
+
         return path[0].real, path[0].imag
 
     def _write_layer_header(self, layer: LineCollection):
-        """Write layer header with metadata and configuration."""
+        """Write layer configuration as G-code comments."""
 
         layer_name = layer.property('vp_name')
         self._g.comment(f'layer = {layer_name}')
         self._write_config_info(self._config)
 
     def _write_config_info(self, config: BaseConfig):
-        """Write configuration parameters as human-readable values."""
+        """Write configuration parameters as G-code comments."""
 
         units = self._context.length_units
         formated_dict = config.format_values(units)

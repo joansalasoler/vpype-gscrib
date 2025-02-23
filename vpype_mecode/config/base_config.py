@@ -26,17 +26,36 @@ from ..enums import LengthUnits
 
 @dataclass
 class BaseConfig(ABC):
-    """Base class for configuration settings."""
+    """Base class if all the configuration dataclasses."""
 
-    def scale_units(self, units: LengthUnits) -> None:
-        """Scale numeric values according to the specified work units."""
+    def scale_lengths(self, units: LengthUnits) -> None:
+        """
+        Scale lengths in-place according to the specified units. Only
+        the fields listed in `_fields_with_px_units` will be scaled.
+
+        Args:
+            units (LengthUnits): The work units to use for scaling.
+        """
 
         for field_name, px_units in self._fields_with_px_units.items():
             value = units.scale(getattr(self, field_name))
             setattr(self, field_name, value)
 
     def format_values(self, units: LengthUnits) -> Dict[str, str]:
-        """Get configuration values as a human-readable dictionary."""
+        """
+        Format configuration values for display.
+
+        If applicable, numeric values are scaled to the given units,
+        rounded to 6 decimal places and their units appended if the
+        field is listed in `_fields_with_px_units`.
+
+        Args:
+            units (LengthUnits): The work units to use for formatting.
+
+        Returns:
+            Dict[str, str]: A dictionary containing the formatted
+            configuration values.
+        """
 
         return {
             field_name: self._format_value(field_name, value, units)

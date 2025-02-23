@@ -31,11 +31,7 @@ from .config import *
 @click.command(name='mecode')
 @vpype_cli.global_processor
 def vpype_mecode(document: Document, **kwargs) -> Document:
-    """
-    This command processes a vpype Document and generates G-Code from
-    it using the `mecode` library. The ouput can be sent to the teminal,
-    a file or to a printer using mecode's direct write mode.
-    """
+    """Main entry point for the `mecode` command."""
 
     try:
         # Parse and validate the command line options
@@ -46,7 +42,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
         # Mecode needs some values in work units, but the default
         # unit in Vpype is pixels. We need to convert them.
 
-        mecode_config.scale_units(render_config.length_units)
+        mecode_config.scale_lengths(render_config.length_units)
 
         # Initialize the G-Code renderer
 
@@ -66,7 +62,13 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 # Initialize the commabd when this module is loaded
 
 vpype_mecode.help_group = 'Output'
-vpype_mecode.help = 'Generate G-Code for CNC machines.'
+vpype_mecode.help = """
+    Generate G-Code for CNC machines.
+
+    This command processes a vpype Document and generates G-Code from
+    it using the `mecode` library. The ouput can be sent to the teminal,
+    a file or to a printer using mecode's direct write mode.
+    """
 
 for param in vpype_options.params:
     vpype_mecode.params.append(param)

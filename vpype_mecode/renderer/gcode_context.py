@@ -22,8 +22,43 @@ from ..config import RenderConfig
 
 
 class GContext():
+    """Context of the G-code generation.
+
+    This class encapsulates all the configuration parameters needed
+    for G-code generation, including units, speeds, z-axis positions,
+    and machine-specific settings.
+
+    Times are given in seconds and lengths in pixels. Both will be
+    automatically scaled by the `GBuilder` instance. Speeds are given
+    in units per minute (mm/min or in/min).
+
+    Args:
+        builder (GBuilder): G-code builder instance
+        config (RenderConfig): Configuration object
+
+    Attributes:
+        g (GBuilder): The G-code builder instance
+        length_units (LengthUnits): Unit system for length measurements
+        time_units (TimeUnits): Unit system for time measurements
+        power_level (float): Power level for laser or tool
+        spindle_rpm (float): Spindle rotation speed in RPM
+        warmup_delay (float): Delay time for tool warmup
+        work_z (float): Z-axis position for working/cutting
+        safe_z (float): Z-axis position for safe travel
+        plunge_z (float): Z-axis position for plunge movements
+        work_speed (float): Feed rate during cutting operations
+        plunge_speed (float): Feed rate during plunge movements
+        travel_speed (float): Feed rate during rapid movements
+    """
 
     def __init__(self, builder: GBuilder, config: RenderConfig):
+        """Initialize the G-code context.
+
+        Args:
+            builder (GBuilder): The G-code builder instance
+            config (RenderConfig): Configuration object
+        """
+
         self._g = builder
 
         self._length_units = config.length_units
@@ -39,6 +74,18 @@ class GContext():
         self._work_speed = self.scale_length(config.work_speed)
         self._plunge_speed = self.scale_length(config.plunge_speed)
         self._travel_speed = self.scale_length(config.travel_speed)
+
+    def scale_length(self, length: float) -> float:
+        """Scale a value to the configured length units.
+
+        Args:
+            length (float): A value to scale in pixels
+
+        Returns:
+            float: Scaled length value in the configured units
+        """
+
+        return self._length_units.scale(length)
 
     @property
     def g(self) -> GBuilder:
@@ -87,6 +134,3 @@ class GContext():
     @property
     def travel_speed(self) -> float:
         return self._travel_speed
-
-    def scale_length(self, length: float) -> float:
-        return self._length_units.scale(length)

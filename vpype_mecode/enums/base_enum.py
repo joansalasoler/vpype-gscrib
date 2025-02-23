@@ -22,15 +22,15 @@ from enum import Enum
 class BaseEnum(str, Enum):
     """Base for all the G-Code enumerations."""
 
-    def get_instruction(self):
-        """Obtain the G-Code instruction code"""
+    def get_instruction(self) -> str:
+        """Obtain the G-Code instruction code for this enum"""
 
         from .codes_table import codes_table
         key = (type(self), self)
         return codes_table[key][0]
 
-    def get_description(self):
-        """Obtain the G-Code instruction comment"""
+    def get_description(self) -> str:
+        """Obtain the G-Code instruction comment for this enum"""
 
         from .codes_table import codes_table
         key = (type(self), self)
