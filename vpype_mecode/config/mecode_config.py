@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 from .base_config import BaseConfig
-from ..enums import DirectWriteMode
+from vpype_mecode.enums import DirectWriteMode
 
 
 @dataclass

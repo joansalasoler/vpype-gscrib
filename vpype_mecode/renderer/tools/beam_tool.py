@@ -19,7 +19,7 @@
 
 from .base_tool import BaseTool
 from ..gcode_context import GContext
-from ...enums import SpinMode
+from vpype_mecode.enums import SpinMode
 
 
 class BeamTool(BaseTool):

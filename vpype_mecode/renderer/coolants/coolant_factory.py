@@ -20,7 +20,7 @@ from .base_coolant import BaseCoolant
 from .flood_coolant import FloodCoolant
 from .mist_coolant import MistCoolant
 from .off_coolant import OffCoolant
-from ...enums import CoolantMode
+from vpype_mecode.enums import CoolantMode
 
 
 class CoolantFactory:

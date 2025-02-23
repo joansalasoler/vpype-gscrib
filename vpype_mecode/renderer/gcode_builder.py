@@ -19,9 +19,9 @@
 import math
 from typeguard import typechecked
 
-from ..enums import *
-from ..excepts import *
-from ..enums import BaseEnum
+from vpype_mecode.enums import *
+from vpype_mecode.excepts import *
+from vpype_mecode.enums import BaseEnum
 from ..mecode import GMatrix
 
 

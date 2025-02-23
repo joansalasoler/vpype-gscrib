@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field
 
 from .base_config import BaseConfig
-from ..enums import *
+from vpype_mecode.enums import *
 
 
 @dataclass

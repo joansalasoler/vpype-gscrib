@@ -19,8 +19,8 @@
 from vpype_cli import TextType, IntRangeType, FloatRangeType
 from vpype_cli import LengthType, PathType
 
-from .config import ConfigOption
-from .enums import *
+from vpype_mecode.config import ConfigOption
+from vpype_mecode.enums import *
 
 
 params = (

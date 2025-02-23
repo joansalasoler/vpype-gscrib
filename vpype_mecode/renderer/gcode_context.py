@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .gcode_builder import GBuilder
-from ..enums import LengthUnits, TimeUnits
-from ..config import RenderConfig
+from vpype_mecode.enums import LengthUnits, TimeUnits
+from vpype_mecode.config import RenderConfig
 
 
 class GContext():

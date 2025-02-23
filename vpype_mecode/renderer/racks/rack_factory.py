@@ -20,7 +20,7 @@ from .automatic_rack import AutomaticRack
 from .base_rack import BaseRack
 from .manual_rack import ManualRack
 from .off_rack import OffRack
-from ...enums import RackMode
+from vpype_mecode.enums import RackMode
 
 
 class RackFactory:

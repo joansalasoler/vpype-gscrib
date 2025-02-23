@@ -22,7 +22,7 @@ from vpype_cli import ChoiceType, LengthType
 from typing import Any
 from enum import Enum
 
-from ..enums import LengthUnits
+from vpype_mecode.enums import LengthUnits
 from . import RenderConfig, MecodeConfig
 
 

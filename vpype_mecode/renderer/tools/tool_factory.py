@@ -22,7 +22,7 @@ from .blade_tool import BladeTool
 from .extruder_tool import ExtruderTool
 from .marker_tool import MarkerTool
 from .spindle_tool import SpindleTool
-from ...enums import ToolMode
+from vpype_mecode.enums import ToolMode
 
 
 class ToolFactory:

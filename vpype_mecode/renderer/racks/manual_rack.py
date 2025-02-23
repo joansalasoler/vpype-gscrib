@@ -18,7 +18,7 @@
 
 from .base_rack import BaseRack
 from ..gcode_context import GContext
-from ...enums import RackMode, HaltMode
+from vpype_mecode.enums import RackMode, HaltMode
 
 
 class ManualRack(BaseRack):

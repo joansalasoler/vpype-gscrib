@@ -18,14 +18,13 @@
 
 import click
 import vpype_cli
-import vpype as vp
 from vpype import Document
 from pydantic import ValidationError
 
-from . import vpype_options
-from .processor import DocumentProcessor
-from .renderer import GBuilder, GRenderer
-from .config import *
+from vpype_mecode import vpype_options
+from vpype_mecode.processor import DocumentProcessor
+from vpype_mecode.renderer import GBuilder, GRenderer
+from vpype_mecode.config import *
 
 
 @click.command(name='mecode')

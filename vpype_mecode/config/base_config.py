@@ -21,7 +21,7 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 from typing import Dict, Any
 
-from ..enums import LengthUnits
+from vpype_mecode.enums import LengthUnits
 
 
 @dataclass

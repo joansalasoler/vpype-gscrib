@@ -18,7 +18,7 @@
 
 from .base_coolant import BaseCoolant
 from ..gcode_context import GContext
-from ...enums import CoolantMode
+from vpype_mecode.enums import CoolantMode
 
 
 class MistCoolant(BaseCoolant):

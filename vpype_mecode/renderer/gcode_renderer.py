@@ -20,15 +20,16 @@ from numpy import array
 from typing import Tuple
 from vpype import Document, LineCollection
 
+from vpype_mecode.config import BaseConfig, RenderConfig
+from vpype_mecode.enums import HaltMode, Plane
+from vpype_mecode.processor import DocumentRenderer
+
 from .gcode_builder import GBuilder
 from .gcode_context import GContext
 from .heads import HeadFactory
 from .tools import ToolFactory
 from .coolants import CoolantFactory
 from .racks import RackFactory
-from ..processor import DocumentRenderer
-from ..enums import *
-from ..config import *
 
 
 class GRenderer(DocumentRenderer):

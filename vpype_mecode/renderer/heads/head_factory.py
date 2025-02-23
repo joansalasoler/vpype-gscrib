@@ -18,7 +18,7 @@
 
 from .base_head import BaseHead
 from .basic_head import BasicHead
-from ...enums import HeadMode
+from vpype_mecode.enums import HeadMode
 
 
 class HeadFactory:
