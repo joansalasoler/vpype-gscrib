@@ -17,22 +17,62 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_tool import BaseTool
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 from vpype_mecode.enums import SpinMode
 
 
 class BeamTool(BaseTool):
+    """Beam tool implementation.
+
+    This class handles operations for a beam tool, such as a laser,
+    including activation, power control, and deactivation.
+    """
 
     def activate(self, ctx: GContext):
+        """Activate the beam tool.
+
+        Generates G-code commands to initialize and prepare the beam
+        tool for operation, setting initial power level to zero.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_on(SpinMode.CLOCKWISE, 0)
 
     def power_on(self, ctx: GContext):
+        """Power on the beam tool.
+
+        Generates G-code commands to set the beam tool to its working
+        power level and wait for the tool to warm up.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.set_tool_power(ctx.power_level)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def power_off(self, ctx: GContext):
+        """Power off the beam tool.
+
+        Generates G-code commands to set the beam tool to its inactive
+        power level and wait for the tool to cool down.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.set_tool_power(0)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def deactivate(self, ctx: GContext):
+        """Deactivate the beam tool.
+
+        Generates G-code commands to completely shut down the beam tool.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_off()

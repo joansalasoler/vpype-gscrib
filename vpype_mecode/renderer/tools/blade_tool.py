@@ -17,13 +17,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_tool import BaseTool
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class BladeTool(BaseTool):
+    """Blade tool implementation.
+
+    This class handles operations for a blade tool, which does not
+    require activation or power control. This is currently a no-op
+    implementation.
+    """
 
     def activate(self, ctx: GContext):
-        pass
+       pass
 
     def power_on(self, ctx: GContext):
         pass

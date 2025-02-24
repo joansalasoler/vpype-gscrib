@@ -17,27 +17,93 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_head import BaseHead
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class BasicHead(BaseHead):
+    """Basic machine head implementation.
+
+    This class handles basic operations for controlling the machine's
+    head, including safe retraction, plunging, traveling, tracing, and
+    parking for service.
+    """
 
     def safe_retract(self, ctx: GContext):
+        """Retract the machine head to a safe height.
+
+        Generates G-code commands to move the machine head to a safe
+        height using rapid moves.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.rapid(z=ctx.safe_z)
 
     def retract(self, ctx: GContext):
+        """Retract the machine head.
+
+        Generates G-code commands to move the machine head to a safe
+        height using rapid moves.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.rapid(z=ctx.safe_z)
 
     def plunge(self, ctx: GContext):
+        """Plunge the machine head to the work height.
+
+        Generates G-code commands to move the machine head to the
+        plunge height at travel speed and then to the work height at
+        controlled plunge speed.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.move(z=ctx.plunge_z, F=ctx.travel_speed)
         ctx.g.move(z=ctx.work_z, F=ctx.plunge_speed)
 
     def travel_to(self, ctx: GContext, x: float, y: float):
+        """Move the machine head to a specified position.
+
+        Generates G-code commands to move the machine head to the
+        specified (x, y) coordinates at the configured travel speed.
+
+        Args:
+            ctx (GContext): The G-code generation context
+            x (float): The target x-coordinate
+            y (float): The target y-coordinate
+        """
+
         ctx.g.move(x=x, y=y, F=ctx.travel_speed)
 
     def trace_to(self, ctx: GContext, x: float, y: float):
+        """Trace a path to a specified position at work speed.
+
+        Generates G-code commands to move the machine head to the
+        specified (x, y) coordinates at the configured work speed.
+
+        Args:
+            ctx (GContext): The G-code generation context
+            x (float): The target x-coordinate
+            y (float): The target y-coordinate
+        """
+
         ctx.g.move(x=x, y=y, F=ctx.work_speed)
 
     def park_for_service(self, ctx: GContext):
+        """Park the machine head for service.
+
+        Generates G-code commands to move the machine head to a safe
+        height and then to the absolute home position (0, 0) for service
+        using rapid moves.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.rapid(z=ctx.safe_z)
         ctx.g.rapid_absolute(x=0, y=0)

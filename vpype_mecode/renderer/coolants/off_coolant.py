@@ -17,10 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_coolant import BaseCoolant
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class OffCoolant(BaseCoolant):
+    """No-op coolant system implementation.
+
+    This class does not perform any coolant operations, effectively
+    disabling coolant control.
+    """
 
     def turn_on(self, ctx: GContext):
         pass

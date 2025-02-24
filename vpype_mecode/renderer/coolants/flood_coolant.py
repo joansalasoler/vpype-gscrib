@@ -17,14 +17,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_coolant import BaseCoolant
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 from vpype_mecode.enums import CoolantMode
 
 
 class FloodCoolant(BaseCoolant):
+    """Flood coolant system implementation.
+
+    This class handles operations for a flood coolant system, including
+    activation and deactivation.
+    """
 
     def turn_on(self, ctx: GContext):
+        """Activate the flood coolant system."""
+
         ctx.g.coolant_on(CoolantMode.FLOOD)
 
     def turn_off(self, ctx: GContext):
+        """Deactivate the flood coolant system."""
+
         ctx.g.coolant_off()

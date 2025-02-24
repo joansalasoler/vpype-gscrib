@@ -22,9 +22,28 @@ from vpype_mecode.enums import HeadMode
 
 
 class HeadFactory:
+    """A factory for creating head managers.
+
+    This factory creates specialized head managers that handle the control
+    of machine tool heads. Head managers are responsible for controlling
+    the movement, positioning, and operational parameters of the machine's
+    tool head, which is the assembly that holds the active tool.
+    """
 
     @classmethod
     def create(self, mode: HeadMode) -> BaseHead:
+        """Create a new head manger instance.
+
+        Args:
+            mode (HeadMode): Head mode.
+
+        Returns:
+            BaseHead: Head manger instance.
+
+        Raises:
+            KeyError: If mode is not valid.
+        """
+
         providers = {
             HeadMode.BASIC: BasicHead,
         }

@@ -17,12 +17,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_rack import BaseRack
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 from vpype_mecode.enums import RackMode, HaltMode
 
 
 class ManualRack(BaseRack):
+    """Manual tool rack implementation.
+
+    This class handles tool changes manually, requiring operator
+    intervention to change tools.
+    """
 
     def change_tool(self, ctx: GContext):
+        """Execute a manual tool change operation.
+
+        Generates G-code commands to pause the program and prompt the
+        operator to change the tool manually.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_change(RackMode.MANUAL, 1)
         ctx.g.halt_program(HaltMode.PAUSE)

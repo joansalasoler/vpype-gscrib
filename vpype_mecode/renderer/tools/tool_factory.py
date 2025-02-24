@@ -26,9 +26,28 @@ from vpype_mecode.enums import ToolMode
 
 
 class ToolFactory:
+    """A factory for creating tool managers.
+
+    This factory creates specialized tool manager instances that handle
+    different types of CNC machine tools and their operations. Each tool
+    manager controls specific aspects of its corresponding tool such as
+    power settings, speed, and operational states.
+    """
 
     @classmethod
     def create(self, mode: ToolMode) -> BaseTool:
+        """Create a new tool manger instance.
+
+        Args:
+            mode (ToolMode): Tool mode.
+
+        Returns:
+            BaseTool: Tool manger instance.
+
+        Raises:
+            KeyError: If mode is not valid.
+        """
+
         providers = {
             ToolMode.BEAM: BeamTool,
             ToolMode.BLADE: BladeTool,

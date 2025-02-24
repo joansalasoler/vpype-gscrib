@@ -17,10 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_rack import BaseRack
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class OffRack(BaseRack):
+    """No-op tool rack implementation.
+
+    This class does not perform any tool management operations,
+    effectively disabling tool change operations.
+    """
 
     def change_tool(self, ctx: GContext):
         pass

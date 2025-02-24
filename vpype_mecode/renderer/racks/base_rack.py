@@ -17,11 +17,27 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class BaseRack(ABC):
+    """Base class for tool rack implementations.
+
+    This abstract base class defines the interface for tool rack
+    operations. Rack implementations handle tool changes and related
+    operations.
+    """
 
     @abstractmethod
     def change_tool(self, ctx: GContext):
+        """Execute a tool change operation.
+
+        This method generates the necessary G-code commands to perform
+        a complete tool change operation, excluding movements to safe
+        positions which must be handled by the caller.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         pass

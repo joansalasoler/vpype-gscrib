@@ -17,10 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_tool import BaseTool
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class MarkerTool(BaseTool):
+    """Marker tool implementation.
+
+    This class handles operations for a marker tool (pen, brush, etc),
+    which does not require activation or power control. This is currently
+    a no-op implementation.
+    """
 
     def activate(self, ctx: GContext):
         pass

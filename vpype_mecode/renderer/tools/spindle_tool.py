@@ -17,21 +17,64 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_tool import BaseTool
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class SpindleTool(BaseTool):
+    """Spindle tool implementation.
+
+    This class handles operations for a spindle tool, including
+    activation and deactivation.
+    """
 
     def activate(self, ctx: GContext):
+        """Activate the spindle tool.
+
+        Generates G-code commands to initialize and prepare the spindle
+        tool for operation, setting the spindle speed, operation mode
+        (clockwise or counterclockwise), turning it on and waiting for
+        the tool to warm-up.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_on(ctx.spin_mode, ctx.spindle_rpm)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def power_on(self, ctx: GContext):
+        """Power on the spindle tool.
+
+        This method currently does nothing as the spindle tool does not
+        require power control.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         pass
 
     def power_off(self, ctx: GContext):
+        """Power off the spindle tool.
+
+        This method currently does nothing as the spindle tool does not
+        require power control.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         pass
 
     def deactivate(self, ctx: GContext):
+        """Deactivate the spindle tool.
+
+        Generates G-code commands to completely shut down the spindle
+        tool and wait for it to cool stop.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_off()
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)

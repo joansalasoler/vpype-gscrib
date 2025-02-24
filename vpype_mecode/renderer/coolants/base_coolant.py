@@ -17,15 +17,44 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class BaseCoolant(ABC):
+    """Base class for coolant system implementations.
+
+    This abstract base class defines the interface for controlling
+    machine coolant systems. It handles the activation and deactivation
+    of cooling mechanisms like mist coolant, flood coolant, or air
+    blast systems.
+
+    Different machines may implement cooling differently:
+
+    - Some machines support multiple coolant types (mist/flood)
+    - Some machines might require warmup or cooldown sequences
+    - Air blast systems might need pressure ramping
+    """
 
     @abstractmethod
     def turn_on(self, ctx: GContext):
+        """Activate the coolant system.
+
+        Generates G-code commands to start the coolant flow.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         pass
 
     @abstractmethod
     def turn_off(self, ctx: GContext):
+        """Deactivate the coolant system.
+
+        Generates G-code commands to stop the coolant flow.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         pass

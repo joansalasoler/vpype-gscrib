@@ -17,10 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_tool import BaseTool
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 
 
 class ExtruderTool(BaseTool):
+    """Extruder tool implementation.
+
+    This class handles operations for an extruder tool, which does not
+    require activation or power control. This is currently a no-op
+    implementation.
+    """
 
     def activate(self, ctx: GContext):
         pass

@@ -24,9 +24,29 @@ from vpype_mecode.enums import RackMode
 
 
 class RackFactory:
+    """A factory for creating tool rack managers.
+
+    This factory creates specialized managers that handle tool rack
+    operations. Rack managers control the tool in use and the changing
+    process, including picking up and putting away tools from/to an
+    automatic tool changer (ATC) or providing instructions for manual
+    tool changes.
+    """
 
     @classmethod
     def create(self, mode: RackMode) -> BaseRack:
+        """Create a new tool rack manger instance.
+
+        Args:
+            mode (RackMode): Rack mode.
+
+        Returns:
+            BaseRack: Rack manger instance.
+
+        Raises:
+            KeyError: If mode is not valid.
+        """
+
         providers = {
             RackMode.OFF: OffRack,
             RackMode.MANUAL: ManualRack,

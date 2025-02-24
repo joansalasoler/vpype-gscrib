@@ -17,11 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .base_rack import BaseRack
-from ..gcode_context import GContext
+from vpype_mecode.renderer.gcode_context import GContext
 from vpype_mecode.enums import RackMode
 
 
 class AutomaticRack(BaseRack):
+    """Automatic tool rack implementation.
+
+    This class handles tool changes automatically using the machine's
+    built-in tool change capabilities.
+    """
 
     def change_tool(self, ctx: GContext):
+        """Execute an automatic tool change operation.
+
+        Generates G-code commands to perform a tool change using the
+        machine's automatic tool changer.
+
+        Args:
+            ctx (GContext): The G-code generation context
+        """
+
         ctx.g.tool_change(RackMode.AUTOMATIC, 1)

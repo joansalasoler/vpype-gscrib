@@ -24,9 +24,28 @@ from vpype_mecode.enums import CoolantMode
 
 
 class CoolantFactory:
+    """A factory for creating coolant managers.
+
+    This factory creates specialized coolant managers that handle the
+    control of coolant systems in CNC machines. Coolant managers control
+    the flow of cutting fluid or coolant during machining operations to
+    reduce heat, clear chips, and extend tool life.
+    """
 
     @classmethod
     def create(self, mode: CoolantMode) -> BaseCoolant:
+        """Create a new coolant manger instance.
+
+        Args:
+            mode (CoolantMode): Coolant mode.
+
+        Returns:
+            BaseCoolant: Coolant manger instance.
+
+        Raises:
+            KeyError: If mode is not valid.
+        """
+
         providers = {
             CoolantMode.OFF: OffCoolant,
             CoolantMode.MIST: MistCoolant,
