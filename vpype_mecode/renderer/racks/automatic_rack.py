@@ -38,4 +38,4 @@ class AutomaticRack(BaseRack):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.tool_change(RackMode.AUTOMATIC, 1)
+        ctx.g.tool_change(RackMode.AUTOMATIC, ctx.tool_number)

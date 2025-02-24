@@ -113,6 +113,13 @@ params = (
         """,
     ),
     ConfigOption(
+        name='tool_number',
+        type=IntRangeType(min=1),
+        help="""
+        Specify the tool number to be used for machining operations.
+        """,
+    ),
+    ConfigOption(
         name='rack_mode',
         type=RackMode,
         help="""

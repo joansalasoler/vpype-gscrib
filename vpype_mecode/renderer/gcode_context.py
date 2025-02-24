@@ -19,6 +19,7 @@
 from .gcode_builder import GBuilder
 from vpype_mecode.enums import LengthUnits, TimeUnits
 from vpype_mecode.config import RenderConfig
+from vpype_mecode.enums import *
 
 
 class GContext():
@@ -61,11 +62,18 @@ class GContext():
 
         self._g = builder
 
+        self._head_mode = config.head_mode
+        self._rack_mode = config.rack_mode
+        self._spin_mode = config.spin_mode
+        self._tool_mode = config.tool_mode
+        self._coolant_mode = config.coolant_mode
+
         self._length_units = config.length_units
         self._time_units = config.time_units
         self._power_level = config.power_level
         self._spindle_rpm = config.spindle_rpm
         self._warmup_delay = config.warmup_delay
+        self._tool_number = config.tool_number
 
         self._work_z = config.work_z
         self._safe_z = config.safe_z
@@ -92,6 +100,26 @@ class GContext():
         return self._g
 
     @property
+    def coolant_mode(self) -> CoolantMode:
+        return self._coolant_mode
+
+    @property
+    def head_mode(self) -> HeadMode:
+        return self._head_mode
+
+    @property
+    def rack_mode(self) -> RackMode:
+        return self._rack_mode
+
+    @property
+    def spin_mode(self) -> SpinMode:
+        return self._spin_mode
+
+    @property
+    def tool_mode(self) -> ToolMode:
+        return self._tool_mode
+
+    @property
     def length_units(self) -> LengthUnits:
         return self._length_units
 
@@ -110,6 +138,10 @@ class GContext():
     @property
     def warmup_delay(self) -> float:
         return self._warmup_delay
+
+    @property
+    def tool_number(self) -> str:
+        return self._tool_number
 
     @property
     def work_z(self) -> float:

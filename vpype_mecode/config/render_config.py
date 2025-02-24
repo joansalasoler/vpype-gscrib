@@ -50,6 +50,7 @@ class RenderConfig(BaseModel, BaseConfig):
     power_level: int = Field(50.0, ge=0)
     spindle_rpm: int = Field(1000, ge=0)
     warmup_delay: float = Field(2.0, ge=0.001)
+    tool_number: int = Field(1, min=1)
 
     # Motion parameters
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)

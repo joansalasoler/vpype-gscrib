@@ -38,5 +38,5 @@ class ManualRack(BaseRack):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.tool_change(RackMode.MANUAL, 1)
+        ctx.g.tool_change(RackMode.MANUAL, ctx.tool_number)
         ctx.g.halt_program(HaltMode.PAUSE)
