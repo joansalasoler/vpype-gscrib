@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import inspect
 from click import Context, Option, Parameter, BadParameter
 from click.core import ParameterSource
 from vpype_cli import ChoiceType, LengthType
@@ -48,19 +49,29 @@ class ConfigOption(Option):
         MecodeConfig.model_fields
     )
 
-    def __init__(self, name: str, **kwargs):
-        self._setup_option_params(name, kwargs)
+    def __init__(self, option_name: str, **kwargs):
+        self._setup_option_params(option_name, kwargs)
         super().__init__(**kwargs)
 
-    def _setup_option_params(self, name: str, kwargs: dict) -> None:
+    def override_default_value(self, default_value: Any) -> None:
+        """Override the default value for the option."""
+
+        self.default = default_value
+        self.help = self._format_help_text(
+            self._help_text, self.default, self.type)
+
+    def _setup_option_params(self, option_name: str, kwargs: dict) -> None:
         """Setup parameters for the option."""
 
-        option_type = kwargs.get('type')
         help_text = kwargs.get('help', '')
-        default_value = self._default_for(name)
+        help_text = inspect.cleandoc(help_text)
+        self._help_text = help_text
+
+        default_value = self._default_for(option_name)
+        option_type = kwargs.get('type')
 
         kwargs['default'] = default_value
-        kwargs['param_decls'] = [f'--{name}']
+        kwargs['param_decls'] = [f'--{option_name}']
 
         if option_type is None:
             return
@@ -107,8 +118,7 @@ class ConfigOption(Option):
 
         return value
 
-    @classmethod
-    def _default_for(cls, field_name: str) -> Any:
+    def _default_for(self, field_name: str) -> Any:
         """Obtain the default value for a parameter."""
 
-        return cls._config_fields[field_name].default
+        return self._config_fields[field_name].default

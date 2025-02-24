@@ -30,14 +30,14 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        name='length_units',
+        option_name='length_units',
         type=LengthUnits,
         help="""
         Choose the unit of measurement for the output G-Code.
         """,
     ),
     ConfigOption(
-        name='time_units',
+        option_name='time_units',
         type=TimeUnits,
         help="""
         Choose the unit of time for the output G-Code. Used to specify
@@ -45,7 +45,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='tool_mode',
+        option_name='tool_mode',
         type=ToolMode,
         help="""
         Specifies the tool type for G-code generation. The generated
@@ -53,7 +53,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='work_speed',
+        option_name='work_speed',
         type=LengthType(),
         help="""
         The speed at which the tool moves while performing an operation
@@ -61,7 +61,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='plunge_speed',
+        option_name='plunge_speed',
         type=LengthType(),
         help="""
         The speed at which the tool moves during the plunging phase,
@@ -71,7 +71,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='travel_speed',
+        option_name='travel_speed',
         type=LengthType(),
         help="""
         The speed at which the tool moves between operations, without
@@ -80,7 +80,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='power_level',
+        option_name='power_level',
         type=IntRangeType(min=0),
         help="""
         Controls the intensity of energy-based tools such as laser
@@ -88,7 +88,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='spindle_rpm',
+        option_name='spindle_rpm',
         type=IntRangeType(min=0),
         help="""
         Controls the rotational speed of the spindle, used for rotating
@@ -97,14 +97,14 @@ params = (
         """,
     ),
     ConfigOption(
-        name='spin_mode',
+        option_name='spin_mode',
         type=SpinMode,
         help="""
         Sets the rotation direction of the spindle.
         """,
     ),
     ConfigOption(
-        name='warmup_delay',
+        option_name='warmup_delay',
         type=FloatRangeType(min=0.001),
         help="""
         Time to wait in seconds after tool activation or deactivation
@@ -113,14 +113,14 @@ params = (
         """,
     ),
     ConfigOption(
-        name='tool_number',
+        option_name='tool_number',
         type=IntRangeType(min=1),
         help="""
         Specify the tool number to be used for machining operations.
         """,
     ),
     ConfigOption(
-        name='rack_mode',
+        option_name='rack_mode',
         type=RackMode,
         help="""
         Specifies if tool changes are needed between layers or if the
@@ -128,14 +128,14 @@ params = (
         """,
     ),
     ConfigOption(
-        name='coolant_mode',
+        option_name='coolant_mode',
         type=CoolantMode,
         help="""
         Selects the type of coolant used during operation.
         """,
     ),
     ConfigOption(
-        name='work_z',
+        option_name='work_z',
         type=LengthType(),
         help="""
         The Z-axis height at which the tool will perform its active work
@@ -143,7 +143,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='plunge_z',
+        option_name='plunge_z',
         type=LengthType(),
         help="""
         The Z-axis height at which the tool begins plunging into the
@@ -152,7 +152,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='safe_z',
+        option_name='safe_z',
         type=LengthType(),
         help="""
         The Z-axis height the tool moves to when traveling between
@@ -165,7 +165,7 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        name='outfile',
+        option_name='outfile',
         type=PathType(dir_okay=False, writable=True),
         help="""
         File path where the generated G-Code will be saved. If not
@@ -173,7 +173,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='header',
+        option_name='header',
         type=PathType(exists=True, dir_okay=False),
         help="""
         Path to a file containing custom G-Code lines to be added at the
@@ -181,7 +181,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='footer',
+        option_name='footer',
         type=PathType(exists=True, dir_okay=False),
         help="""
         Path to a file containing custom G-Code lines to be added at the
@@ -189,7 +189,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='aerotech_include',
+        option_name='aerotech_include',
         is_flag=True,
         help="""
         Adds Aerotech-specific functions and variable definitions to the
@@ -197,7 +197,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='output_digits',
+        option_name='output_digits',
         type=IntRangeType(min=0),
         help="""
         Number of decimal places to include in G-Code coordinates and
@@ -205,7 +205,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='lineend',
+        option_name='lineend',
         type=TextType(),
         help="""
         Specifies the line-ending characters for the generated G-Code.
@@ -213,7 +213,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='comment_char',
+        option_name='comment_char',
         type=TextType(),
         help="""
         Defines the character used to mark comments in the generated
@@ -226,7 +226,7 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        name='direct_write',
+        option_name='direct_write',
         is_flag=True,
         help="""
         Sends the generated G-Code directly to a connected printer via a
@@ -234,7 +234,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='direct_write_mode',
+        option_name='direct_write_mode',
         type=DirectWriteMode,
         help="""
         Communication method for direct writing. Used only if `direct_write`
@@ -242,7 +242,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='printer_host',
+        option_name='printer_host',
         type=TextType(),
         help="""
         The hostname or IP address of the printer when using direct
@@ -250,7 +250,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='printer_port',
+        option_name='printer_port',
         type=IntRangeType(min=0),
         help="""
         The port number used for network communication with the printer
@@ -258,7 +258,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='baudrate',
+        option_name='baudrate',
         type=IntRangeType(min=0),
         help="""
         The communication speed (baud rate) for a serial connection to
@@ -266,7 +266,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='two_way_comm',
+        option_name='two_way_comm',
         is_flag=True,
         help="""
         If enabled, the program will wait for a response from the printer
@@ -279,42 +279,42 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        name='x_axis',
+        option_name='x_axis',
         type=TextType(),
         help="""
         Custom label for the machine's X axis in the generated G-Code.
         """,
     ),
     ConfigOption(
-        name='y_axis',
+        option_name='y_axis',
         type=TextType(),
         help="""
         Custom label for the machine's Y axis in the generated G-Code.
         """,
     ),
     ConfigOption(
-        name='z_axis',
+        option_name='z_axis',
         type=TextType(),
         help="""
         Custom label for the machine's Z axis in the generated G-Code.
         """,
     ),
     ConfigOption(
-        name='i_axis',
+        option_name='i_axis',
         type=TextType(),
         help="""
         Custom label for the machine's I axis in the generated G-Code.
         """,
     ),
     ConfigOption(
-        name='j_axis',
+        option_name='j_axis',
         type=TextType(),
         help="""
         Custom label for the machine's J axis in the generated G-Code.
         """,
     ),
     ConfigOption(
-        name='k_axis',
+        option_name='k_axis',
         type=TextType(),
         help="""
         Custom label for the machine's K axis in the generated G-Code.
@@ -326,7 +326,7 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        name='extrude',
+        option_name='extrude',
         is_flag=True,
         help="""
         Enables extrusion mode, where filament flow is calculated and
@@ -334,21 +334,21 @@ params = (
         """,
     ),
     ConfigOption(
-        name='filament_diameter',
+        option_name='filament_diameter',
         type=LengthType(),
         help="""
         Diameter of the filament used for 3D printing.
         """,
     ),
     ConfigOption(
-        name='layer_height',
+        option_name='layer_height',
         type=LengthType(),
         help="""
         The thickness of each printed layer for 3D printing.
         """,
     ),
     ConfigOption(
-        name='extrusion_width',
+        option_name='extrusion_width',
         type=LengthType(),
         help="""
         The width of the extruded filament, including any flattening
@@ -356,7 +356,7 @@ params = (
         """,
     ),
     ConfigOption(
-        name='extrusion_multiplier',
+        option_name='extrusion_multiplier',
         type=FloatRangeType(min=0.0),
         help="""
         Adjusts the amount of filament extruded. A value greater than 1
