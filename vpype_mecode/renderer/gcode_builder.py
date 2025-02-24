@@ -102,6 +102,27 @@ class GBuilder(GMatrix):
         self.write(statement)
 
     @typechecked
+    def set_tool_power(self, power: float) -> None:
+        """Set the power level for the current tool.
+
+        The power parameter represents tool-specific values that vary
+        by machine type, such as:
+
+        - Spindle rotation speed in RPM
+        - Laser power output (typically 0-100%)
+        - Other similar power settings
+
+        Args:
+            power (float): Power level for the tool (must be >= 0.0)
+
+        Raises:
+            ValueError: If power is less than 0.0
+        """
+
+        self._validate_tool_power(power)
+        self.write(f'S{power}')
+
+    @typechecked
     def sleep(self, units: TimeUnits, seconds: float) -> None:
         """Delays program execution for the specified time.
 
@@ -122,12 +143,19 @@ class GBuilder(GMatrix):
     def tool_on(self, mode: SpinMode, power: float) -> None:
         """Activate the tool with specified direction and power.
 
+        The power parameter represents tool-specific values that vary
+        by machine type, such as:
+
+        - Spindle rotation speed in RPM
+        - Laser power output (typically 0-100%)
+        - Other similar power settings
+
         Args:
             mode (SpinMode): Direction of tool rotation (CW/CCW)
-            power (float): Power level for the tool (must be >= 1.0)
+            power (float): Power level for the tool (must be >= 0.0)
 
         Raises:
-            ValueError: If power is less than 1.0
+            ValueError: If power is less than 0.0
             ValueError: If mode is OFF or was already active
             ToolStateError: If attempting invalid mode transition
         """
@@ -138,8 +166,9 @@ class GBuilder(GMatrix):
         self._current_spin_mode = mode
         self._is_tool_active = True
 
-        params = f'S{power}'
-        statement = self._get_gcode_from_table(mode, params)
+        speed_statement = f'S{power}'
+        mode_statement = self._get_gcode_from_table(mode)
+        statement = f'{speed_statement} {mode_statement}'
         self.write(statement, resp_needed=True)
 
     def tool_off(self) -> None:
@@ -298,7 +327,7 @@ class GBuilder(GMatrix):
     def _validate_tool_power(self, power: float) -> None:
         """Validate tool power level is within acceptable range."""
 
-        if not isinstance(power, int | float) or power < 1.0:
+        if not isinstance(power, int | float) or power < 0.0:
             message = f'Invalid tool power `{power}`.'
             raise ValueError(message)
 

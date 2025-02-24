@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from .base_tool import BaseTool
 from ..gcode_context import GContext
 from vpype_mecode.enums import SpinMode
@@ -25,15 +24,15 @@ from vpype_mecode.enums import SpinMode
 class BeamTool(BaseTool):
 
     def activate(self, ctx: GContext):
-        pass
+        ctx.g.tool_on(SpinMode.CLOCKWISE, 0)
 
     def power_on(self, ctx: GContext):
-        ctx.g.tool_on(SpinMode.CLOCKWISE, ctx.power_level)
+        ctx.g.set_tool_power(ctx.power_level)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def power_off(self, ctx: GContext):
-        ctx.g.tool_off()
+        ctx.g.set_tool_power(0)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def deactivate(self, ctx: GContext):
-        pass
+        ctx.g.tool_off()
