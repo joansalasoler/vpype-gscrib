@@ -79,6 +79,7 @@ class GContext():
         self._work_z = config.work_z
         self._safe_z = config.safe_z
         self._plunge_z = config.plunge_z
+        self._park_z = config.park_z
 
         self._work_speed = self.scale_length(config.work_speed)
         self._plunge_speed = self.scale_length(config.plunge_speed)
@@ -160,6 +161,10 @@ class GContext():
     @property
     def plunge_z(self) -> float:
         return self._plunge_z
+
+    @property
+    def park_z(self) -> float:
+        return self._park_z
 
     @property
     def work_speed(self) -> float:

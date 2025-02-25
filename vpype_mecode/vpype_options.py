@@ -182,6 +182,14 @@ params = (
         operations, ensuring it does not collide with the material.
         """,
     ),
+    ConfigOption(
+        option_name='park_z',
+        type=LengthType(),
+        help="""
+        The Z-axis parking height where the tool retracts for maintenance
+        operations, such as tool changes and program completion.
+        """,
+    ),
 
     # ------------------------------------------------------------------
     # G-Code Output Options (mecode)

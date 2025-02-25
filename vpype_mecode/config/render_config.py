@@ -61,6 +61,7 @@ class RenderConfig(BaseModel, BaseConfig):
     work_z: float = Field(vp.convert_length('0mm'))
     plunge_z: float = Field(vp.convert_length('1mm'))
     safe_z: float = Field(vp.convert_length('10mm'))
+    park_z: float = Field(vp.convert_length('50mm'))
 
 
     # Vpype's default unit of measure is pixels, so we may need to
@@ -73,4 +74,5 @@ class RenderConfig(BaseModel, BaseConfig):
         'work_z': 'px',
         'plunge_z': 'px',
         'safe_z': 'px',
+        'park_z': 'px',
     }
