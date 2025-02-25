@@ -20,10 +20,10 @@ import vpype
 import vpype_mecode
 
 from numpy import array
-from typing import Tuple
-from vpype import Document, LineCollection
 from datetime import datetime
-
+from collections import deque
+from typing import List, Tuple
+from vpype import Document, LineCollection
 from vpype_mecode.config import BaseConfig, RenderConfig
 from vpype_mecode.enums import HaltMode, Plane
 from vpype_mecode.processor import DocumentRenderer
@@ -67,7 +67,7 @@ class GRenderer(DocumentRenderer):
     Attributes:
         _g (GBuilder): G-code command builder instance
         _config (RenderConfig): Rendering configuration parameters
-        _context (GContext): Rendering context parameters
+        _context (GContext): Current rendering context
         _head (Head): Machine head controller
         _tool (Tool): Tool controller (laser, spindle, etc.)
         _coolant (Coolant): Coolant system controller
@@ -77,21 +77,31 @@ class GRenderer(DocumentRenderer):
     DOCUMENT_SEPARATOR = '=' * 60
     LAYER_SEPARATOR = '-' * 60
 
-    def __init__(self, builder: GBuilder, config: RenderConfig):
+    def __init__(self, builder: GBuilder, configs: List[RenderConfig]):
         """G-code renderer initialization.
 
         Args:
             builder (GBuilder): G-code builder instance
-            config (RenderConfig): Configuration parameters
+            config (List[RenderConfig]): Configuration parameters
         """
 
         self._g = builder
-        self._config = config
-        self._context = GContext(builder, config)
-        self._head = HeadFactory.create(config.head_mode)
-        self._tool = ToolFactory.create(config.tool_mode)
-        self._coolant = CoolantFactory.create(config.coolant_mode)
-        self._rack = RackFactory.create(config.rack_mode)
+        self._ctx_queue = self._build_contexts(builder, configs)
+        self._context = self._switch_context()
+
+    def _switch_context(self) -> GContext:
+        """Switch to the next context in the queue."""
+
+        context = self._ctx_queue[0]
+
+        self._context = context
+        self._head = HeadFactory.create(context.head_mode)
+        self._tool = ToolFactory.create(context.tool_mode)
+        self._coolant = CoolantFactory.create(context.coolant_mode)
+        self._rack = RackFactory.create(context.rack_mode)
+        self._ctx_queue.rotate(-1)
+
+        return context
 
     def begin_document(self, document: Document):
         """This method is invoked once per document before any of the
@@ -137,6 +147,8 @@ class GRenderer(DocumentRenderer):
         Args:
             layer (LineCollection): Layer being processed
         """
+
+        self._context = self._switch_context()
 
         first_path = self._first_path_of_layer(layer)
         x, y = self._first_point_of_path(first_path)
@@ -220,6 +232,7 @@ class GRenderer(DocumentRenderer):
         self._head.safe_retract(self._context)
         self._tool.deactivate(self._context)
         self._coolant.turn_off(self._context)
+        self._switch_context()
 
     def end_document(self, document: Document):
         """This method is invoked once per document after all layers on
@@ -254,6 +267,11 @@ class GRenderer(DocumentRenderer):
 
         self._g.emergency_halt(str(e))
         self._g.teardown()
+
+    def _build_contexts(self, builder: GBuilder, configs: List[RenderConfig]) -> deque:
+        """Builds a context queue from a list of configurations."""
+
+        return deque([GContext(builder, c) for c in configs])
 
     def _first_path_of_layer(self, layer: LineCollection) -> array:
         """Get the first path to render from a layer."""
@@ -292,14 +310,13 @@ class GRenderer(DocumentRenderer):
 
         self._g.comment(self.LAYER_SEPARATOR)
         self._g.comment(f'layer = {layer_name}')
-        self._write_config_info(self._config)
+        self._write_config_info(self._context)
         self._g.comment(self.LAYER_SEPARATOR)
 
-    def _write_config_info(self, config: BaseConfig):
+    def _write_config_info(self, context: GContext):
         """Write configuration parameters as G-code comments."""
 
-        units = self._context.length_units
-        formated_dict = config.format_values(units)
+        formated_dict = context.format_config_values()
 
         for key, value in formated_dict.items():
             self._g.comment(f'{key} = {value}')

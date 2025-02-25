@@ -19,8 +19,9 @@
 import click
 import vpype
 import vpype_cli
+
 from typing import List
-from vpype import config
+from vpype import ConfigManager
 from vpype import Document
 from vpype_cli import State
 from pydantic import ValidationError
@@ -34,10 +35,30 @@ from vpype_mecode.config import *
 _config_exception = None
 
 
-@click.command(name='mecode')
+@vpype_cli.cli.command(
+  name='mecode',
+  group='Output',
+  help= """
+  Generate G-Code for CNC machines.
+
+  This command processes a vpype Document and generates G-Code from
+  it using the `mecode` library. The ouput can be sent to the teminal,
+  a file or to a printer using mecode's direct write mode.
+
+  The command accepts a number of options that can be used to configure
+  the G-Code generation process. They can be provided in the command
+  line as global defaults or in a TOML file than contains specific
+  settings for each layer of the document.
+  """
+)
 @vpype_cli.global_processor
-def vpype_mecode(document: Document, **kwargs) -> Document:
+@click.pass_context
+def vpype_mecode(ctx: click.Context, document: Document, **kwargs) -> Document:
     """Main entry point for the `mecode` command."""
+
+    if document.is_empty():
+        raise click.UsageError(
+            'Cannot generate G-Code from empty document')
 
     if document.page_size is None:
         raise click.UsageError(
@@ -47,16 +68,26 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
         raise click.UsageError(_config_exception)
 
     try:
-        # Parse and validate the command line options. They have
-        # precedence over the TOML file values.
+        print(ctx.params)
+        # Read configuration parameters from the command line
 
+        config_path = kwargs['render_config']
         mecode_config = MecodeConfig.model_validate(kwargs)
-        render_config = RenderConfig.model_validate(kwargs)
+        render_config = [RenderConfig.model_validate(kwargs),]
+
+        # The renderer can be configured with a TOML file or with
+        # command line arguments.
+
+        if config_path is not None:
+            file_path = config_path
+            render_config = read_config_file(file_path, document)
 
         # Mecode needs some values in work units, but the default
         # unit in Vpype is pixels. We need to convert them.
 
-        mecode_config.scale_lengths(render_config.length_units)
+        defaults_config = render_config[0]
+        length_units = defaults_config.length_units
+        mecode_config.scale_lengths(length_units)
 
         # Initialize the G-Code renderer
 
@@ -95,16 +126,36 @@ def validate_config(config: dict, params: List[ConfigOption]) -> dict:
     return values
 
 
-# Initialize the command when this module is loaded
+def read_config_file(path: str, document: Document) -> List[RenderConfig]:
+    """Read layer settings from the configuration TOML file."""
 
-vpype_mecode.help_group = 'Output'
-vpype_mecode.help = """
-    Generate G-Code for CNC machines.
+    configs = []
+    manager = vpype.config_manager
+    manager.load_config_file(path)
 
-    This command processes a vpype Document and generates G-Code from
-    it using the `mecode` library. The ouput can be sent to the teminal,
-    a file or to a printer using mecode's direct write mode.
-    """
+    try:
+        document_config = read_config_section('document', manager)
+        configs.append(document_config)
+
+        for index in range(len(document.layers)):
+            layer_config = read_config_section(f'layer-{index}', manager)
+            configs.append(layer_config)
+    except click.BadParameter as e:
+        message = f"Invalid value in file '{path}': {e.message}"
+        raise click.UsageError(message)
+
+    return configs
+
+
+def read_config_section(section_name: str, manager: ConfigManager) -> RenderConfig:
+    """Read a configuration section from the manager"""
+
+    toml_values = manager.config.get(section_name, {})
+    config = validate_config(toml_values, vpype_options.params)
+    renderer_config = RenderConfig.model_validate(config)
+
+    return renderer_config
+
 
 # Initialize the command line options
 
@@ -123,8 +174,6 @@ try:
         if param.name in config:
             value = config[param.name]
             param.override_default_value(value)
-
-        vpype_mecode.params.append(param)
 except click.BadParameter as e:
-    e.message = f"Invalid value in 'vpype.toml': {e.message}"
+    e.message = f"Invalid value in file 'vpype.toml': {e.message}"
     _config_exception = e

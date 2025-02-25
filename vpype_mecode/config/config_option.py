@@ -63,15 +63,17 @@ class ConfigOption(Option):
     def _setup_option_params(self, option_name: str, kwargs: dict) -> None:
         """Setup parameters for the option."""
 
+        option_type = kwargs.get('type')
+        default_value = kwargs.get('default')
         help_text = kwargs.get('help', '')
         help_text = inspect.cleandoc(help_text)
         self._help_text = help_text
 
-        default_value = self._default_for(option_name)
-        option_type = kwargs.get('type')
-
-        kwargs['default'] = default_value
         kwargs['param_decls'] = [f'--{option_name}']
+
+        if 'default' not in kwargs:
+            default_value = self._default_for(option_name)
+            kwargs['default'] = default_value
 
         if option_type is None:
             return

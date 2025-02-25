@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .gcode_builder import GBuilder
+from vpype_mecode.renderer.gcode_builder import GBuilder
 from vpype_mecode.enums import LengthUnits, TimeUnits
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.enums import *
@@ -61,6 +61,7 @@ class GContext():
         """
 
         self._g = builder
+        self._config = config
 
         self._head_mode = config.head_mode
         self._rack_mode = config.rack_mode
@@ -94,6 +95,11 @@ class GContext():
         """
 
         return self._length_units.scale(length)
+
+    def format_config_values(self):
+        """Return a firnated dictionary of configuration values"""
+
+        return self._config.format_values(self._length_units)
 
     @property
     def g(self) -> GBuilder:

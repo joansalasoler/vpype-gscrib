@@ -25,6 +25,29 @@ from vpype_mecode.enums import *
 
 params = (
 
+
+    # ------------------------------------------------------------------
+    # Global Options
+    # ------------------------------------------------------------------
+
+    ConfigOption(
+        option_name='outfile',
+        type=PathType(dir_okay=False, writable=True),
+        help="""
+        File path where the generated G-Code will be saved. If not
+        specified, the G-Code will be printed to the terminal.
+        """,
+    ),
+    ConfigOption(
+        option_name='render_config',
+        type=PathType(exists=True, dir_okay=False, resolve_path=True),
+        default=None,
+        help="""
+        Path to a TOML file containing configuration settings specific
+        to the document and each of its layers.
+        """,
+    ),
+
     # ------------------------------------------------------------------
     # G-Code Renderer Options
     # ------------------------------------------------------------------
@@ -50,6 +73,21 @@ params = (
         help="""
         Specifies the tool type for G-code generation. The generated
         code adapts to the selected tool type.
+        """,
+    ),
+    ConfigOption(
+        option_name='rack_mode',
+        type=RackMode,
+        help="""
+        Specifies if tool changes are needed between layers or if the
+        machine can handle multiple tools.
+        """,
+    ),
+    ConfigOption(
+        option_name='coolant_mode',
+        type=CoolantMode,
+        help="""
+        Selects the type of coolant used during operation.
         """,
     ),
     ConfigOption(
@@ -120,21 +158,6 @@ params = (
         """,
     ),
     ConfigOption(
-        option_name='rack_mode',
-        type=RackMode,
-        help="""
-        Specifies if tool changes are needed between layers or if the
-        machine can handle multiple tools.
-        """,
-    ),
-    ConfigOption(
-        option_name='coolant_mode',
-        type=CoolantMode,
-        help="""
-        Selects the type of coolant used during operation.
-        """,
-    ),
-    ConfigOption(
         option_name='work_z',
         type=LengthType(),
         help="""
@@ -165,16 +188,8 @@ params = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        option_name='outfile',
-        type=PathType(dir_okay=False, writable=True),
-        help="""
-        File path where the generated G-Code will be saved. If not
-        specified, the G-Code will be printed to the terminal.
-        """,
-    ),
-    ConfigOption(
         option_name='header',
-        type=PathType(exists=True, dir_okay=False),
+        type=PathType(exists=True, dir_okay=False, resolve_path=True),
         help="""
         Path to a file containing custom G-Code lines to be added at the
         beginning of the generated G-Code.
@@ -182,7 +197,7 @@ params = (
     ),
     ConfigOption(
         option_name='footer',
-        type=PathType(exists=True, dir_okay=False),
+        type=PathType(exists=True, dir_okay=False, resolve_path=True),
         help="""
         Path to a file containing custom G-Code lines to be added at the
         end of the generated G-Code.
