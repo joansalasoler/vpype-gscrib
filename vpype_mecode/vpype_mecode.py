@@ -21,18 +21,21 @@ import vpype
 import vpype_cli
 
 from typing import List
-from vpype import ConfigManager
 from vpype import Document
-from vpype_cli import State
 from pydantic import ValidationError
 
 from vpype_mecode import vpype_options
 from vpype_mecode.processor import DocumentProcessor
 from vpype_mecode.renderer import GBuilder, GRenderer
-from vpype_mecode.config import *
+from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
 
 
-_config_exception = None
+"""G-Code generator plugin for Vpype.
+
+This module provides a Vpype plugin that generates G-Code for CNC
+machines using the `mecode` library. It supports configuration through
+command line parameters and TOML configuration files.
+"""
 
 
 @vpype_cli.cli.command(
@@ -52,47 +55,34 @@ _config_exception = None
   """
 )
 @vpype_cli.global_processor
-@click.pass_context
-def vpype_mecode(ctx: click.Context, document: Document, **kwargs) -> Document:
-    """Main entry point for the `mecode` command."""
+def vpype_mecode(document: Document, **kwargs) -> Document:
+    """Main entry point for the `mecode` command.
 
-    if document.is_empty():
-        raise click.UsageError(
-            'Cannot generate G-Code from empty document')
+    Args:
+        document: The Vpype document to process
+        **kwargs: Command line parameters
 
-    if document.page_size is None:
-        raise click.UsageError(
-            'It is required for the document to have a page size.')
+    Returns:
+        The processed Document instance
 
-    if _config_exception is not None:
-        raise click.UsageError(_config_exception)
+    Raises:
+        click.BadParameter: If the configuration is invalid
+        click.UsageError: If the document cannot be processed
+    """
 
     try:
-        print(ctx.params)
-        # Read configuration parameters from the command line
+        if _config_exception is not None:
+            raise click.UsageError(_config_exception)
 
-        config_path = kwargs['render_config']
-        mecode_config = MecodeConfig.model_validate(kwargs)
-        render_config = [RenderConfig.model_validate(kwargs),]
+        _validate_document(document)
 
-        # The renderer can be configured with a TOML file or with
-        # command line arguments.
-
-        if config_path is not None:
-            file_path = config_path
-            render_config = read_config_file(file_path, document)
-
-        # Mecode needs some values in work units, but the default
-        # unit in Vpype is pixels. We need to convert them.
-
-        defaults_config = render_config[0]
-        length_units = defaults_config.length_units
-        mecode_config.scale_lengths(length_units)
+        render_configs = _setup_render_configs(document, kwargs)
+        mecode_config = _setup_mecode_config(kwargs, render_configs[0])
 
         # Initialize the G-Code renderer
 
         builder = GBuilder(**mecode_config.model_dump())
-        renderer = GRenderer(builder, render_config)
+        renderer = GRenderer(builder, render_configs)
 
         # Process the document using the configured renderer
 
@@ -104,76 +94,62 @@ def vpype_mecode(ctx: click.Context, document: Document, **kwargs) -> Document:
     return document
 
 
-# Utility functions
+# ---------------------------------------------------------------------
+# Utility methods
+# ---------------------------------------------------------------------
 
-def validate_config(config: dict, params: List[ConfigOption]) -> dict:
-    """Validate configuration parameters from a dict.
+def _validate_document(document: Document):
+    """Validate that the document meets the requirements."""
 
-    This method is used to validate a dictionary of configuration
-    parameters in the same way as the command line arguments are
-    validated and converted to their types.
-    """
+    if document.is_empty():
+        raise click.UsageError(
+            'Cannot generate G-Code from empty document')
 
-    values = {}
-    state = State()
-    ctx = click.Context(vpype_mecode)
-
-    for param in (o for o in params if o.name in config):
-        value = param.process_value(ctx, config[param.name])
-        value = state.preprocess_argument(value)
-        values[param.name] = value
-
-    return values
+    if document.page_size is None:
+        raise click.UsageError(
+            'It is required for the document to have a page size.')
 
 
-def read_config_file(path: str, document: Document) -> List[RenderConfig]:
-    """Read layer settings from the configuration TOML file."""
+def _setup_mecode_config(params, renderer_config: RenderConfig) -> MecodeConfig:
+    """Create and validate the Mecode configuration."""
 
-    configs = []
-    manager = vpype.config_manager
-    manager.load_config_file(path)
+    mecode_config = MecodeConfig.model_validate(params)
+    mecode_config.scale_lengths(renderer_config.length_units)
 
-    try:
-        document_config = read_config_section('document', manager)
-        configs.append(document_config)
-
-        for index in range(len(document.layers)):
-            layer_config = read_config_section(f'layer-{index}', manager)
-            configs.append(layer_config)
-    except click.BadParameter as e:
-        message = f"Invalid value in file '{path}': {e.message}"
-        raise click.UsageError(message)
-
-    return configs
+    return mecode_config
 
 
-def read_config_section(section_name: str, manager: ConfigManager) -> RenderConfig:
-    """Read a configuration section from the manager"""
+def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
+    """Create and validate the rendering configurations, either from
+    the command line parameters or a TOML file."""
 
-    toml_values = manager.config.get(section_name, {})
-    config = validate_config(toml_values, vpype_options.params)
-    renderer_config = RenderConfig.model_validate(config)
+    config_path = params['render_config']
 
-    return renderer_config
+    if config_path is None:
+        return [RenderConfig.model_validate(params),]
+
+    return _config_loader.read_config_file(config_path, document)
 
 
-# Initialize the command line options
+# ---------------------------------------------------------------------
+# Initialize the command line interface
+# ---------------------------------------------------------------------
+
+_config_exception = None
+_config_loader = ConfigLoader(vpype_mecode)
 
 for param in vpype_options.params:
     vpype_mecode.params.append(param)
 
-# Read configuration values from the user TOML file and override the
-# default values of the command line options with them.
-
 try:
     cm = vpype.config_manager
     toml_values = cm.config.get('vpype-mecode', {})
-    config = validate_config(toml_values, vpype_options.params)
+    config = _config_loader.validate_config(toml_values)
 
     for param in vpype_options.params:
         if param.name in config:
-            value = config[param.name]
-            param.override_default_value(value)
+            default_value = config[param.name]
+            param.override_default_value(default_value)
 except click.BadParameter as e:
     e.message = f"Invalid value in file 'vpype.toml': {e.message}"
     _config_exception = e
