@@ -48,6 +48,18 @@ codes_table = {
     ),
 
     # ------------------------------------------------------------------
+    # Distance Modes
+    # ------------------------------------------------------------------
+
+    (DistanceMode, DistanceMode.ABSOLUTE): (
+        'G90', 'Set distance mode (absolute)'
+    ),
+
+    (DistanceMode, DistanceMode.RELATIVE): (
+        'G91', 'Set distance mode (relative)'
+    ),
+
+    # ------------------------------------------------------------------
     # Feed Rate Modes
     # ------------------------------------------------------------------
 

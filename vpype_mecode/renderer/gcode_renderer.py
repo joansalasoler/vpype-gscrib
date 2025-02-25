@@ -25,8 +25,8 @@ from collections import deque
 from typing import List, Tuple
 from vpype import Document, LineCollection
 from vpype_mecode.config import RenderConfig
-from vpype_mecode.enums import FeedMode, HaltMode, Plane
 from vpype_mecode.processor import DocumentRenderer
+from vpype_mecode.enums import *
 
 from .gcode_builder import GBuilder
 from .gcode_context import GContext
@@ -124,8 +124,8 @@ class GRenderer(DocumentRenderer):
 
         self._write_document_header(document)
 
-        self._g.setup()
-        self._g.absolute()
+        self._g._write_header()
+        self._g.set_distance_mode(DistanceMode.ABSOLUTE)
         self._g.set_feed_mode(FeedMode.MINUTE)
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)

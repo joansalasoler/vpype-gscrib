@@ -102,6 +102,18 @@ class GBuilder(GMatrix):
         self.write(statement)
 
     @typechecked
+    def set_distance_mode(self, mode: DistanceMode) -> None:
+        """Set the positioning mode for subsequent commands.
+
+        Args:
+            mode (DistanceMode): The distance mode to use
+        """
+
+        self.is_relative = (mode == DistanceMode.RELATIVE)
+        statement = self._get_gcode_from_table(mode)
+        self.write(statement)
+
+    @typechecked
     def set_feed_mode(self, mode: FeedMode) -> None:
         """Set the feed rate mode for subsequent commands.
 
