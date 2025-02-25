@@ -24,8 +24,5 @@ class FeedMode(BaseEnum):
 
     MINUTE = 'min'
     REVOLUTION = 'rev'
+    INVERSE_TIME = '1/time'
 
-    def __invert__(self):
-        if self == FeedMode.MINUTE:
-            return FeedMode.REVOLUTION
-        return FeedMode.MINUTE

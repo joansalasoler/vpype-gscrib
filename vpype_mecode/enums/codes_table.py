@@ -51,6 +51,10 @@ codes_table = {
     # Feed Rate Modes
     # ------------------------------------------------------------------
 
+    (FeedMode, FeedMode.INVERSE_TIME): (
+        'G93', 'Set feed rate mode (inverse time)'
+    ),
+
     (FeedMode, FeedMode.MINUTE): (
         'G94', 'Set feed rate mode (units per minute)'
     ),

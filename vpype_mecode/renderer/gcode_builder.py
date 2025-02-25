@@ -102,6 +102,17 @@ class GBuilder(GMatrix):
         self.write(statement)
 
     @typechecked
+    def set_feed_mode(self, mode: FeedMode) -> None:
+        """Set the feed rate mode for subsequent commands.
+
+        Args:
+            mode (FeedMode): The feed rate mode to use
+        """
+
+        statement = self._get_gcode_from_table(mode)
+        self.write(statement)
+
+    @typechecked
     def set_tool_power(self, power: float) -> None:
         """Set the power level for the current tool.
 

@@ -24,8 +24,8 @@ from datetime import datetime
 from collections import deque
 from typing import List, Tuple
 from vpype import Document, LineCollection
-from vpype_mecode.config import BaseConfig, RenderConfig
-from vpype_mecode.enums import HaltMode, Plane
+from vpype_mecode.config import RenderConfig
+from vpype_mecode.enums import FeedMode, HaltMode, Plane
 from vpype_mecode.processor import DocumentRenderer
 
 from .gcode_builder import GBuilder
@@ -126,6 +126,7 @@ class GRenderer(DocumentRenderer):
 
         self._g.setup()
         self._g.absolute()
+        self._g.set_feed_mode(FeedMode.MINUTE)
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 
@@ -298,7 +299,7 @@ class GRenderer(DocumentRenderer):
         self._g.comment(f'Vpype version: {vpype.__version__}')
         self._g.comment(f'Program zero: bottom-left')
         self._g.comment(f'Number of layers: {num_layers}')
-        self._g.comment(f'Legnth units: {length_units}')
+        self._g.comment(f'Length units: {length_units}')
         self._g.comment(f'Time units: {time_units}')
         self._g.comment(f'Date: {iso_datetime}')
         self._g.comment(self.DOCUMENT_SEPARATOR)
