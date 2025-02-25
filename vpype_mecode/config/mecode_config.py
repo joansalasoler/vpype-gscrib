@@ -47,7 +47,7 @@ class MecodeConfig(BaseModel, BaseConfig):
     aerotech_include: bool = Field(False)
     output_digits: int = Field(6, ge=0)
     lineend: str = Field('os')
-    comment_char: str = Field(';')
+    comment_char: str = Field('(')
 
     # Direct write settings
     direct_write: bool = Field(False)

@@ -40,11 +40,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (LengthUnits, LengthUnits.INCHES): (
-        'G20', 'Set length units (inches)'
+        'G20', 'Set length units, inches'
     ),
 
     (LengthUnits, LengthUnits.MILLIMETERS): (
-        'G21', 'Set length units (millimeters)'
+        'G21', 'Set length units, millimeters'
     ),
 
     # ------------------------------------------------------------------
@@ -52,11 +52,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (DistanceMode, DistanceMode.ABSOLUTE): (
-        'G90', 'Set distance mode (absolute)'
+        'G90', 'Set distance mode, absolute'
     ),
 
     (DistanceMode, DistanceMode.RELATIVE): (
-        'G91', 'Set distance mode (relative)'
+        'G91', 'Set distance mode, relative'
     ),
 
     # ------------------------------------------------------------------
@@ -64,15 +64,15 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (FeedMode, FeedMode.INVERSE_TIME): (
-        'G93', 'Set feed rate mode (inverse time)'
+        'G93', 'Set feed rate mode, inverse time'
     ),
 
     (FeedMode, FeedMode.MINUTE): (
-        'G94', 'Set feed rate mode (units per minute)'
+        'G94', 'Set feed rate mode, units per minute'
     ),
 
     (FeedMode, FeedMode.REVOLUTION): (
-        'G95', 'Set feed rate mode (units per revolution)'
+        'G95', 'Set feed rate mode, units per revolution'
     ),
 
     # ------------------------------------------------------------------
@@ -80,11 +80,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (SpinMode, SpinMode.CLOCKWISE): (
-        'M03', 'Start tool (clockwise)'
+        'M03', 'Start tool, clockwise'
     ),
 
     (SpinMode, SpinMode.COUNTER): (
-        'M04', 'Start tool (counterclockwise)'
+        'M04', 'Start tool, counterclockwise'
     ),
 
     (SpinMode, SpinMode.OFF): (
@@ -96,11 +96,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (RackMode, RackMode.AUTOMATIC): (
-        'M06', 'Tool change (automatic)'
+        'M06', 'Tool change, automatic'
     ),
 
     (RackMode, RackMode.MANUAL): (
-        'M06', 'Tool change (manual)'
+        'M06', 'Tool change, manual'
     ),
 
     # ------------------------------------------------------------------
@@ -108,11 +108,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (CoolantMode, CoolantMode.FLOOD): (
-        'M08', 'Turn on coolant (flood)'
+        'M08', 'Turn on coolant, flood'
     ),
 
     (CoolantMode, CoolantMode.MIST): (
-        'M07', 'Turn on coolant (mist)'
+        'M07', 'Turn on coolant, mist'
     ),
 
     (CoolantMode, CoolantMode.OFF): (
@@ -124,15 +124,15 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (Plane, Plane.XY): (
-        'G17', 'Select plane (XY)'
+        'G17', 'Select plane, XY'
     ),
 
     (Plane, Plane.YZ): (
-        'G19', 'Select plane (YZ)'
+        'G19', 'Select plane, YZ'
     ),
 
     (Plane, Plane.ZX): (
-        'G18', 'Select plane (ZX)'
+        'G18', 'Select plane, ZX'
     ),
 
     # ------------------------------------------------------------------
@@ -140,11 +140,11 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (TimeUnits, TimeUnits.SECONDS): (
-        'G04', 'Sleep for a while (seconds)'
+        'G04', 'Sleep for a while, seconds'
     ),
 
     (TimeUnits, TimeUnits.MILLISECONDS): (
-        'G04', 'Sleep for a while (milliseconds)'
+        'G04', 'Sleep for a while, milliseconds'
     ),
 
     # ------------------------------------------------------------------
@@ -152,19 +152,19 @@ codes_table = {
     # ------------------------------------------------------------------
 
     (HaltMode, HaltMode.PAUSE): (
-        'M00', 'Pause program (forced)'
+        'M00', 'Pause program, forced'
     ),
 
     (HaltMode, HaltMode.OPTIONAL_PAUSE): (
-        'M01', 'Pause program (optional)'
+        'M01', 'Pause program, optional'
     ),
 
     (HaltMode, HaltMode.END_WITHOUT_RESET): (
-        'M02', 'End of program (no reset)'
+        'M02', 'End of program, no reset'
     ),
 
     (HaltMode, HaltMode.END_WITH_RESET): (
-        'M30', 'End of program (stop and reset)'
+        'M30', 'End of program, stop and reset'
     ),
 
     (HaltMode, HaltMode.PALLET_EXCHANGE_AND_END): (

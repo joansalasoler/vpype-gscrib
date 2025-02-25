@@ -277,8 +277,12 @@ class G(object):
 
         # We need to special case using parenthesis for comments, since we have to
         # wrap them around the beginning and the end of the comment
+
         if self._comment_char == "(":
             return "( {} )".format(txt)
+
+        if self._comment_char == "[":
+            return "[ {} ]".format(txt)
 
         # Otherwise, just prepend the comment character (and a space)
         return "{} {}".format(self._comment_char, txt)
