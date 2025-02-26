@@ -87,22 +87,24 @@ class ConfigLoader:
         manager = ConfigManager()
         manager.load_config_file(path)
 
-        document_config = self._read_config_section(manager, 'document')
+        document_values = manager.config.get('document', {})
+        document_config = self._to_config_model(document_values)
         configs.append(document_config)
 
         for index in range(len(document.layers)):
-            section = f'layer-{index}'
-            layer_config = self._read_config_section(manager, section)
+            layer_values = manager.config.get(f'layer-{index}', {})
+            layer_values = {**document_values, **layer_values}
+            layer_config = self._to_config_model(layer_values)
+
             layer_config.length_units = document_config.length_units
             layer_config.time_units = document_config.time_units
+
             configs.append(layer_config)
 
         return configs
 
-    def _read_config_section(
-            self, manager: ConfigManager, section_name: str) -> RenderConfig:
+    def _to_config_model(self, values: dict = {}) -> RenderConfig:
         """Read and validate a section from the configuration."""
 
-        toml_values = manager.config.get(section_name, {})
-        config = self.validate_config(toml_values)
+        config = self.validate_config(values)
         return RenderConfig.model_validate(config)

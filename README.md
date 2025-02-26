@@ -58,6 +58,10 @@ You can specify per-layer settings using a TOML configuration file.
 Here's an example configuration for a pen plotter:
 
 ```ini
+# Document-level configuration. These settings control the machine's
+# behavior between layer operations. All layers inherit these values
+# unless specifically overridden in their [layer-X] section.
+
 [document]
 length_units = "mm"          # Using metric units
 tool_mode = "marker"         # Using marker mode for pen plotting
