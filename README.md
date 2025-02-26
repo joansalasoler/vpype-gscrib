@@ -124,7 +124,7 @@ Install `vpype-mecode` and its dependencies (including `vpype`):
 
 ```bash
 $ pip install -e .
-$ pip install -r dev-dependencies.txt
+$ pip install -r requirements.txt
 ```
 
 ## Contributing
