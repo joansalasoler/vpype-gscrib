@@ -29,10 +29,10 @@ from . import RenderConfig, MecodeConfig
 
 class ConfigOption(Option):
     """
-    Custom Click option class that enforces units for length types and
-    provides enhanced parameter handling.
+    Custom `click` option class that enforces units for length types
+    and provides enhanced parameter handling.
 
-    This class extends Click's Option class to provide:
+    This class extends `click`'s `Option` class to provide:
 
     - Automatic unit enforcement for length parameters
     - Enhanced help text formatting
@@ -41,7 +41,7 @@ class ConfigOption(Option):
 
     Args:
         name (str): The name of the option
-        **kwargs: Additional arguments passed to Click's Option
+        **kwargs: Additional arguments passed to parent `Option`
     """
 
     _config_fields = (

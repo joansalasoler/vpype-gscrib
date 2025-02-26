@@ -23,7 +23,7 @@ from vpype_mecode.config import ConfigOption
 from vpype_mecode.enums import *
 
 
-params = (
+command_options = (
 
 
     # ------------------------------------------------------------------

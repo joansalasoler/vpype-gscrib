@@ -28,13 +28,13 @@ from vpype_mecode.config import *
 
 
 class ConfigLoader:
-    """Handles loading and validation of configuration files.
+    """Utility class for loading and parsing configuration files.
 
-    This class manages the loading of configuration from TOML files and
+    This class manages the loading of settings from TOML files and
     validates the configuration against the expected schema.
 
     Attributes:
-        command: The Click command this loader is associated with
+        command: The `click` command this loader is associated with
     """
 
     def __init__(self, command: Command):

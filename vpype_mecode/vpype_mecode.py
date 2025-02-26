@@ -24,7 +24,7 @@ from typing import List
 from vpype import Document
 from pydantic import ValidationError
 
-from vpype_mecode import vpype_options
+from vpype_mecode.vpype_options import command_options
 from vpype_mecode.processor import DocumentProcessor
 from vpype_mecode.renderer import GBuilder, GRenderer
 from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
@@ -138,7 +138,7 @@ def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
 _config_exception = None
 _config_loader = ConfigLoader(vpype_mecode)
 
-for param in vpype_options.params:
+for param in command_options:
     vpype_mecode.params.append(param)
 
 try:
@@ -146,7 +146,7 @@ try:
     toml_values = cm.config.get('vpype-mecode', {})
     config = _config_loader.validate_config(toml_values)
 
-    for param in vpype_options.params:
+    for param in command_options:
         if param.name in config:
             default_value = config[param.name]
             param.override_default_value(default_value)

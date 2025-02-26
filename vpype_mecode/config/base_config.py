@@ -26,7 +26,9 @@ from vpype_mecode.enums import LengthUnits
 
 @dataclass
 class BaseConfig(ABC):
-    """Base class if all the configuration dataclasses."""
+    """
+    Abstract base class defining the interface for configuration objects.
+    """
 
     def scale_lengths(self, units: LengthUnits) -> None:
         """

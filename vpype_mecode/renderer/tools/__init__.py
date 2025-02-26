@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+"""
+Handles tool operations.
+
+This module provides implementations for different machine tools such as
+lasers, spindles, and other end effectors. Each implementation handles
+tool initialization, activation, power control, and shutdown, generating
+the corresponding G-code commands for various tool types and behaviors.
+"""
+
 from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
