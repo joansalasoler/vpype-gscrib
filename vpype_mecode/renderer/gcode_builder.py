@@ -37,13 +37,6 @@ class GBuilder(GMatrix):
     - Coolant control
     - Program execution control
     - Movement commands
-
-    Attributes:
-        is_tool_active (bool): Indicates if a tool is currently active
-        is_coolant_active (bool): Indicates if coolant system is active
-        current_tool (int): Current selected tool number
-        current_spin_mode (SpinMode): Current spindle rotation mode
-        current_coolant_mode (CoolantMode): Current coolant mode
     """
 
     def __init__(self, *args, **kwargs) -> None:

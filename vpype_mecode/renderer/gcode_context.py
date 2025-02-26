@@ -36,20 +36,6 @@ class GContext():
     Args:
         builder (GBuilder): G-code builder instance
         config (RenderConfig): Configuration object
-
-    Attributes:
-        g (GBuilder): The G-code builder instance
-        length_units (LengthUnits): Unit system for length measurements
-        time_units (TimeUnits): Unit system for time measurements
-        power_level (float): Power level for laser or tool
-        spindle_rpm (float): Spindle rotation speed in RPM
-        warmup_delay (float): Delay time for tool warmup
-        work_z (float): Z-axis position for working/cutting
-        safe_z (float): Z-axis position for safe travel
-        plunge_z (float): Z-axis position for plunge movements
-        work_speed (float): Feed rate during cutting operations
-        plunge_speed (float): Feed rate during plunge movements
-        travel_speed (float): Feed rate during rapid movements
     """
 
     def __init__(self, builder: GBuilder, config: RenderConfig):
@@ -104,76 +90,95 @@ class GContext():
 
     @property
     def g(self) -> GBuilder:
+        """The G-code builder instance"""
         return self._g
 
     @property
     def coolant_mode(self) -> CoolantMode:
+        """Coolant system mode"""
         return self._coolant_mode
 
     @property
     def head_mode(self) -> HeadMode:
+        """Head mode"""
         return self._head_mode
 
     @property
     def rack_mode(self) -> RackMode:
+        """Rack mode"""
         return self._rack_mode
 
     @property
     def spin_mode(self) -> SpinMode:
+        """Tool spin mode"""
         return self._spin_mode
 
     @property
     def tool_mode(self) -> ToolMode:
+        """Tool mode"""
         return self._tool_mode
 
     @property
     def length_units(self) -> LengthUnits:
+        """Unit system for length measurements"""
         return self._length_units
 
     @property
     def time_units(self) -> TimeUnits:
+        """Unit system for time measurements"""
         return self._time_units
 
     @property
     def power_level(self) -> float:
+        """Power level for the tool"""
         return self._power_level
 
     @property
     def spindle_rpm(self) -> float:
+        """Spindle rotation speed in RPM"""
         return self._spindle_rpm
 
     @property
     def warmup_delay(self) -> float:
+        """Delay time for tool warmup/cooldown"""
         return self._warmup_delay
 
     @property
     def tool_number(self) -> str:
+        """Tool identifier number"""
         return self._tool_number
 
     @property
     def work_z(self) -> float:
+        """Z-axis position for working/cutting"""
         return self._work_z
 
     @property
     def safe_z(self) -> float:
+        """Z-axis position for movements between operations"""
         return self._safe_z
 
     @property
     def plunge_z(self) -> float:
+        """Z-axis position for initial material contact"""
         return self._plunge_z
 
     @property
     def park_z(self) -> float:
+        """Z-axis position for service operations"""
         return self._park_z
 
     @property
     def work_speed(self) -> float:
+        """Feed rate during cutting operations"""
         return self._work_speed
 
     @property
     def plunge_speed(self) -> float:
+        """Feed rate during initial material contact"""
         return self._plunge_speed
 
     @property
     def travel_speed(self) -> float:
+        """Feed rate during movements between operations"""
         return self._travel_speed
