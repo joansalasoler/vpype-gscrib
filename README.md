@@ -89,6 +89,9 @@ work_speed = "600mm"         # Even slower for thick lines
 plunge_speed = "50mm"        # Very gentle pen lowering
 ```
 
+See the [config-template.toml](config-template.toml) file for a
+complete configuration example.
+
 ## Documentation
 
 The complete plug-in documentation is available directly in the CLI help:
