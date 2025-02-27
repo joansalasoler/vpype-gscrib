@@ -11,6 +11,7 @@ for CNC machines, plotters, and other G-code compatible devices.
 
    Home <self>
    Command Line Interface <cli>
+   G-Code Mappings Table <gcode-table>
    Module Index <modindex>
    General Index <genindex>
    License <license>
@@ -24,6 +25,7 @@ API Reference
    :template: module.rst
    :recursive:
 
+   vpype_mecode.codes
    vpype_mecode.config
    vpype_mecode.enums
    vpype_mecode.excepts

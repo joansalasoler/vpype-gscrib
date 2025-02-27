@@ -32,12 +32,16 @@ class ConfigLoader:
 
     This class manages the loading of settings from TOML files and
     validates the configuration against the expected schema.
-
-    Attributes:
-        command: The `click` command this loader is associated with
     """
 
     def __init__(self, command: Command):
+        """Initialize a new `ConfigLoader` instance.
+
+        Args:
+            command (Command): The `click` command this loader
+                               is associated with.
+        """
+
         self._command = command
 
     def validate_config(self, config: dict) -> dict:

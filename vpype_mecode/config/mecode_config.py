@@ -32,7 +32,13 @@ class MecodeConfig(BaseModel, BaseConfig):
 
     This class stores various options that are passed directly to the
     `mecode` library, which is responsible for generating the G-Code.
-    See the `vpype_options` module.
+    See the :doc:`command line reference </cli>` for detailed information
+    about the properties of this class.
+
+    Example:
+        >>> params = { 'outfile': 'output.gcode' }
+        >>> mecode_config = MecodeConfig.model_validate(params)
+        >>> print(mecode_config.outfile)
     """
 
     # Predefined settings (do not change!)

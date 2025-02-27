@@ -94,7 +94,10 @@ complete configuration example.
 
 ## Documentation
 
-The complete plug-in documentation is available directly in the CLI help:
+The latest documentation of the project can be found at
+[Read the Docs](https://vpype-mecode.readthedocs.io/en/latest/).
+
+The command line documentation is also available using the `--help` flag:
 
 ```bash
 $ vpype mecode --help

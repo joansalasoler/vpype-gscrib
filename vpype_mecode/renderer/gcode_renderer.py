@@ -62,7 +62,7 @@ class GRenderer(DocumentRenderer):
 
     Args:
         builder (GBuilder): G-code builder instance
-        config (RenderConfig): Configuration parameters
+        configs (List[RenderConfig]): Configuration parameters
 
     Attributes:
         _g (GBuilder): G-code command builder instance

@@ -23,6 +23,15 @@ from vpype_mecode.config import ConfigOption
 from vpype_mecode.enums import *
 
 
+"""
+Configuration options.
+
+This module defines all available configuration options that can be used
+to customize the G-Code generation process. They are used both to parse
+the command line options and the TOML configuration files.
+"""
+
+
 command_options = (
 
 

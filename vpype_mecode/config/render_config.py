@@ -32,7 +32,13 @@ class RenderConfig(BaseModel, BaseConfig):
     This class defines motion parameters, spindle settings, and Z-axis
     positions. The default values are chosen to be safe for a variety of
     CNC machines, including milling machines, pen plotters, laser
-    engravers, and 3D printers.
+    engravers, and 3D printers. See the :doc:`command line reference </cli>`
+    for detailed information about the properties of this class.
+
+    Example:
+        >>> params = { 'length_units': 'mm' }
+        >>> renderer_config = RenderConfig.model_validate(params)
+        >>> print(renderer_config.length_units)
     """
 
     # Length and time units
