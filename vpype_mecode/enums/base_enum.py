@@ -25,13 +25,13 @@ class BaseEnum(str, Enum):
     def get_instruction(self) -> str:
         """Obtain the G-Code instruction code for this enum"""
 
-        from .codes_table import codes_table
-        key = (type(self), self)
-        return codes_table[key][0]
+        from vpype_mecode.codes import gcode_table
+        entry = gcode_table.get_entry(self)
+        return entry.instruction
 
     def get_description(self) -> str:
         """Obtain the G-Code instruction comment for this enum"""
 
-        from .codes_table import codes_table
-        key = (type(self), self)
-        return codes_table[key][1]
+        from vpype_mecode.codes import gcode_table
+        entry = gcode_table.get_entry(self)
+        return entry.description

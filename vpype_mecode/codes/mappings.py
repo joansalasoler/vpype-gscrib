@@ -16,34 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from . import *
+from vpype_mecode.enums import *
+from .gcode_table import GCodeEntry, GCodeTable
 
 
 """
-Mapping table to convert enum values to G-Code instructions.
-
-This module contains a dictionary that translates our internal enum
-values into their corresponding G-Code instructions. The `GBuilder`
-class uses this mapping to generate valid G-Code output.
-
-Notice that the dictionary keys are prefixed with their enum type
-because the enums inherit from `str`. This namespacing prevents
-conflicts between enums that might share the same value but represent
-different commands.
+Built-in enums to G-Code mappings.
 """
 
-
-codes_table = {
+gcode_table = GCodeTable((
 
     # ------------------------------------------------------------------
     # Length Units
     # ------------------------------------------------------------------
 
-    (LengthUnits, LengthUnits.INCHES): (
+    GCodeEntry(LengthUnits.INCHES,
         'G20', 'Set length units, inches'
     ),
 
-    (LengthUnits, LengthUnits.MILLIMETERS): (
+    GCodeEntry(LengthUnits.MILLIMETERS,
         'G21', 'Set length units, millimeters'
     ),
 
@@ -51,11 +42,11 @@ codes_table = {
     # Distance Modes
     # ------------------------------------------------------------------
 
-    (DistanceMode, DistanceMode.ABSOLUTE): (
+    GCodeEntry(DistanceMode.ABSOLUTE,
         'G90', 'Set distance mode, absolute'
     ),
 
-    (DistanceMode, DistanceMode.RELATIVE): (
+    GCodeEntry(DistanceMode.RELATIVE,
         'G91', 'Set distance mode, relative'
     ),
 
@@ -63,15 +54,15 @@ codes_table = {
     # Feed Rate Modes
     # ------------------------------------------------------------------
 
-    (FeedMode, FeedMode.INVERSE_TIME): (
+    GCodeEntry(FeedMode.INVERSE_TIME,
         'G93', 'Set feed rate mode, inverse time'
     ),
 
-    (FeedMode, FeedMode.MINUTE): (
+    GCodeEntry(FeedMode.MINUTE,
         'G94', 'Set feed rate mode, units per minute'
     ),
 
-    (FeedMode, FeedMode.REVOLUTION): (
+    GCodeEntry(FeedMode.REVOLUTION,
         'G95', 'Set feed rate mode, units per revolution'
     ),
 
@@ -79,15 +70,15 @@ codes_table = {
     # Tool Control
     # ------------------------------------------------------------------
 
-    (SpinMode, SpinMode.CLOCKWISE): (
+    GCodeEntry(SpinMode.CLOCKWISE,
         'M03', 'Start tool, clockwise'
     ),
 
-    (SpinMode, SpinMode.COUNTER): (
+    GCodeEntry(SpinMode.COUNTER,
         'M04', 'Start tool, counterclockwise'
     ),
 
-    (SpinMode, SpinMode.OFF): (
+    GCodeEntry(SpinMode.OFF,
         'M05', 'Stop tool'
     ),
 
@@ -95,11 +86,11 @@ codes_table = {
     # Tool Swap Modes
     # ------------------------------------------------------------------
 
-    (RackMode, RackMode.AUTOMATIC): (
+    GCodeEntry(RackMode.AUTOMATIC,
         'M06', 'Tool change, automatic'
     ),
 
-    (RackMode, RackMode.MANUAL): (
+    GCodeEntry(RackMode.MANUAL,
         'M06', 'Tool change, manual'
     ),
 
@@ -107,15 +98,15 @@ codes_table = {
     # Coolant Control Modes
     # ------------------------------------------------------------------
 
-    (CoolantMode, CoolantMode.FLOOD): (
+    GCodeEntry(CoolantMode.FLOOD,
         'M08', 'Turn on coolant, flood'
     ),
 
-    (CoolantMode, CoolantMode.MIST): (
+    GCodeEntry(CoolantMode.MIST,
         'M07', 'Turn on coolant, mist'
     ),
 
-    (CoolantMode, CoolantMode.OFF): (
+    GCodeEntry(CoolantMode.OFF,
         'M09', 'Turn off coolant'
     ),
 
@@ -123,15 +114,15 @@ codes_table = {
     # Plane Selection
     # ------------------------------------------------------------------
 
-    (Plane, Plane.XY): (
+    GCodeEntry(Plane.XY,
         'G17', 'Select plane, XY'
     ),
 
-    (Plane, Plane.YZ): (
+    GCodeEntry(Plane.YZ,
         'G19', 'Select plane, YZ'
     ),
 
-    (Plane, Plane.ZX): (
+    GCodeEntry(Plane.ZX,
         'G18', 'Select plane, ZX'
     ),
 
@@ -139,11 +130,11 @@ codes_table = {
     # Sleep/Dwell Modes
     # ------------------------------------------------------------------
 
-    (TimeUnits, TimeUnits.SECONDS): (
+    GCodeEntry(TimeUnits.SECONDS,
         'G04', 'Sleep for a while, seconds'
     ),
 
-    (TimeUnits, TimeUnits.MILLISECONDS): (
+    GCodeEntry(TimeUnits.MILLISECONDS,
         'G04', 'Sleep for a while, milliseconds'
     ),
 
@@ -151,24 +142,24 @@ codes_table = {
     # Halt Modes
     # ------------------------------------------------------------------
 
-    (HaltMode, HaltMode.PAUSE): (
+    GCodeEntry(HaltMode.PAUSE,
         'M00', 'Pause program, forced'
     ),
 
-    (HaltMode, HaltMode.OPTIONAL_PAUSE): (
+    GCodeEntry(HaltMode.OPTIONAL_PAUSE,
         'M01', 'Pause program, optional'
     ),
 
-    (HaltMode, HaltMode.END_WITHOUT_RESET): (
+    GCodeEntry(HaltMode.END_WITHOUT_RESET,
         'M02', 'End of program, no reset'
     ),
 
-    (HaltMode, HaltMode.END_WITH_RESET): (
+    GCodeEntry(HaltMode.END_WITH_RESET,
         'M30', 'End of program, stop and reset'
     ),
 
-    (HaltMode, HaltMode.PALLET_EXCHANGE_AND_END): (
+    GCodeEntry(HaltMode.PALLET_EXCHANGE_AND_END,
         'M60', 'Exchange pallet and end program'
     ),
 
-}
+))

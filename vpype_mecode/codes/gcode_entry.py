@@ -16,14 +16,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .base_enum import BaseEnum
+from vpype_mecode.enums import BaseEnum
 
 
-class HaltMode(BaseEnum):
-    """Program termination and pause modes."""
+class GCodeEntry:
+    """Represents a single G-Code instruction entry."""
 
-    PAUSE = 'pause'
-    OPTIONAL_PAUSE = 'optional_pause'
-    END_WITHOUT_RESET = 'end_without_reset'
-    END_WITH_RESET = 'end_with_reset'
-    PALLET_EXCHANGE_AND_END = 'pallet_exchange_and_end'
+    def __init__(self, enum: BaseEnum, instruction: str, description: str):
+        self._enum = enum
+        self._instruction = instruction
+        self._description = description
+
+    @property
+    def enum(self) -> BaseEnum:
+        """Enum value associated with this entry."""
+        return self._enum
+
+    @property
+    def instruction(self) -> str:
+        """G-Code instruction associated with the enum value."""
+        return self._instruction
+
+    @property
+    def description(self) -> str:
+        """Description of what the G-Code instruction does"""
+        return self._description
