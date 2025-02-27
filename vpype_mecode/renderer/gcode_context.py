@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from dataclasses import asdict, FrozenInstanceError
 from vpype_mecode.renderer.gcode_builder import GBuilder
-from vpype_mecode.enums import LengthUnits, TimeUnits
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.enums import *
 
@@ -29,14 +29,29 @@ class GContext():
     for G-code generation, including units, speeds, z-axis positions,
     and machine-specific settings.
 
-    Times are given in seconds and lengths in pixels. Both will be
-    automatically scaled by the `GBuilder` instance. Speeds are given
-    in units per minute (mm/min or in/min).
+    Along with the `Gbuilder` instance it exposes all public fields from
+    the provided `RenderConfig` as read-only properties. Values are
+    automatically scaled according to the unit conventions below:
+
+    - Times: seconds (will be scaled by `GBuilder`)
+    - Lengths: pixels (will be scaled by `GBuilder`)
+    - Speeds: units per minute (mm/min or in/min)
+
+    Example:
+        >>> ctx = GContext(builder, config)
+        >>> print(config.work_speed)  # Speed in px/min
+        >>> print(ctx.work_speed)  # Speed in units/min
 
     Args:
         builder (GBuilder): G-code builder instance
         config (RenderConfig): Configuration object
     """
+
+    _scale_properties = (
+        'work_speed',
+        'plunge_speed',
+        'travel_speed',
+    )
 
     def __init__(self, builder: GBuilder, config: RenderConfig):
         """Initialize the G-code context.
@@ -48,28 +63,14 @@ class GContext():
 
         self._g = builder
         self._config = config
-
-        self._head_mode = config.head_mode
-        self._rack_mode = config.rack_mode
-        self._spin_mode = config.spin_mode
-        self._tool_mode = config.tool_mode
-        self._coolant_mode = config.coolant_mode
-
         self._length_units = config.length_units
-        self._time_units = config.time_units
-        self._power_level = config.power_level
-        self._spindle_rpm = config.spindle_rpm
-        self._warmup_delay = config.warmup_delay
-        self._tool_number = config.tool_number
+        self._init_properties(config)
+        self._frozen = True
 
-        self._work_z = config.work_z
-        self._safe_z = config.safe_z
-        self._plunge_z = config.plunge_z
-        self._park_z = config.park_z
-
-        self._work_speed = self.scale_length(config.work_speed)
-        self._plunge_speed = self.scale_length(config.plunge_speed)
-        self._travel_speed = self.scale_length(config.travel_speed)
+    @property
+    def g(self) -> GBuilder:
+        """The G-code builder instance"""
+        return self._g
 
     def scale_length(self, length: float) -> float:
         """Scale a value to the configured length units.
@@ -84,101 +85,23 @@ class GContext():
         return self._length_units.scale(length)
 
     def format_config_values(self):
-        """Return a firnated dictionary of configuration values"""
+        """Return a formatted dictionary of configuration values"""
 
         return self._config.format_values(self._length_units)
 
-    @property
-    def g(self) -> GBuilder:
-        """The G-code builder instance"""
-        return self._g
+    def _init_properties(self, config: RenderConfig):
+        """Makes the config values availabe on this context"""
 
-    @property
-    def coolant_mode(self) -> CoolantMode:
-        """Coolant system mode"""
-        return self._coolant_mode
+        for name, value in asdict(config).items():
+            if name in self._scale_properties:
+                value = self.scale_length(value)
+            setattr(self, name, value)
 
-    @property
-    def head_mode(self) -> HeadMode:
-        """Head mode"""
-        return self._head_mode
+    def __setattr__(self, name, value):
+        """Ensure all the properties of this class are read only"""
 
-    @property
-    def rack_mode(self) -> RackMode:
-        """Rack mode"""
-        return self._rack_mode
+        if hasattr(self, '_frozen') and self._frozen:
+            raise FrozenInstanceError(
+                f"Cannot assign to field '{name}'.")
 
-    @property
-    def spin_mode(self) -> SpinMode:
-        """Tool spin mode"""
-        return self._spin_mode
-
-    @property
-    def tool_mode(self) -> ToolMode:
-        """Tool mode"""
-        return self._tool_mode
-
-    @property
-    def length_units(self) -> LengthUnits:
-        """Unit system for length measurements"""
-        return self._length_units
-
-    @property
-    def time_units(self) -> TimeUnits:
-        """Unit system for time measurements"""
-        return self._time_units
-
-    @property
-    def power_level(self) -> float:
-        """Power level for the tool"""
-        return self._power_level
-
-    @property
-    def spindle_rpm(self) -> float:
-        """Spindle rotation speed in RPM"""
-        return self._spindle_rpm
-
-    @property
-    def warmup_delay(self) -> float:
-        """Delay time for tool warmup/cooldown"""
-        return self._warmup_delay
-
-    @property
-    def tool_number(self) -> str:
-        """Tool identifier number"""
-        return self._tool_number
-
-    @property
-    def work_z(self) -> float:
-        """Z-axis position for working/cutting"""
-        return self._work_z
-
-    @property
-    def safe_z(self) -> float:
-        """Z-axis position for movements between operations"""
-        return self._safe_z
-
-    @property
-    def plunge_z(self) -> float:
-        """Z-axis position for initial material contact"""
-        return self._plunge_z
-
-    @property
-    def park_z(self) -> float:
-        """Z-axis position for service operations"""
-        return self._park_z
-
-    @property
-    def work_speed(self) -> float:
-        """Feed rate during cutting operations"""
-        return self._work_speed
-
-    @property
-    def plunge_speed(self) -> float:
-        """Feed rate during initial material contact"""
-        return self._plunge_speed
-
-    @property
-    def travel_speed(self) -> float:
-        """Feed rate during movements between operations"""
-        return self._travel_speed
+        super().__setattr__(name, value)
