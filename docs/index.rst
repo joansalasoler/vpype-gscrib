@@ -10,7 +10,10 @@ for CNC machines, plotters, and other G-code compatible devices.
    :caption: Contents
 
    Home <self>
+   User Guide <user-guide>
+   Development Guide <dev-guide>
    Command Line Interface <cli>
+   Example Configuration <config>
    G-Code Mappings Table <gcode-table>
    Module Index <modindex>
    General Index <genindex>

@@ -13,10 +13,6 @@ using `mecode`'s direct write mode.
 mostly untested. Some features may be missing or not work as expected.
 Use with caution in production environments.
 
-⚠️ **Safety Warning**: Always test the generated G-code in a simulator
-before running it. Incorrect G-code can damage your machine, tools, or
-workpiece.
-
 ## Features
 
 - Convert vector paths to optimized G-code
@@ -26,6 +22,11 @@ workpiece.
 - Coolant control (mist/flood)
 - Customizable units (metric/imperial)
 - Per-layer configuration support via TOML files
+
+## Documentation
+
+Documentation for the latest version of the project can be found at
+[Read the Docs](https://vpype-mecode.readthedocs.io/en/latest/).
 
 ## Examples
 
@@ -52,61 +53,7 @@ vpype \
   mecode --render_config=config.toml --outfile=output.gcode
 ```
 
-## Configuration file
-
-You can specify per-layer settings using a TOML configuration file.
-Here's an example configuration for a pen plotter:
-
-```ini
-# Document-level configuration. These settings control the machine's
-# behavior between layer operations. All layers inherit these values
-# unless specifically overridden in their [layer-X] section.
-
-[document]
-length_units = "mm"          # Using metric units
-tool_mode = "marker"         # Using marker mode for pen plotting
-rack_mode = "manual"         # Manual tool changes for different pens
-travel_speed = "3000mm"      # Speed for non-drawing moves
-safe_z = "1cm"               # Safe height for non-drawing moves
-plunge_z = "1mm"             # Height at which to begin plunging
-
-# Settings for first layer (black fine liner)
-
-[layer-0]
-work_speed = "1200mm"        # Faster speed for simple lines
-plunge_speed = "500mm"       # Gentle pen lowering speed
-
-# Settings for second layer (red marker)
-
-[layer-1]
-work_speed = "800mm"         # Slower for better ink flow
-plunge_speed = "400mm"       # Gentler pen lowering for softer tip
-
-# Settings for third layer (thick marker)
-
-[layer-2]
-work_speed = "600mm"         # Even slower for thick lines
-plunge_speed = "50mm"        # Very gentle pen lowering
-```
-
-See the [config-template.toml](config-template.toml) file for a
-complete configuration example.
-
-## Documentation
-
-The latest documentation of the project can be found at
-[Read the Docs](https://vpype-mecode.readthedocs.io/en/latest/).
-
-The command line documentation is also available using the `--help` flag:
-
-```bash
-$ vpype mecode --help
-```
-
 ## Development setup
-
-See the [installation instructions](https://vpype.readthedocs.io/en/latest/install.html)
-for information on how to install `vpype`.
 
 Here is how to clone the project for development:
 
