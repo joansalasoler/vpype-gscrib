@@ -245,6 +245,7 @@ Currently, the system supports the following component types:
 * **Head** — Controls machine movements (travel, plunge, retract).
 * **Coolant** — Manages the coolant system (flood, mist).
 * **Rack** — Manages tool changes and rack operations.
+* **Bed** — Manages the machine bed or table.
 
 The renderer coordinates these components to process the document
 hierarchy and create the G-code program. They are instantiated from
@@ -260,9 +261,9 @@ Here's how to add a new component.
 **Implement the Component:**
 
 Define a new component by extending the appropriate abstract base class
-(`BaseTool`, `BaseHead`, `BaseCoolant`, `BaseRack`). Each method receives
-a `GContext`, which holds the configuration for the specific document
-layer or the entire document being rendered.
+(`BaseTool`, `BaseHead`, `BaseCoolant`, `BaseRack`, `BaseBed`). Each
+method receives a `GContext`, which holds the configuration for the
+specific document layer or the entire document being rendered.
 
 ```python
 class CustomHead(BaseHead):

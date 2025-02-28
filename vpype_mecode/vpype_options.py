@@ -100,6 +100,13 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name='bed_mode',
+        type=BedMode,
+        help="""
+        Selects the type of bed used for operation.
+        """,
+    ),
+    ConfigOption(
         option_name='work_speed',
         type=LengthType(),
         help="""

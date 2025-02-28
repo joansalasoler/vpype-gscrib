@@ -20,6 +20,7 @@ Use with caution in production environments.
 - Configurable machine parameters (speeds, power levels, spindle settings)
 - Automatic and manual tool change support
 - Coolant control (mist/flood)
+- Bed control (heat/cool down)
 - Customizable units (metric/imperial)
 - Per-layer configuration support via TOML files
 

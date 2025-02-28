@@ -51,6 +51,7 @@ class RenderConfig(BaseModel, BaseConfig):
     rack_mode: RackMode = Field(RackMode.MANUAL)
     spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
     tool_mode: ToolMode = Field(ToolMode.MARKER)
+    bed_mode: BedMode = Field(BedMode.OFF)
 
     # Tool parameters
     power_level: int = Field(50.0, ge=0)

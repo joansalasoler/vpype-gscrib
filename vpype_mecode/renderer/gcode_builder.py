@@ -35,6 +35,7 @@ class GBuilder(GMatrix):
     - Unit and plane selection
     - Tool operations and changes
     - Coolant control
+    - Bed control
     - Program execution control
     - Movement commands
     """

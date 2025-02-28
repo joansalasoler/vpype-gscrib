@@ -34,6 +34,7 @@ from .heads import HeadFactory
 from .tools import ToolFactory
 from .coolants import CoolantFactory
 from .racks import RackFactory
+from .beds import BedFactory
 
 
 class GRenderer(DocumentRenderer):
@@ -46,6 +47,7 @@ class GRenderer(DocumentRenderer):
     - Tool: Manages tool operations (tool activation/deactivation)
     - Coolant: Handles coolant system control (turn on/off)
     - Rack: Manages tool changes and rack operations
+    - Bed: Handles bed operations (heat/cool down)
 
     Each component is created through its respective factory based on
     the configuration modes, allowing different strategies to be swapped
@@ -68,10 +70,11 @@ class GRenderer(DocumentRenderer):
         _g (GBuilder): G-code command builder instance
         _config (RenderConfig): Rendering configuration parameters
         _context (GContext): Current rendering context
-        _head (Head): Machine head controller
-        _tool (Tool): Tool controller (laser, spindle, etc.)
-        _coolant (Coolant): Coolant system controller
-        _rack (Rack): Tool rack controller
+        _head (BaseHead): Machine head controller
+        _tool (BaseTool): Tool controller (laser, spindle, etc.)
+        _coolant (BaseCoolant): Coolant system controller
+        _rack (BaseRack): Tool rack controller
+        _bed (BaseBed): Bed controller
     """
 
     _HEAD_SEPARATOR = '=' * 60
@@ -100,6 +103,7 @@ class GRenderer(DocumentRenderer):
         self._tool = ToolFactory.create(context.tool_mode)
         self._coolant = CoolantFactory.create(context.coolant_mode)
         self._rack = RackFactory.create(context.rack_mode)
+        self._bed = BedFactory.create(context.bed_mode)
         self._ctx_queue.rotate(-1)
 
         return context
@@ -143,6 +147,8 @@ class GRenderer(DocumentRenderer):
         self._g.reflect(0)
         self._g.translate(0, height)
         self._g.scale(length_units.scale_factor)
+
+        self._bed.turn_on(self._context)
 
     def begin_layer(self, layer: LineCollection):
         """Each layer is composed of one or more paths. This method is
@@ -260,6 +266,7 @@ class GRenderer(DocumentRenderer):
         """
 
         self._context = self._document_context
+        self._bed.turn_off(self._context)
         self._head.park_for_service(self._context)
         self._g.halt_program(HaltMode.END_WITH_RESET)
         self._g.teardown()

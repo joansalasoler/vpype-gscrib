@@ -34,6 +34,7 @@ API Reference
    vpype_mecode.excepts
    vpype_mecode.processor
    vpype_mecode.renderer
+   vpype_mecode.renderer.beds
    vpype_mecode.renderer.coolants
    vpype_mecode.renderer.heads
    vpype_mecode.renderer.racks
