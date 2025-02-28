@@ -105,5 +105,6 @@ class BasicHead(BaseHead):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.rapid(z=ctx.park_z)
-        ctx.g.rapid_absolute(x=0, y=0)
+        ctx.g.rapid(z=ctx.safe_z)
+        park_z = ctx.scale_length(ctx.park_z)
+        ctx.g.rapid_absolute(x=0, y=0, z=park_z)
