@@ -244,6 +244,7 @@ Currently, the system supports the following component types:
 * **Tool** — Handles tool operations (activation, deactivation).
 * **Head** — Controls machine movements (travel, plunge, retract).
 * **Coolant** — Manages the coolant system (flood, mist).
+* **Fan** — Manages the machine fans (on, off ).
 * **Rack** — Manages tool changes and rack operations.
 * **Bed** — Manages the machine bed or table.
 
@@ -261,8 +262,8 @@ Here's how to add a new component.
 **Implement the Component:**
 
 Define a new component by extending the appropriate abstract base class
-(`BaseTool`, `BaseHead`, `BaseCoolant`, `BaseRack`, `BaseBed`). Each
-method receives a `GContext`, which holds the configuration for the
+(`BaseTool`, `BaseHead`, `BaseCoolant`, `BaseFan`, `BaseRack`, `BaseBed`).
+Each method receives a `GContext`, which holds the configuration for the
 specific document layer or the entire document being rendered.
 
 ```python

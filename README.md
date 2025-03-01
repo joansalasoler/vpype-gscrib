@@ -21,6 +21,7 @@ Use with caution in production environments.
 - Automatic and manual tool change support
 - Coolant control (mist/flood)
 - Bed control (heat/cool down)
+- Fan speed control (on/off)
 - Customizable units (metric/imperial)
 - Per-layer configuration support via TOML files
 

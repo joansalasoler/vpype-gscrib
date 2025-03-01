@@ -30,6 +30,7 @@ from vpype_mecode.enums import *
 
 from .gcode_builder import GBuilder
 from .gcode_context import GContext
+from .fans import FanFactory
 from .heads import HeadFactory
 from .tools import ToolFactory
 from .coolants import CoolantFactory
@@ -75,6 +76,7 @@ class GRenderer(DocumentRenderer):
         _coolant (BaseCoolant): Coolant system controller
         _rack (BaseRack): Tool rack controller
         _bed (BaseBed): Bed controller
+        _fan (BaseFan): Fan controller
     """
 
     _HEAD_SEPARATOR = '=' * 60
@@ -104,6 +106,7 @@ class GRenderer(DocumentRenderer):
         self._coolant = CoolantFactory.create(context.coolant_mode)
         self._rack = RackFactory.create(context.rack_mode)
         self._bed = BedFactory.create(context.bed_mode)
+        self._fan = FanFactory.create(context.fan_mode)
         self._ctx_queue.rotate(-1)
 
         return context
@@ -178,6 +181,7 @@ class GRenderer(DocumentRenderer):
         self._head.travel_to(self._context, x, y)
         self._tool.activate(self._context)
         self._coolant.turn_on(self._context)
+        self._fan.turn_on(self._context)
 
     def begin_path(self, path: array):
         """Each path is composed of one or more segments. This method is
@@ -248,6 +252,7 @@ class GRenderer(DocumentRenderer):
 
         self._head.safe_retract(self._context)
         self._tool.deactivate(self._context)
+        self._fan.turn_off(self._context)
         self._coolant.turn_off(self._context)
         self._switch_context()
 

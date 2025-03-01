@@ -36,6 +36,7 @@ API Reference
    vpype_mecode.renderer
    vpype_mecode.renderer.beds
    vpype_mecode.renderer.coolants
+   vpype_mecode.renderer.fans
    vpype_mecode.renderer.heads
    vpype_mecode.renderer.racks
    vpype_mecode.renderer.tools

@@ -140,6 +140,22 @@ class GBuilder(GMatrix):
         self.write(f'S{power}')
 
     @typechecked
+    def set_fan_speed(self, speed: int) -> None:
+        """Set the speed of the main fan.
+
+        Args:
+            speed (int): Fan speed (must be >= 0 and <= 255)
+
+        Raises:
+            ValueError: If speed is not in the valid range
+        """
+
+        self._validate_fan_speed(speed)
+        mode = FanMode.ON if speed > 0 else FanMode.OFF
+        statement = self._get_gcode_from_table(mode, f'S{speed}')
+        self.write(statement)
+
+    @typechecked
     def sleep(self, units: TimeUnits, seconds: float) -> None:
         """Delays program execution for the specified time.
 
@@ -346,6 +362,13 @@ class GBuilder(GMatrix):
 
         if not isinstance(power, int | float) or power < 0.0:
             message = f'Invalid tool power `{power}`.'
+            raise ValueError(message)
+
+    def _validate_fan_speed(self, speed: int) -> None:
+        """Validate fan speed is within acceptable range."""
+
+        if not isinstance(speed, int) or speed < 0 or speed > 255:
+            message = f'Invalid fan speed `{speed}`.'
             raise ValueError(message)
 
     def _validate_sleep_time(self, seconds: float) -> None:

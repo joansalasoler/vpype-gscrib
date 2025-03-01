@@ -14,6 +14,7 @@ from .base_enum import BaseEnum
 from .coolant_mode import CoolantMode
 from .direct_write_mode import DirectWriteMode
 from .distance_mode import DistanceMode
+from .fan_mode import FanMode
 from .feed_mode import FeedMode
 from .halt_mode import HaltMode
 from .head_mode import HeadMode
@@ -30,6 +31,7 @@ __all__ = [
     'CoolantMode',
     'DirectWriteMode',
     'DistanceMode',
+    'FanMode',
     'FeedMode',
     'HaltMode',
     'HeadMode',

@@ -52,6 +52,7 @@ class RenderConfig(BaseModel, BaseConfig):
     spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
     tool_mode: ToolMode = Field(ToolMode.MARKER)
     bed_mode: BedMode = Field(BedMode.OFF)
+    fan_mode: FanMode = Field(FanMode.OFF)
 
     # Tool parameters
     power_level: int = Field(50.0, ge=0)
@@ -63,6 +64,9 @@ class RenderConfig(BaseModel, BaseConfig):
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)
     plunge_speed: float = Field(vp.convert_length('100mm'), ge=0)
     travel_speed: float = Field(vp.convert_length('1000mm'), ge=0)
+
+    # Fan parameters
+    fan_speed: int = Field(255, min=0, max=255)
 
     # Predefined Z-axis positions
     work_z: float = Field(vp.convert_length('0mm'))

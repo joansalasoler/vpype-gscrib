@@ -100,6 +100,13 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name='fan_mode',
+        type=FanMode,
+        help="""
+        Selects the type of fan used during operation.
+        """,
+    ),
+    ConfigOption(
         option_name='bed_mode',
         type=BedMode,
         help="""
@@ -131,6 +138,15 @@ command_options = (
         The speed at which the tool moves between operations, without
         interacting with the material or work surface, measured in units
         per minute.
+        """,
+    ),
+    ConfigOption(
+        option_name='fan_speed',
+        type=IntRangeType(min=0, max=255),
+        help="""
+        The speed at which the fan rotates during operations. A value
+        of 0 turns off the fan, while a value of 255 sets it to its
+        maximum speed.
         """,
     ),
     ConfigOption(
