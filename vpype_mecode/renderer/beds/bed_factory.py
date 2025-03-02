@@ -18,6 +18,7 @@
 
 from .base_bed import BaseBed
 from .off_bed import OffBed
+from .heated_bed import HeatedBed
 from vpype_mecode.enums import BedMode
 
 
@@ -44,6 +45,7 @@ class BedFactory:
 
         providers = {
             BedMode.OFF: OffBed,
+            BedMode.HEATED: HeatedBed,
         }
 
         return providers[mode]()

@@ -68,6 +68,9 @@ class RenderConfig(BaseModel, BaseConfig):
     # Fan parameters
     fan_speed: int = Field(255, min=0, max=255)
 
+    # Bed parameters
+    bed_temperature: int = Field(60)
+
     # Predefined Z-axis positions
     work_z: float = Field(vp.convert_length('0mm'))
     plunge_z: float = Field(vp.convert_length('1mm'))

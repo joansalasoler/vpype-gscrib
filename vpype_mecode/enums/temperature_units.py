@@ -19,12 +19,8 @@
 from .base_enum import BaseEnum
 
 
-class HaltMode(BaseEnum):
-    """Program termination and pause modes."""
+class TemperatureUnits(BaseEnum):
+    """Units of temperature."""
 
-    PAUSE = 'pause'
-    OPTIONAL_PAUSE = 'optional_pause'
-    END_WITHOUT_RESET = 'end_without_reset'
-    END_WITH_RESET = 'end_with_reset'
-    PALLET_EXCHANGE_AND_END = 'pallet_exchange_and_end'
-    WAIT_FOR_BED_TEMP = 'wait_for_bed_temp'
+    CELSIUS = 'celsius'
+    KELVIN = 'kelvin'

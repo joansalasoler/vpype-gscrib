@@ -16,39 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod
+from .base_bed import BaseBed
+from vpype_mecode.enums import HaltMode, TemperatureUnits
 from vpype_mecode.renderer.gcode_context import GContext
 
 
-class BaseBed(ABC):
-    """Base class for controlling machine bed/table.
+class HeatedBed(BaseBed):
+    """Heated bed implementation.
 
-    This abstract base class defines the interface for controlling
-    bed-related functionalities such as heating, cooling, material
-    holding, and leveling. It provides methods to prepare the bed
-    and manage its state during operation.
+    This class handles the functionality for heated beds. It sets the
+    bed target temperature when the bed is turned on and waits for the
+    target to be reached. Sets the temperature to zero when turned off.
     """
 
-    @abstractmethod
     def turn_on(self, ctx: GContext):
-        """Activate the bed system.
+        units = TemperatureUnits.CELSIUS
+        halt_mode = HaltMode.WAIT_FOR_BED_TEMP
+        ctx.g.set_bed_temperature(units, ctx.bed_temperature)
+        ctx.g.halt_program(halt_mode, S=ctx.bed_temperature)
 
-        Generates G-code commands to prepare the bed.
-
-        Args:
-            ctx (GContext): The G-code generation context
-        """
-
-        pass
-
-    @abstractmethod
     def turn_off(self, ctx: GContext):
-        """Deactivate the bed system.
-
-        Generates G-code commands to stop the bed.
-
-        Args:
-            ctx (GContext): The G-code generation context
-        """
-
-        pass
+        units = TemperatureUnits.CELSIUS
+        ctx.g.set_bed_temperature(units, 0)

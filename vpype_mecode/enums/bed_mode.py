@@ -23,4 +23,5 @@ class BedMode(BaseEnum):
     """Bed modes for the machine."""
 
     OFF = 'off'
+    HEATED = 'heated'
 

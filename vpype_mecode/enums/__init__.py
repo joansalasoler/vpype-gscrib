@@ -22,6 +22,7 @@ from .length_units import LengthUnits
 from .plane import Plane
 from .rack_mode import RackMode
 from .spin_mode import SpinMode
+from .temperature_units import TemperatureUnits
 from .bed_mode import BedMode
 from .time_units import TimeUnits
 from .tool_mode import ToolMode
@@ -39,6 +40,7 @@ __all__ = [
     'Plane',
     'RackMode',
     'SpinMode',
+    'TemperatureUnits',
     'BedMode',
     'TimeUnits',
     'ToolMode',

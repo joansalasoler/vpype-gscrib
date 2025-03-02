@@ -123,6 +123,18 @@ gcode_table = GCodeTable((
     ),
 
     # ------------------------------------------------------------------
+    # Temperature Control
+    # ------------------------------------------------------------------
+
+    GCodeEntry(TemperatureUnits.CELSIUS,
+        'M140', 'Set bed temperature, celsius'
+    ),
+
+    GCodeEntry(TemperatureUnits.KELVIN,
+        'M140', 'Set bed temperature, kelvin'
+    ),
+
+    # ------------------------------------------------------------------
     # Plane Selection
     # ------------------------------------------------------------------
 
@@ -172,6 +184,10 @@ gcode_table = GCodeTable((
 
     GCodeEntry(HaltMode.PALLET_EXCHANGE_AND_END,
         'M60', 'Exchange pallet and end program'
+    ),
+
+    GCodeEntry(HaltMode.WAIT_FOR_BED_TEMP,
+        'M190', 'Wait for bed to reach temp, celsius'
     ),
 
 ))

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from vpype_cli import TextType, IntRangeType, FloatRangeType
-from vpype_cli import LengthType, PathType
+from vpype_cli import IntegerType, LengthType, PathType
 
 from vpype_mecode.config import ConfigOption
 from vpype_mecode.enums import *
@@ -147,6 +147,14 @@ command_options = (
         The speed at which the fan rotates during operations. A value
         of 0 turns off the fan, while a value of 255 sets it to its
         maximum speed.
+        """,
+    ),
+    ConfigOption(
+        option_name='bed_temperature',
+        type=IntegerType(),
+        help="""
+        The temperature at which the heated bed is set during operation,
+        measured in celcius degrees.
         """,
     ),
     ConfigOption(

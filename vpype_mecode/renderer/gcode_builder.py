@@ -156,6 +156,18 @@ class GBuilder(GMatrix):
         self.write(statement)
 
     @typechecked
+    def set_bed_temperature(self, units: TemperatureUnits, temp: int) -> None:
+        """Set the temperature of the bed and return immediately.
+
+        Args:
+            units (TemperatureUnits): Temperature units
+            temp (float): Target temperature
+        """
+
+        statement = self._get_gcode_from_table(units, f'S{temp}')
+        self.write(statement)
+
+    @typechecked
     def sleep(self, units: TimeUnits, seconds: float) -> None:
         """Delays program execution for the specified time.
 
@@ -270,11 +282,12 @@ class GBuilder(GMatrix):
         self.write(statement, resp_needed=True)
 
     @typechecked
-    def halt_program(self, mode: HaltMode) -> None:
+    def halt_program(self, mode: HaltMode, **kwargs) -> None:
         """Pause or stop program execution.
 
         Args:
             mode (HaltMode): Type of halt to perform
+            **kwargs: Arbitrary command parameters
 
         Raises:
             ToolStateError: If attempting to halt with tool active
@@ -284,7 +297,8 @@ class GBuilder(GMatrix):
         self._ensure_tool_is_inactive('Halt request with tool on.')
         self._ensure_coolant_is_inactive('Halt request with coolant on.')
 
-        statement = self._get_gcode_from_table(mode)
+        params = self._get_params_string_from_dict(kwargs)
+        statement = self._get_gcode_from_table(mode, params)
         self.write(statement, resp_needed=True)
 
     @typechecked
@@ -377,6 +391,9 @@ class GBuilder(GMatrix):
         if not isinstance(seconds, int | float) or seconds < 0.001:
             message = f'Invalid sleep time `{seconds}`.'
             raise ValueError(message)
+
+    def _get_params_string_from_dict(self, params: dict) -> str:
+        return ' '.join(f'{k}{v}' for k, v in params.items())
 
     def _get_gcode_from_table(self, value: BaseEnum, params: str = None) -> str:
         """Generate a G-code statement from the codes table."""
