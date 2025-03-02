@@ -20,6 +20,8 @@ head_mode = "basic"         # basic
 tool_mode = "marker"        # beam, blade, extruder, marker, spindle
 rack_mode = "manual"        # off, manual, automatic
 coolant_mode = "off"        # off, mist, flood
+fan_mode = "off"            # off, on
+bed_mode = "off"            # off, heated
 
 # Tool configuration
 tool_number = 1             # Tool identifier number
@@ -39,6 +41,10 @@ plunge_z = "1.0mm"          # Z height for initial material contact
 safe_z = "10.0mm"           # Z height for movements between operations
 park_z = "50.0mm"           # Z height when parked
 
+# Other parameters
+fan_speed = 255             # min = 0, max = 255
+bed_temperature = 60        # Celsius degrees
+
 # =====================================================================
 # Layer-Specific Settings
 #
@@ -53,6 +59,8 @@ park_z = "50.0mm"           # Z height when parked
 # tool_mode = "marker"
 # rack_mode = "manual"
 # coolant_mode = "off"
+# fan_mode = "off"
+# bed_mode = "off"
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
@@ -65,6 +73,8 @@ park_z = "50.0mm"           # Z height when parked
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# fan_speed = 255
+# bed_temperature = 60
 
 [layer-1]
 
@@ -72,6 +82,8 @@ park_z = "50.0mm"           # Z height when parked
 # tool_mode = "marker"
 # rack_mode = "manual"
 # coolant_mode = "off"
+# fan_mode = "off"
+# bed_mode = "off"
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
@@ -84,6 +96,8 @@ park_z = "50.0mm"           # Z height when parked
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# fan_speed = 255
+# bed_temperature = 60
 
 [layer-2]
 
@@ -91,6 +105,8 @@ park_z = "50.0mm"           # Z height when parked
 # tool_mode = "marker"
 # rack_mode = "manual"
 # coolant_mode = "off"
+# fan_mode = "off"
+# bed_mode = "off"
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
@@ -103,4 +119,6 @@ park_z = "50.0mm"           # Z height when parked
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# fan_speed = 255
+# bed_temperature = 60
 ```
