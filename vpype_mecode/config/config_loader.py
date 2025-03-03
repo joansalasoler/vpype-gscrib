@@ -17,14 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import click
-import vpype
+from typing import List
 
 from click import Command
-from typing import List
 from vpype import ConfigManager, Document
 from vpype_cli import State
 
-from vpype_mecode.config import *
+from .render_config import RenderConfig
 
 
 class ConfigLoader:
@@ -95,7 +94,7 @@ class ConfigLoader:
         document_config = self._to_config_model(document_values)
         configs.append(document_config)
 
-        for index in range(len(document.layers)):
+        for index in reversed(range(len(document.layers))):
             layer_values = manager.config.get(f'layer-{index}', {})
             layer_values = {**document_values, **layer_values}
             layer_config = self._to_config_model(layer_values)
