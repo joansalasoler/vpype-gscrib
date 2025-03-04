@@ -302,24 +302,6 @@ class G(object):
         cmd = 'G0 ' if rapid else 'G1 '
         self.write(cmd + "A{:.{digits}f}".format(a, digits=self.output_digits))
 
-    def insert_machine_stop(self, comment=None):
-        '''Insert a machine stop (M00) command with an optional comment
-        '''
-        if comment:
-            self.write("M00 {}".format(self._commentify(comment)))
-        else:
-            self.write("M00")
-
-    def insert_optional_stop(self, comment=None):
-        '''Insert a optional stop (M01) command with an optional comment
-        '''
-        if comment:
-            self.write("M01 {}".format(self._commentify(comment)))
-        else:
-            self.write("M01")
-
-
-
 
     # GCode Aliases  ########################################################
 
