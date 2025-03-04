@@ -38,16 +38,12 @@ class DocumentRenderer(ABC):
         document layers are processed.
         """
 
-        pass
-
     @abstractmethod
     def end_document(self, document: Document):
         """
         This method is invoked once per document after all layers on
         the document have been processed.
         """
-
-        pass
 
     @abstractmethod
     def begin_layer(self, layer: LineCollection):
@@ -56,16 +52,12 @@ class DocumentRenderer(ABC):
         invoked once per layer before any paths are processed.
         """
 
-        pass
-
     @abstractmethod
     def end_layer(self, layer: LineCollection):
         """
         This method is invoked once per layer after all paths on the
         layer have been processed.
         """
-
-        pass
 
     @abstractmethod
     def begin_path(self, path: array):
@@ -74,16 +66,12 @@ class DocumentRenderer(ABC):
         invoked once per path before any of its segments are processed.
         """
 
-        pass
-
     @abstractmethod
     def end_path(self, path: array):
         """
         This method is invoked once per path after all segments of the
         path have been processed.
         """
-
-        pass
 
     @abstractmethod
     def trace_segment(self, path: array, x: float, y: float):
@@ -92,12 +80,8 @@ class DocumentRenderer(ABC):
         the segment's x and y coordinates.
         """
 
-        pass
-
     @abstractmethod
     def process_error(self, e: Exception):
         """
         Invoked if an error occurs during the processing of a document.
         """
-
-        pass

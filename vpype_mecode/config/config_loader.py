@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
 from typing import List
 
+import click
 from click import Command
 from vpype import ConfigManager, Document
 from vpype_cli import State

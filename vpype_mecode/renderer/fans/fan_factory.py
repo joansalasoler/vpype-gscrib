@@ -16,17 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import FanMode
+
 from .base_fan import BaseFan
 from .on_fan import OnFan
 from .off_fan import OffFan
-from vpype_mecode.enums import FanMode
 
 
 class FanFactory:
     """A factory for creating fan managers."""
 
     @classmethod
-    def create(self, mode: FanMode) -> BaseFan:
+    def create(cls, mode: FanMode) -> BaseFan:
         """Create a new fan manger instance.
 
         Args:

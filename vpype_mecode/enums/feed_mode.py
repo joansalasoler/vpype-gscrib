@@ -25,4 +25,3 @@ class FeedMode(BaseEnum):
     MINUTE = 'min'
     REVOLUTION = 'rev'
     INVERSE_TIME = '1/time'
-

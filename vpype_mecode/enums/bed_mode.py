@@ -24,4 +24,3 @@ class BedMode(BaseEnum):
 
     OFF = 'off'
     HEATED = 'heated'
-

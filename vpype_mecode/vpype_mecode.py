@@ -16,26 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
-import vpype
-import vpype_cli
-
-from typing import List
-from vpype import Document
-from pydantic import ValidationError
-
-from vpype_mecode.vpype_options import command_options
-from vpype_mecode.processor import DocumentProcessor
-from vpype_mecode.renderer import GBuilder, GRenderer
-from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
-
-
 """G-Code generator plugin for Vpype.
 
 This module provides a Vpype plugin that generates G-Code for CNC
 machines using the `mecode` library. It supports configuration through
 command line parameters and TOML configuration files.
 """
+
+from typing import List
+
+import click
+import vpype
+import vpype_cli
+
+from pydantic import ValidationError
+from vpype import Document
+
+from vpype_mecode.vpype_options import command_options
+from vpype_mecode.processor import DocumentProcessor
+from vpype_mecode.renderer import GBuilder, GRenderer
+from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
 
 
 @vpype_cli.cli.command(

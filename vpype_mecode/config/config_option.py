@@ -17,14 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import inspect
+from enum import Enum
+from typing import Any
+
 from click import Context, Option, Parameter, BadParameter
 from click.core import ParameterSource
 from vpype_cli import ChoiceType, LengthType
-from typing import Any
-from enum import Enum
 
 from vpype_mecode.enums import LengthUnits
-from . import RenderConfig, MecodeConfig
+from .mecode_config import MecodeConfig
+from .render_config import RenderConfig
 
 
 class ConfigOption(Option):
@@ -114,9 +116,9 @@ class ConfigOption(Option):
         if source != ParameterSource.DEFAULT:
             str_value = str(value)
 
-            if len(str_value) and not str_value[-1].isalpha():
+            if len(str_value) > 0 and not str_value[-1].isalpha():
                 raise BadParameter(
-                    f'Units are required (e.g., 10mm, 2in).')
+                    'Units are required (e.g., 10mm, 2in).')
 
         return value
 

@@ -16,13 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import ToolMode
+
 from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
 from .extruder_tool import ExtruderTool
 from .marker_tool import MarkerTool
 from .spindle_tool import SpindleTool
-from vpype_mecode.enums import ToolMode
 
 
 class ToolFactory:
@@ -35,7 +36,7 @@ class ToolFactory:
     """
 
     @classmethod
-    def create(self, mode: ToolMode) -> BaseTool:
+    def create(cls, mode: ToolMode) -> BaseTool:
         """Create a new tool manger instance.
 
         Args:

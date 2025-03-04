@@ -24,4 +24,3 @@ class DistanceMode(BaseEnum):
 
     ABSOLUTE = 'absolute'
     RELATIVE = 'relative'
-

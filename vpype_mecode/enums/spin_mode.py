@@ -29,6 +29,8 @@ class SpinMode(BaseEnum):
     def __invert__(self):
         if self == SpinMode.CLOCKWISE:
             return SpinMode.COUNTER
-        elif self == SpinMode.COUNTER:
+
+        if self == SpinMode.COUNTER:
             return SpinMode.CLOCKWISE
+
         return self

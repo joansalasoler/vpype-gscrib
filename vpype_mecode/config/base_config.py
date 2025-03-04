@@ -39,7 +39,9 @@ class BaseConfig(ABC):
             units (LengthUnits): The work units to use for scaling.
         """
 
-        for field_name, px_units in self._fields_with_px_units.items():
+        fields_with_px_units = self._get_fields_with_px_units()
+
+        for field_name in fields_with_px_units.keys():
             value = units.scale(getattr(self, field_name))
             setattr(self, field_name, value)
 
@@ -67,9 +69,10 @@ class BaseConfig(ABC):
     def _format_value(self, field_name: str, value: Any, units: LengthUnits) -> str:
         """Format a single value as a human-readable string."""
 
-        if hasattr(self, '_fields_with_px_units') \
-           and field_name in self._fields_with_px_units:
-            px_units = self._fields_with_px_units[field_name]
+        fields_with_px_units = self._get_fields_with_px_units()
+
+        if field_name in fields_with_px_units:
+            px_units = fields_with_px_units[field_name]
             work_units = px_units.replace('px', units.value)
             value = round(units.scale(value), 6)
             return f'{value} {work_units}'
@@ -81,3 +84,11 @@ class BaseConfig(ABC):
             return value.value
 
         return str(value)
+
+    def _get_fields_with_px_units(self) -> dict:
+        """Get a dictionary of fields with pixel units."""
+
+        if hasattr(self, '_fields_with_px_units'):
+            return getattr(self, '_fields_with_px_units')
+
+        return {}

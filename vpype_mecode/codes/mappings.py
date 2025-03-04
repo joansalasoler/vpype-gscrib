@@ -16,13 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import *
-from .gcode_table import GCodeEntry, GCodeTable
-
-
 """
 Built-in enums to G-Code mappings.
 """
+
+from vpype_mecode.enums import *
+from .gcode_table import GCodeEntry, GCodeTable
+
 
 gcode_table = GCodeTable((
 

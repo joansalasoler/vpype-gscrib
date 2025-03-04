@@ -19,4 +19,11 @@
 
 class GCodeError(Exception):
     """Base exception for G-code related errors."""
-    pass
+
+
+class CoolantStateError(GCodeError):
+    """Exception raised for inconsistent coolant state errors."""
+
+
+class ToolStateError(GCodeError):
+    """Exception raised for inconsistent tool state errors."""

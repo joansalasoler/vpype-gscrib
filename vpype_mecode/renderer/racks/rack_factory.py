@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import RackMode
+
 from .automatic_rack import AutomaticRack
 from .base_rack import BaseRack
 from .manual_rack import ManualRack
 from .off_rack import OffRack
-from vpype_mecode.enums import RackMode
 
 
 class RackFactory:
@@ -34,7 +35,7 @@ class RackFactory:
     """
 
     @classmethod
-    def create(self, mode: RackMode) -> BaseRack:
+    def create(cls, mode: RackMode) -> BaseRack:
         """Create a new tool rack manger instance.
 
         Args:

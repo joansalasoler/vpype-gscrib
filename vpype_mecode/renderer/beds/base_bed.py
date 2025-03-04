@@ -39,8 +39,6 @@ class BaseBed(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def turn_off(self, ctx: GContext):
         """Deactivate the bed system.
@@ -50,5 +48,3 @@ class BaseBed(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass

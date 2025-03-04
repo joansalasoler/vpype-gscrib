@@ -16,9 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import HeadMode
+
 from .base_head import BaseHead
 from .basic_head import BasicHead
-from vpype_mecode.enums import HeadMode
 
 
 class HeadFactory:
@@ -31,7 +32,7 @@ class HeadFactory:
     """
 
     @classmethod
-    def create(self, mode: HeadMode) -> BaseHead:
+    def create(cls, mode: HeadMode) -> BaseHead:
         """Create a new head manger instance.
 
         Args:

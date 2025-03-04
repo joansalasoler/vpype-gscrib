@@ -88,4 +88,3 @@ class DocumentProcessor:
             self.renderer.trace_segment(path, x, y)
 
         self.renderer.end_path(path)
-

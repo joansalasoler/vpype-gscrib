@@ -39,5 +39,3 @@ class BaseRack(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass

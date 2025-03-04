@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .base_tool import BaseTool
 from vpype_mecode.renderer.gcode_context import GContext
+from .base_tool import BaseTool
 
 
 class SpindleTool(BaseTool):
@@ -42,30 +42,6 @@ class SpindleTool(BaseTool):
         ctx.g.tool_on(ctx.spin_mode, ctx.spindle_rpm)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
-    def power_on(self, ctx: GContext):
-        """Power on the spindle tool.
-
-        This method currently does nothing as the spindle tool does not
-        require power control.
-
-        Args:
-            ctx (GContext): The G-code generation context
-        """
-
-        pass
-
-    def power_off(self, ctx: GContext):
-        """Power off the spindle tool.
-
-        This method currently does nothing as the spindle tool does not
-        require power control.
-
-        Args:
-            ctx (GContext): The G-code generation context
-        """
-
-        pass
-
     def deactivate(self, ctx: GContext):
         """Deactivate the spindle tool.
 
@@ -78,3 +54,9 @@ class SpindleTool(BaseTool):
 
         ctx.g.tool_off()
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
+
+    def power_on(self, ctx: GContext):
+        pass
+
+    def power_off(self, ctx: GContext):
+        pass

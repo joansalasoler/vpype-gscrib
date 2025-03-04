@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .base_bed import BaseBed
 from vpype_mecode.enums import HaltMode, TemperatureUnits
 from vpype_mecode.renderer.gcode_context import GContext
+from .base_bed import BaseBed
 
 
 class HeatedBed(BaseBed):

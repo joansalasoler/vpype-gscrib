@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import CoolantMode
+
 from .base_coolant import BaseCoolant
 from .flood_coolant import FloodCoolant
 from .mist_coolant import MistCoolant
 from .off_coolant import OffCoolant
-from vpype_mecode.enums import CoolantMode
 
 
 class CoolantFactory:
@@ -33,7 +34,7 @@ class CoolantFactory:
     """
 
     @classmethod
-    def create(self, mode: CoolantMode) -> BaseCoolant:
+    def create(cls, mode: CoolantMode) -> BaseCoolant:
         """Create a new coolant manger instance.
 
         Args:

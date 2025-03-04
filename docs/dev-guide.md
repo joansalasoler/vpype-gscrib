@@ -313,7 +313,7 @@ the **component’s factory**, which maps each mode to its implementation.
 class HeadFactory:
 
     @classmethod
-    def create(self, mode: HeadMode) -> BaseHead:
+    def create(cls, mode: HeadMode) -> BaseHead:
         providers = {
             HeadMode.BASIC: BasicHead,
             HeadMode.CUSTOM: CustomHead,  # Register new component

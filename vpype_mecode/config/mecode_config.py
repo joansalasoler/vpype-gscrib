@@ -16,16 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import vpype as vp
-from dataclasses import dataclass
-from pydantic import BaseModel, Field
+import dataclasses
 from typing import Optional
 
-from .base_config import BaseConfig
+import vpype as vp
+from pydantic import BaseModel, Field
+
 from vpype_mecode.enums import DirectWriteMode
+from .base_config import BaseConfig
 
 
-@dataclass
+@dataclasses.dataclass
 class MecodeConfig(BaseModel, BaseConfig):
     """
     Configuration settings for the `mecode` library.

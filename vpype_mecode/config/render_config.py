@@ -16,15 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import dataclasses
 import vpype as vp
-from dataclasses import dataclass
 from pydantic import BaseModel, Field
 
-from .base_config import BaseConfig
 from vpype_mecode.enums import *
+from .base_config import BaseConfig
 
 
-@dataclass
+@dataclasses.dataclass
 class RenderConfig(BaseModel, BaseConfig):
     """
     Configuration settings for G-Code generation.

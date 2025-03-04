@@ -42,8 +42,6 @@ class BaseHead(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def retract(self, ctx: GContext):
         """Move the head to the normal Z travel height.
@@ -55,8 +53,6 @@ class BaseHead(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def plunge(self, ctx: GContext):
         """Lower the head to the working height.
@@ -67,8 +63,6 @@ class BaseHead(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass
 
     @abstractmethod
     def travel_to(self, ctx: GContext, x: float, y: float):
@@ -82,8 +76,6 @@ class BaseHead(ABC):
             x (float): Target X coordinate in current coordinate system.
             y (float): Target Y coordinate in current coordinate system.
         """
-
-        pass
 
     @abstractmethod
     def trace_to(self, ctx: GContext, x: float, y: float):
@@ -99,8 +91,6 @@ class BaseHead(ABC):
             y (float): Target Y coordinate in current coordinate system.
         """
 
-        pass
-
     @abstractmethod
     def park_for_service(self, ctx: GContext):
         """Move the head to the machine's service/parking position.
@@ -113,5 +103,3 @@ class BaseHead(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass

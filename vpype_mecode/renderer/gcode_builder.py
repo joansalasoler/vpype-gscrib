@@ -21,6 +21,7 @@ from typeguard import typechecked
 
 from vpype_mecode.enums import *
 from vpype_mecode.excepts import *
+from vpype_mecode.codes import gcode_table
 from vpype_mecode.enums import BaseEnum
 from ..mecode import GMatrix
 
@@ -398,12 +399,11 @@ class GBuilder(GMatrix):
     def _get_gcode_from_table(self, value: BaseEnum, params: str = None) -> str:
         """Generate a G-code statement from the codes table."""
 
-        code = value.get_instruction()
-        description = value.get_description()
-        comment = self._as_comment(description)
+        entry = gcode_table.get_entry(value)
+        comment = self._as_comment(entry.description)
         args = f' {params}' if params else ''
 
-        return f'{code}{args} {comment}'
+        return f'{entry.instruction}{args} {comment}'
 
     def _as_comment(self, text: str) -> None:
         """Format text as a G-code comment."""

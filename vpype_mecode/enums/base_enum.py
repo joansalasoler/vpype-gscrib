@@ -21,17 +21,3 @@ from enum import Enum
 
 class BaseEnum(str, Enum):
     """Base for all the G-Code enumerations."""
-
-    def get_instruction(self) -> str:
-        """Obtain the G-Code instruction code for this enum"""
-
-        from vpype_mecode.codes import gcode_table
-        entry = gcode_table.get_entry(self)
-        return entry.instruction
-
-    def get_description(self) -> str:
-        """Obtain the G-Code instruction comment for this enum"""
-
-        from vpype_mecode.codes import gcode_table
-        entry = gcode_table.get_entry(self)
-        return entry.description

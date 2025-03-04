@@ -16,13 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_cli import TextType, IntRangeType, FloatRangeType
-from vpype_cli import IntegerType, LengthType, PathType
-
-from vpype_mecode.config import ConfigOption
-from vpype_mecode.enums import *
-
-
 """
 Configuration options.
 
@@ -30,6 +23,12 @@ This module defines all available configuration options that can be used
 to customize the G-Code generation process. They are used both to parse
 the command line options and the TOML configuration files.
 """
+
+from vpype_cli import TextType, IntRangeType, FloatRangeType
+from vpype_cli import IntegerType, LengthType, PathType
+
+from vpype_mecode.config import ConfigOption
+from vpype_mecode.enums import *
 
 
 command_options = (

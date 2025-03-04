@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from .base_tool import BaseTool
 from vpype_mecode.renderer.gcode_context import GContext
+from .base_tool import BaseTool
 
 
 class MarkerTool(BaseTool):

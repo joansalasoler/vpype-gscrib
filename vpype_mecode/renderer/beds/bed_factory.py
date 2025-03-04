@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from vpype_mecode.enums import BedMode
+
 from .base_bed import BaseBed
 from .off_bed import OffBed
 from .heated_bed import HeatedBed
-from vpype_mecode.enums import BedMode
 
 
 class BedFactory:
@@ -30,7 +31,7 @@ class BedFactory:
     """
 
     @classmethod
-    def create(self, mode: BedMode) -> BaseBed:
+    def create(cls, mode: BedMode) -> BaseBed:
         """Create a new bed manger instance.
 
         Args:

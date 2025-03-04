@@ -49,8 +49,6 @@ class BaseTool(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def power_on(self, ctx: GContext):
         """Set the tool to its active working state.
@@ -62,8 +60,6 @@ class BaseTool(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass
 
     @abstractmethod
     def power_off(self, ctx: GContext):
@@ -77,8 +73,6 @@ class BaseTool(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def deactivate(self, ctx: GContext):
         """Perform tool shutdown operations.
@@ -90,5 +84,3 @@ class BaseTool(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass

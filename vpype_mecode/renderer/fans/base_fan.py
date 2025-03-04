@@ -33,8 +33,6 @@ class BaseFan(ABC):
             ctx (GContext): The G-code generation context
         """
 
-        pass
-
     @abstractmethod
     def turn_off(self, ctx: GContext):
         """Deactivate the fan system.
@@ -44,5 +42,3 @@ class BaseFan(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
-
-        pass
