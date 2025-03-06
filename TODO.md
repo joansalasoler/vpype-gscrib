@@ -21,6 +21,12 @@ ideal for Z-height control. A better approach would allow roughing and
 finishing passes with different settings. Currently, this can be done by
 duplicating layers manually, but it's not convenient.
 
+## Heightmap Tool Compensation
+
+While currently used for Z-height adjustment, future implementations
+could use height maps to modulate tool power instead. For example, to
+adjust a laser’s intensity or control extrusion rates.
+
 ## Z Height Adjustment by Pen Thickness
 
 Vpype supports setting pen thickness. This could be used to adjust
@@ -32,16 +38,12 @@ A head mode that adjusts pressure (Z height) and speed based on stroke
 type, angle, length, and randomness. Would create a more human-like
 artistic effect.
 
-## Automatic Variable Depth Engraving
-
-A head mode for milling that adjusts Z height dynamically to create an
-artisanal look.
-
 ## Custom Brush Strokes with AI
 
 Develop an AI system that learns from existing artwork or brushstroke
 patterns and can generate custom brush strokes or designs that match a
-particular style or texture.
+particular style or texture. A custom SDXL model to generate heightmaps
+could be used for this purpose.
 
 ## DIY Automatic Tool Change
 

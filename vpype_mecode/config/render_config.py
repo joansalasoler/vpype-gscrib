@@ -17,6 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import dataclasses
+from typing import Any, Optional
+
+import pydantic
 import vpype as vp
 from pydantic import BaseModel, Field
 
@@ -76,6 +79,22 @@ class RenderConfig(BaseModel, BaseConfig):
     plunge_z: float = Field(vp.convert_length('1mm'))
     safe_z: float = Field(vp.convert_length('10mm'))
     park_z: float = Field(vp.convert_length('50mm'))
+
+    # Heightmap transformation parameters
+    height_map: Optional[str] = Field(None)
+    height_map_scale: float = Field(50.0, gt=0)
+
+
+    @pydantic.model_validator(mode="after")
+    @classmethod
+    def validate_field_values(cls, model: BaseConfig) -> BaseConfig:
+        """Validate field values are consistent."""
+
+        cls.validate_ge(model, 'plunge_z', 'work_z')
+        cls.validate_ge(model, 'safe_z', 'work_z')
+        cls.validate_ge(model, 'park_z', 'safe_z')
+
+        return model
 
 
     # Vpype's default unit of measure is pixels, so we may need to

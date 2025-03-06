@@ -110,6 +110,65 @@ and
 [Cookbook](https://vpype.readthedocs.io/en/latest/cookbook.html)
 helpful for mastering this powerful tool.
 
+## Height Maps
+
+One of the most powerful features of this plugin is its ability to use
+**height maps** to dynamically adjust tool operation based on surface
+variations. Whether you're engraving on a curved object, compensating
+for an uneven machine bed, or creating intricate textures, height maps
+unlock new creative and technical possibilities.
+
+A grayscale height map image is used to define surface variations:
+
+* **Darker pixels represent lower areas**
+* **Lighter pixels represent higher areas**
+
+### What Can You Do with Height Maps
+
+* **Consistent depth**: Ensure uniform cutting, even if the material
+  isn't perfectly flat.
+* **Automatic bed leveling**: Compensate for an uneven bed without
+  tedious manual adjustments.
+* **Work on curved or irregular surfaces**: Effortlessly engrave, draw,
+  or cut on cylinders, domed objects, wavy surfaces, or even complex
+  freeform shapes like a hand-shaped sculpture.
+* **Texture mapping**: Transform grayscale patterns into detailed
+  topographical engravings, creating intricate artistic designs,
+  functional surface textures, or even depth-based shading effects.
+
+While currently used for Z-height adjustment, future implementations
+could use height maps to modulate tool power instead. For example,
+to adjust a laser's intensity or control extrusion rates.
+
+### Using Height Maps for Z Compensation
+
+Here's an example of using a height map to dynamically adjust the Z
+height during machining:
+
+```bash
+vpype \
+  read drawing.svg \
+  mecode \
+    --length_units=mm \
+    --head_mode=mapped \
+    --height_map=heightmap.png \
+    --height_map_scale=50.0 \
+    --outfile=output.gcode
+```
+
+By setting the head mode to `mapped`, the system smoothly interpolates
+between height values, ensuring precise tool movement across the surface.
+
+**Understanding the Options:**
+
+* **--head_mode=mapped**: Enables Z-axis height map compensation.
+* **--height_map**: Grayscale image defining height variations.
+* **--height_map_scale**: Scale factor for height adjustments.
+
+In this example, a scale factor of `50.0` means that a white pixel on
+the height map image raises the tool by 50 mm, while black pixels result
+in no height change.
+
 ## Advanced Configuration
 
 The plugin supports per-layer configurations via a TOML file. This lets

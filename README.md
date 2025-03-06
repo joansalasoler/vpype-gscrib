@@ -23,6 +23,7 @@ Use with caution in production environments.
 - Bed control (heat/cool down)
 - Fan speed control (on/off)
 - Customizable units (metric/imperial)
+- Use heightmaps for Z height compensation
 - Per-layer configuration support via TOML files
 
 ## Documentation

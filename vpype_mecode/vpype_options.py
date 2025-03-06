@@ -76,6 +76,14 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name='head_mode',
+        type=HeadMode,
+        help="""
+        Specifies the head type for G-code generation. The head determines
+        how axis movements are generated and coordinated.
+        """,
+    ),
+    ConfigOption(
         option_name='tool_mode',
         type=ToolMode,
         help="""
@@ -227,6 +235,30 @@ command_options = (
         help="""
         The Z-axis parking height where the tool retracts for maintenance
         operations, such as tool changes and program completion.
+        """,
+    ),
+
+    # ------------------------------------------------------------------
+    # G-Code Transform Options
+    # ------------------------------------------------------------------
+
+    ConfigOption(
+        option_name='height_map',
+        type=PathType(exists=True, dir_okay=False, resolve_path=True),
+        help="""
+        Path to a heightmap image file that defines surface variations
+        across the work area. The image is interpreted as a grid of
+        values that can be used to dynamically adjust various parameters
+        during operation, such as tool height or power levels.
+        """,
+    ),
+    ConfigOption(
+        option_name='height_map_scale',
+        type=FloatRangeType(min=0.0),
+        help="""
+        Scaling factor applied to normalized heightmap values (0.0 to 1.0)
+        to convert them into actual work units. For example, a scale of 10
+        means a heightmap value of 1.0 becomes 10 units.
         """,
     ),
 

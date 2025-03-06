@@ -40,3 +40,4 @@ API Reference
    vpype_mecode.renderer.heads
    vpype_mecode.renderer.racks
    vpype_mecode.renderer.tools
+   vpype_mecode.utils

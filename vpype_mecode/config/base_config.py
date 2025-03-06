@@ -30,6 +30,20 @@ class BaseConfig(ABC):
     Abstract base class defining the interface for configuration objects.
     """
 
+    @classmethod
+    def validate_gt(cls, model: 'BaseConfig', f1: str, f2: str):
+        """Validate a field value is greater than another."""
+
+        if getattr(model, f1) <= getattr(model, f2):
+            raise ValueError(f'`{f1}` must be greater than `{f2}`')
+
+    @classmethod
+    def validate_ge(cls, model: 'BaseConfig', f1: str, f2: str):
+        """Validate a field value is greater or equal to another."""
+
+        if getattr(model, f1) < getattr(model, f2):
+            raise ValueError(f'`{f1}` must be greater or equal to `{f2}`')
+
     def scale_lengths(self, units: LengthUnits) -> None:
         """
         Scale lengths in-place according to the specified units. Only

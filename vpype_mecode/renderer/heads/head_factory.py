@@ -20,6 +20,7 @@ from vpype_mecode.enums import HeadMode
 
 from .base_head import BaseHead
 from .basic_head import BasicHead
+from .mapped_head import MappedHead
 
 
 class HeadFactory:
@@ -47,6 +48,7 @@ class HeadFactory:
 
         providers = {
             HeadMode.BASIC: BasicHead,
+            HeadMode.MAPPED: MappedHead,
         }
 
         return providers[mode]()

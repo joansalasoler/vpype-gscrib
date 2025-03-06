@@ -15,6 +15,7 @@ from . import enums
 from . import excepts
 from . import processor
 from . import renderer
+from . import utils
 
 __version__ = '0.1.0'
 
@@ -26,4 +27,5 @@ __all__ = [
     'excepts',
     'processor',
     'renderer',
+    'utils',
 ]

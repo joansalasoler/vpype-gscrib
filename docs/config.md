@@ -16,7 +16,7 @@ length_units = "mm"         # mm (millimeters), in (inches)
 time_units = "s"            # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
-head_mode = "basic"         # basic
+head_mode = "basic"         # basic, mapped
 tool_mode = "marker"        # beam, blade, extruder, marker, spindle
 rack_mode = "manual"        # off, manual, automatic
 coolant_mode = "off"        # off, mist, flood
@@ -40,6 +40,10 @@ work_z = "0.0mm"            # Z height during operations
 plunge_z = "1.0mm"          # Z height for initial material contact
 safe_z = "10.0mm"           # Z height for movements between operations
 park_z = "50.0mm"           # Z height when parked
+
+# Heightmap configuration
+height_map =                # Heightmap file path
+height_map_scale = 50.0     # Scale of the heightmap
 
 # Other parameters
 fan_speed = 255             # min = 0, max = 255
@@ -73,6 +77,8 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# height_map =
+# height_map_scale = 50.0
 # fan_speed = 255
 # bed_temperature = 60
 
@@ -96,6 +102,8 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# height_map =
+# height_map_scale = 50.0
 # fan_speed = 255
 # bed_temperature = 60
 
@@ -119,6 +127,8 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# height_map =
+# height_map_scale = 50.0
 # fan_speed = 255
 # bed_temperature = 60
 ```

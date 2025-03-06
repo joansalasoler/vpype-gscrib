@@ -23,3 +23,4 @@ class HeadMode(BaseEnum):
     """Head modes for the machine."""
 
     BASIC = 'basic'
+    MAPPED = 'mapped'

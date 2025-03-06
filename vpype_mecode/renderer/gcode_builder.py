@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from collections import namedtuple
 from typeguard import typechecked
 
 from vpype_mecode.enums import *
@@ -24,6 +25,9 @@ from vpype_mecode.excepts import *
 from vpype_mecode.codes import gcode_table
 from vpype_mecode.enums import BaseEnum
 from ..mecode import GMatrix
+
+
+Position = namedtuple('Position', 'x y z')
 
 
 class GBuilder(GMatrix):
@@ -73,6 +77,16 @@ class GBuilder(GMatrix):
     def current_coolant_mode(self) -> CoolantMode:
         """Get the current coolant mode."""
         return self._current_coolant_mode
+
+    @property
+    def current_head_position(self):
+        """Get the current head position."""
+
+        return Position(
+            self.current_position['x'],
+            self.current_position['y'],
+            self.current_position['z']
+        )
 
     @typechecked
     def select_units(self, length_units: LengthUnits) -> None:
