@@ -1,7 +1,10 @@
 numpy~=2.2.0
 pydantic~=2.10.0
+pyserial~=3.5.0
+solidpython~=1.1.0
 typeguard~=4.4.0
 vpype~=1.14.0
+vpython~=7.6.0
 Sphinx~=8.2.0
 sphinx-click~=6.0.0
 sphinx-copybutton~=0.5.0

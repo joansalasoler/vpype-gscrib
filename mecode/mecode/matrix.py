@@ -103,7 +103,7 @@ class GMatrix(G):
         x, y, z, u = self.matrix_stack[-1] @ point
         return x, y, z
 
-    def _transform_length(self, length):
+    def _matrix_transform_length(self, length):
         """Transform a length while considering scaling."""
         transformed = self.transform(length, 0, 0)
         return math.sqrt(sum(coord ** 2 for coord in transformed))
@@ -136,7 +136,7 @@ class GMatrix(G):
         if x is None: x_prime = None
         if y is None: y_prime = None
         if z is None: z_prime = None
-        if helix_len: helix_len = self._transform_length(helix_len)
+        if helix_len: helix_len = self._matrix_transform_length(helix_len)
 
         direction = self._arc_direction_transform(direction)
 

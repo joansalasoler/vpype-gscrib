@@ -9,3 +9,15 @@ target-version = ["py38", "py39", "py310"]
 profile = "black"
 line_length = 80
 src_paths = ["vpype_mecode"]
+
+[tool.pytest.ini_options]
+norecursedirs = "vpype_mecode/mecode"
+
+[tool.pylint.master]
+init-hook = "import sys; sys.path.append('vpype_mecode')"
+
+[tool.pylint.messages_control]
+disable = ["C", "R"]
+
+[tool.pylint.reports]
+output-format = "colorized"

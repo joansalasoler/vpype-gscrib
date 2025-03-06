@@ -94,6 +94,7 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 pip install --upgrade pip  # Upgrade pip
 pip install -e .  # Install in development mode
 pip install -r requirements.txt  # Install additional dependencies
+pip install -r requirements.dev.txt  # Install development dependencies
 ```
 
 **Check the plugin is working:**

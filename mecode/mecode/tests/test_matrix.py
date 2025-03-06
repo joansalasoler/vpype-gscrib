@@ -175,7 +175,7 @@ class TestGMatrix(TestGFixture):
         G2 X0.000000 Y20.000000 R10.000000
         """)
         self.assert_output()
-        self.assert_almost_position({'x': 10, 'y': 0, 'z': 25})
+        self.assert_almost_position({'x': 10, 'y': 0, 'z': 5})
 
     def test_current_position(self):
         self.g.push_matrix()

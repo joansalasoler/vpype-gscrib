@@ -40,7 +40,7 @@ class EFDPicoPulse(object):
 
         Keyword argument:
         mode -- 1 = Timed; 2 = Purge; 3 = Continuous; 5 = read current mode """
-        
+
         return self.send(str(mode) + 'drv1')
 
     def set_dispense_count(self, count):
@@ -81,4 +81,4 @@ class EFDPicoPulse(object):
     def reset_alarm(self):
         """Reset a currently active alarm."""
         return self.send('arst')
-    
+
