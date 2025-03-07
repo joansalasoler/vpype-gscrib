@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from dataclasses import asdict, FrozenInstanceError
+from typeguard import typechecked
 from vpype_mecode.renderer.gcode_builder import GBuilder
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.enums import *
@@ -53,6 +54,7 @@ class GContext():
         'travel_speed',
     )
 
+    @typechecked
     def __init__(self, builder: GBuilder, config: RenderConfig):
         """Initialize the G-code context.
 
@@ -72,6 +74,7 @@ class GContext():
         """The G-code builder instance"""
         return self._g
 
+    @typechecked
     def scale_length(self, length: float) -> float:
         """Scale a value to the configured length units.
 

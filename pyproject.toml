@@ -11,6 +11,7 @@ line_length = 80
 src_paths = ["vpype_mecode"]
 
 [tool.pytest.ini_options]
+typeguard-packages = "vpype_mecode"
 norecursedirs = "vpype_mecode/mecode"
 
 [tool.pylint.messages_control]

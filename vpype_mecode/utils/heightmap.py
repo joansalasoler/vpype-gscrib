@@ -16,8 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from numbers import Real
+from typing import Sequence, Union
+
 import numpy
 import cv2 as cv
+
+from typeguard import typechecked
+from numpy.typing import ArrayLike
 from numpy import float32, uint16, ndarray
 from scipy.interpolate import BivariateSpline, RectBivariateSpline
 from skimage import draw
@@ -45,6 +51,7 @@ class HeightMap:
         >>> height = height_map.get_height_at(100, 100)
     """
 
+    @typechecked
     def __init__(self, image_data: ndarray) -> None:
         self._scale_z = 1.0
         self._height_map = self._to_height_map(image_data)
@@ -72,6 +79,7 @@ class HeightMap:
 
         return cls(image_data)
 
+    @typechecked
     def set_scale(self, scale_z: float) -> None:
         """Set the vertical scaling factor for height values.
 
@@ -82,7 +90,8 @@ class HeightMap:
 
         self._scale_z = scale_z
 
-    def get_height_at(self, x: float, y: float) -> float:
+    @typechecked
+    def get_height_at(self, x: Real, y: Real) -> float:
         """Get the interpolated height value at specific coordinates.
 
         Args:
@@ -95,7 +104,8 @@ class HeightMap:
 
         return self._scale_z * self._interpolator(y, x)[0, 0]
 
-    def sample_path(self, line: ndarray, tolerance: float = 0.01) -> ndarray:
+    @typechecked
+    def sample_path(self, line: Union[Sequence[float], ArrayLike], tolerance: float = 0.01) -> ndarray:
         """Sample height values along a straight line path.
 
         Generates a series of points along the line with their corresponding
@@ -103,17 +113,26 @@ class HeightMap:
         the specified tolerance.
 
         Args:
-            line (ndarray): Array containing start and end points of the
-                line to sample in the format [x1, y1, x2, y2].
+            line: Sequence containing start and end points of the line
+                to sample in the format (x1, y1, x2, y2).
             tolerance (float, optional): Minimum height difference between
                 consecutive points to be included in the output.
 
         Returns:
             ndarray: Array of points (x, y, z) along the line where
                 height changes exceed the tolerance.
+
+        Raises:
+            ValueError: If line does not contain exactly 4 elements or
+                cannot be converted to float values.
         """
 
-        points = self._interpolate_line(line)
+        line_array = numpy.asarray(line, dtype=float)
+
+        if line_array.shape != (4,):
+            raise ValueError('Line must contain exactly 4 elements')
+
+        points = self._interpolate_line(line_array)
         filtered = self._filter_points(points, tolerance)
 
         return filtered

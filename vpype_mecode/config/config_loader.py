@@ -20,6 +20,7 @@ from typing import List
 
 import click
 from click import Command
+from typeguard import typechecked
 from vpype import ConfigManager, Document
 from vpype_cli import State
 
@@ -33,6 +34,7 @@ class ConfigLoader:
     validates the configuration against the expected schema.
     """
 
+    @typechecked
     def __init__(self, command: Command):
         """Initialize a new `ConfigLoader` instance.
 
@@ -43,6 +45,7 @@ class ConfigLoader:
 
         self._command = command
 
+    @typechecked
     def validate_config(self, config: dict) -> dict:
         """Validate configuration parameters from a dictionary.
 
@@ -69,6 +72,7 @@ class ConfigLoader:
 
         return values
 
+    @typechecked
     def read_config_file(
             self, path: str, document: Document) -> List[RenderConfig]:
         """Read and process a configuration file for all document layers.

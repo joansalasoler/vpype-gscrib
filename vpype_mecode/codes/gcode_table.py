@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from typing import Tuple, Type
+from typeguard import typechecked
 from vpype_mecode.enums import BaseEnum
 
 from .gcode_entry import GCodeEntry
@@ -31,7 +32,8 @@ class GCodeTable:
     identified by a combination of its enum type and value.
     """
 
-    def __init__(self, values: Tuple[GCodeEntry]):
+    @typechecked
+    def __init__(self, values: Tuple[GCodeEntry, ...]):
         """Initialize a new `GCodeTable` with the given entries.
 
         Args:
@@ -41,6 +43,7 @@ class GCodeTable:
         self._entries = {}
         self._init_entries(values)
 
+    @typechecked
     def get_entry(self, enum: BaseEnum) -> GCodeEntry:
         """Retrieve the entry for the given enum.
 
@@ -57,6 +60,7 @@ class GCodeTable:
         key = self._key_for(enum)
         return self._entries[key]
 
+    @typechecked
     def add_entry(self, entry: GCodeEntry) -> None:
         """Add a new entry to the table.
 
@@ -80,7 +84,7 @@ class GCodeTable:
 
         return (type(enum), enum)
 
-    def _init_entries(self, values: Tuple[GCodeEntry]) -> None:
+    def _init_entries(self, values: Tuple[GCodeEntry, ...]) -> None:
         """Initialize the entries dictionary with the provided values."""
 
         for entry in values:

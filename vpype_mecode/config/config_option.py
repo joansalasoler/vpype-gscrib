@@ -125,4 +125,8 @@ class ConfigOption(Option):
     def _default_for(self, field_name: str) -> Any:
         """Obtain the default value for a parameter."""
 
+        if field_name not in self._config_fields:
+            raise ValueError(
+                f'Default value is required for option: {field_name}')
+
         return self._config_fields[field_name].default

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import dataclasses
-from typing import Any, Optional
+from typing import Optional
 
 import pydantic
 import vpype as vp
@@ -61,7 +61,7 @@ class RenderConfig(BaseModel, BaseConfig):
     power_level: int = Field(50.0, ge=0)
     spindle_rpm: int = Field(1000, ge=0)
     warmup_delay: float = Field(2.0, ge=0.001)
-    tool_number: int = Field(1, min=1)
+    tool_number: int = Field(1, ge=1)
 
     # Motion parameters
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)
@@ -69,7 +69,7 @@ class RenderConfig(BaseModel, BaseConfig):
     travel_speed: float = Field(vp.convert_length('1000mm'), ge=0)
 
     # Fan parameters
-    fan_speed: int = Field(255, min=0, max=255)
+    fan_speed: int = Field(255, ge=0, le=255)
 
     # Bed parameters
     bed_temperature: int = Field(60)

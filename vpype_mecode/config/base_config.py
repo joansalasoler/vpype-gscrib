@@ -20,6 +20,7 @@ from abc import ABC
 from dataclasses import dataclass, asdict
 from enum import Enum
 from typing import Dict, Any
+from typeguard import typechecked
 
 from vpype_mecode.enums import LengthUnits
 
@@ -44,6 +45,7 @@ class BaseConfig(ABC):
         if getattr(model, f1) < getattr(model, f2):
             raise ValueError(f'`{f1}` must be greater or equal to `{f2}`')
 
+    @typechecked
     def scale_lengths(self, units: LengthUnits) -> None:
         """
         Scale lengths in-place according to the specified units. Only
@@ -59,6 +61,7 @@ class BaseConfig(ABC):
             value = units.scale(getattr(self, field_name))
             setattr(self, field_name, value)
 
+    @typechecked
     def format_values(self, units: LengthUnits) -> Dict[str, str]:
         """
         Format configuration values for display.
