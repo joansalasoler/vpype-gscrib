@@ -28,6 +28,8 @@ from numpy import float32, uint16, ndarray
 from scipy.interpolate import BivariateSpline, RectBivariateSpline
 from skimage import draw
 
+from vpype_mecode.excepts import ImageLoadError
+
 
 UINT8_MAX = 255.0
 UINT16_MAX = 65535.0
@@ -68,14 +70,17 @@ class HeightMap:
             HeightMap: New HeightMap instance
 
         Raises:
-            RuntimeError: If the image file cannot be read.
+            ImageLoadError: If the image file cannot be read.
         """
 
         flags = cv.IMREAD_GRAYSCALE | cv.IMREAD_ANYDEPTH
         image_data = cv.imread(path, flags)
 
         if image_data is None:
-            raise RuntimeError('Could not be read heightmap file.')
+            raise ImageLoadError(
+                f'Could not load heightmap from `{path}`. '
+                f'File does not exist or is not a valid image.'
+            )
 
         return cls(image_data)
 
@@ -140,8 +145,8 @@ class HeightMap:
     def _interpolate_line(self, line: ndarray) -> ndarray:
         """Get interpolated points along a straight line."""
 
-        line = [round(i) for i in line]
-        rows, cols = draw.line(*line)
+        line_points = [round(i) for i in line]
+        rows, cols = draw.line(*line_points)
 
         return numpy.array([
             (x, y, self.get_height_at(x, y))

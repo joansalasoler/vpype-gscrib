@@ -33,6 +33,7 @@ from pydantic import ValidationError
 from vpype import Document
 
 from vpype_mecode.vpype_options import command_options
+from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
 from vpype_mecode.renderer import GBuilder, GRenderer
 from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
@@ -71,10 +72,8 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
     """
 
     try:
-        if _config_exception is not None:
-            raise click.UsageError(_config_exception)
-
         _validate_document(document)
+        _validate_user_config()
 
         render_configs = _setup_render_configs(document, kwargs)
         mecode_config = _setup_mecode_config(kwargs, render_configs[0])
@@ -88,8 +87,13 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 
         processor = DocumentProcessor(renderer)
         processor.process(document)
+    except VpypeMecodeError as e:
+        raise click.UsageError(str(e))
     except ValidationError as e:
-        raise click.BadParameter(str(e))
+        message = e.errors()[0]['msg']
+        raise click.UsageError(message)
+    except FileNotFoundError as e:
+        raise click.UsageError(f"File not found: {e.filename}")
 
     return document
 
@@ -97,6 +101,13 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 # ---------------------------------------------------------------------
 # Utility methods
 # ---------------------------------------------------------------------
+
+def _validate_user_config():
+    """Raises an exception if the user's vpype.toml file had errors"""
+
+    if _config_exception is not None:
+        raise _config_exception
+
 
 def _validate_document(document: Document):
     """Validate that the document meets the requirements."""
@@ -150,6 +161,11 @@ try:
         if param.name in config:
             default_value = config[param.name]
             param.override_default_value(default_value)
+except ValidationError as e:
+    message = e.errors()[0]['msg']
+    message = f"Invalid value in file 'vpype.toml': {message}"
+    _config_exception = click.UsageError(message)
 except click.BadParameter as e:
-    e.message = f"Invalid value in file 'vpype.toml': {e.message}"
-    _config_exception = e
+    message = f"Invalid value in file 'vpype.toml': {e.message}"
+    _config_exception = click.UsageError(message)
+

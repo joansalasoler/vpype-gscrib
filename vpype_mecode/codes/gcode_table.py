@@ -75,7 +75,13 @@ class GCodeTable:
         key = self._key_for(entry.enum)
 
         if key in self._entries:
-            raise KeyError(f'Key {entry.enum} already in the table.')
+            existing = self._entries[key]
+
+            raise KeyError(
+                f'Cannot add duplicate G-Code entry for enum `{entry.enum}`. '
+                f'An entry exists with instruction `{existing.instruction}` '
+                f'and description `{existing.description}`.'
+            )
 
         self._entries[key] = entry
 
