@@ -53,4 +53,5 @@ brush into paint.
 ## G-code Commands
 
 * **G43, G44:** Tool Length Compensation
+* **M106:** Support for multiple fans (P<index>)
 * **M141:** Set Chamber Temperature

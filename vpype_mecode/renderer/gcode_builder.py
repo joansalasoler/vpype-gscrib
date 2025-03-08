@@ -155,19 +155,22 @@ class GBuilder(GMatrix):
         self.write(f'S{power}')
 
     @typechecked
-    def set_fan_speed(self, speed: int) -> None:
+    def set_fan_speed(self, speed: int, number: int = 0) -> None:
         """Set the speed of the main fan.
 
         Args:
             speed (int): Fan speed (must be >= 0 and <= 255)
+            number (int): Fan number (must be >= 0)
 
         Raises:
             ValueError: If speed is not in the valid range
         """
 
         self._validate_fan_speed(speed)
+        self._validate_fan_number(number)
         mode = FanMode.ON if speed > 0 else FanMode.OFF
-        statement = self._get_gcode_from_table(mode, f'S{speed}')
+        params = f'P{number} S{speed}'
+        statement = self._get_gcode_from_table(mode, params)
         self.write(statement)
 
     @typechecked
@@ -391,6 +394,13 @@ class GBuilder(GMatrix):
 
         if not isinstance(power, int | float) or power < 0.0:
             message = f'Invalid tool power `{power}`.'
+            raise ValueError(message)
+
+    def _validate_fan_number(self, number: int) -> None:
+        """Validate fan index is within acceptable range."""
+
+        if not isinstance(number, int) or number < 0:
+            message = f'Invalid fan index `{number}`.'
             raise ValueError(message)
 
     def _validate_fan_speed(self, speed: int) -> None:
