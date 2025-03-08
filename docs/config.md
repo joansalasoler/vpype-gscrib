@@ -45,6 +45,7 @@ park_z = "50.0mm"           # Z height when parked
 # Heightmap configuration
 height_map =                # Heightmap file path
 height_map_scale = 50.0     # Scale of the heightmap
+height_map_tolerance = 0.01 # Heightmap sampling tolerance
 
 # Other parameters
 fan_speed = 255             # min = 0, max = 255
@@ -81,6 +82,7 @@ bed_temperature = 60        # Celsius degrees
 # park_z = "50.0mm"
 # height_map =
 # height_map_scale = 50.0
+# height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
 
@@ -107,6 +109,7 @@ bed_temperature = 60        # Celsius degrees
 # park_z = "50.0mm"
 # height_map =
 # height_map_scale = 50.0
+# height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
 
@@ -133,6 +136,7 @@ bed_temperature = 60        # Celsius degrees
 # park_z = "50.0mm"
 # height_map =
 # height_map_scale = 50.0
+# height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
 ```

@@ -84,6 +84,7 @@ class RenderConfig(BaseModel, BaseConfig):
     # Heightmap transformation parameters
     height_map: Optional[str] = Field(None)
     height_map_scale: float = Field(50.0, gt=0)
+    height_map_tolerance: float = Field(0.01, ge=0)
 
 
     @pydantic.model_validator(mode="after")

@@ -98,6 +98,7 @@ class MappedHead(BasicHead):
 
         if not isinstance(self._height_map, HeightMap):
             self._height_map = HeightMap.from_path(ctx.height_map)
+            self._height_map.set_tolerance(ctx.height_map_tolerance)
             self._height_map.set_scale(ctx.height_map_scale)
 
         return self._height_map

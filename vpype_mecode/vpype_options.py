@@ -268,6 +268,15 @@ command_options = (
         means a heightmap value of 1.0 becomes 10 units.
         """,
     ),
+    ConfigOption(
+        option_name='height_map_tolerance',
+        type=FloatRangeType(min=0.0),
+        help="""
+        Minimum height difference threshold used when sampling points
+        from the height map. Points with height differences below this
+        value will be filtered out. Measured in work units.
+        """,
+    ),
 
     # ------------------------------------------------------------------
     # G-Code Output Options (mecode)

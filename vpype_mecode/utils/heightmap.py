@@ -56,6 +56,7 @@ class HeightMap:
     @typechecked
     def __init__(self, image_data: ndarray) -> None:
         self._scale_z = 1.0
+        self._tolerance = 0.01
         self._height_map = self._to_height_map(image_data)
         self._interpolator = self._create_interpolator(self._height_map)
 
@@ -96,6 +97,19 @@ class HeightMap:
         self._scale_z = scale_z
 
     @typechecked
+    def set_tolerance(self, tolerance: float) -> None:
+        """Set height difference threshold for path sampling.
+
+        Args:
+            tolerance (float): The minimum height difference between
+                consecutive points that will be considered significant
+                during path sampling. Points with height differences below
+                this value will be filtered out when using sample_path().
+        """
+
+        self._tolerance = tolerance
+
+    @typechecked
     def get_height_at(self, x: Real, y: Real) -> float:
         """Get the interpolated height value at specific coordinates.
 
@@ -110,7 +124,7 @@ class HeightMap:
         return self._scale_z * self._interpolator(y, x)[0, 0]
 
     @typechecked
-    def sample_path(self, line: Union[Sequence[float], ArrayLike], tolerance: float = 0.01) -> ndarray:
+    def sample_path(self, line: Union[Sequence[float], ArrayLike]) -> ndarray:
         """Sample height values along a straight line path.
 
         Generates a series of points along the line with their corresponding
@@ -138,7 +152,7 @@ class HeightMap:
             raise ValueError('Line must contain exactly 4 elements')
 
         points = self._interpolate_line(line_array)
-        filtered = self._filter_points(points, tolerance)
+        filtered = self._filter_points(points, self._tolerance)
 
         return filtered
 

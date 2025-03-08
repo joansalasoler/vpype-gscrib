@@ -112,7 +112,8 @@ def test_sample_path(height_map):
     assert points[-1][0] == 8.0
     assert points[-1][1] == 5.0
 
-    points_high = height_map.sample_path(line, tolerance=0.5)
+    height_map.set_tolerance(0.5)
+    points_high = height_map.sample_path(line)
     assert len(points_high) <= len(points)
 
 def test_filter_points(height_map):
