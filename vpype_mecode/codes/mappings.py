@@ -82,6 +82,18 @@ gcode_table = GCodeTable((
         'M05', 'Stop tool'
     ),
 
+    GCodeEntry(PowerMode.CONSTANT,
+        'M03', 'Start tool, constant power'
+    ),
+
+    GCodeEntry(PowerMode.DYNAMIC,
+        'M04', 'Start tool, dynamic power'
+    ),
+
+    GCodeEntry(PowerMode.OFF,
+        'M05', 'Stop tool'
+    ),
+
     # ------------------------------------------------------------------
     # Tool Swap Modes
     # ------------------------------------------------------------------

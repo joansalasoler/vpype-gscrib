@@ -25,8 +25,9 @@ bed_mode = "off"            # off, heated
 
 # Tool configuration
 tool_number = 1             # Tool identifier number
-spin_mode = "clockwise"     # clockwise, counter
+spin_mode = "clockwise"     # off, clockwise, counter
 spindle_rpm = 1000          # Spindle speed in revolutions per minute
+power_mode = "constant"     # off, constant, dynamic
 power_level = 50            # Power level for energy-based tools
 warmup_delay = 2.0          # Delay after tool start/stop in time_units
 
@@ -68,6 +69,7 @@ bed_temperature = 60        # Celsius degrees
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
+# power_mode = "constant"
 # power_level = 50
 # warmup_delay = 2.0
 # work_speed = "500.0mm"
@@ -93,6 +95,7 @@ bed_temperature = 60        # Celsius degrees
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
+# power_mode = "constant"
 # power_level = 50
 # warmup_delay = 2.0
 # work_speed = "500.0mm"
@@ -118,6 +121,7 @@ bed_temperature = 60        # Celsius degrees
 # tool_number = 1
 # spin_mode = "clockwise"
 # spindle_rpm = 1000
+# power_mode = "constant"
 # power_level = 50
 # warmup_delay = 2.0
 # work_speed = "500.0mm"

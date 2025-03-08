@@ -189,6 +189,13 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name='power_mode',
+        type=PowerMode,
+        help="""
+        Sets the power mode of the tool.
+        """,
+    ),
+    ConfigOption(
         option_name='warmup_delay',
         type=FloatRangeType(min=0.001),
         help="""

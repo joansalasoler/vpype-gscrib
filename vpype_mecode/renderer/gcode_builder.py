@@ -49,6 +49,7 @@ class GBuilder(GMatrix):
         super().__init__(*args, **kwargs)
         self._current_tool = 0
         self._current_spin_mode = SpinMode.OFF
+        self._current_power_mode = PowerMode.OFF
         self._current_coolant_mode = CoolantMode.OFF
         self._is_coolant_active = False
         self._is_tool_active = False
@@ -72,6 +73,11 @@ class GBuilder(GMatrix):
     def current_spin_mode(self) -> SpinMode:
         """Get the current spin mode."""
         return self._current_spin_mode
+
+    @property
+    def current_power_mode(self) -> PowerMode:
+        """Get the current power mode."""
+        return self._current_power_mode
 
     @property
     def current_coolant_mode(self) -> CoolantMode:
@@ -210,8 +216,6 @@ class GBuilder(GMatrix):
         by machine type, such as:
 
         - Spindle rotation speed in RPM
-        - Laser power output (typically 0-100%)
-        - Other similar power settings
 
         Args:
             mode (SpinMode): Direction of tool rotation (CW/CCW)
@@ -241,6 +245,46 @@ class GBuilder(GMatrix):
         self._is_tool_active = False
 
         statement = self._get_gcode_from_table(SpinMode.OFF)
+        self.write(statement, resp_needed=True)
+
+    @typechecked
+    def power_on(self, mode: PowerMode, power: float) -> None:
+        """Activate the tool with specified mode and power.
+
+        The power parameter represents tool-specific values that vary
+        by machine type, such as:
+
+        - Laser power output (typically 0-100%)
+        - Other similar power settings
+
+        Args:
+            mode (PowerMode): Power mode of the tool
+            power (float): Power level for the tool (must be >= 0.0)
+
+        Raises:
+            ValueError: If power is less than 0.0
+            ValueError: If mode is OFF or was already active
+            ToolStateError: If attempting invalid mode transition
+        """
+
+        self._prevent_mode_change(mode, PowerMode.OFF)
+        self._prevent_mode_change(mode, ~self._current_power_mode)
+        self._validate_tool_power(power)
+        self._current_power_mode = mode
+        self._is_tool_active = True
+
+        speed_statement = f'S{power}'
+        mode_statement = self._get_gcode_from_table(mode)
+        statement = f'{speed_statement} {mode_statement}'
+        self.write(statement, resp_needed=True)
+
+    def power_off(self) -> None:
+        """Power off the current tool."""
+
+        self._current_power_mode = PowerMode.OFF
+        self._is_tool_active = False
+
+        statement = self._get_gcode_from_table(PowerMode.OFF)
         self.write(statement, resp_needed=True)
 
     @typechecked

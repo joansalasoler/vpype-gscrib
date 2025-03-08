@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from vpype_mecode.renderer.gcode_context import GContext
-from vpype_mecode.enums import SpinMode
+from vpype_mecode.enums import PowerMode
 from .base_tool import BaseTool
 
 
@@ -38,7 +38,7 @@ class BeamTool(BaseTool):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.tool_on(SpinMode.CLOCKWISE, 0)
+        ctx.g.power_on(ctx.power_mode, 0)
 
     def power_on(self, ctx: GContext):
         """Power on the beam tool.
@@ -75,4 +75,4 @@ class BeamTool(BaseTool):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.tool_off()
+        ctx.g.power_off()

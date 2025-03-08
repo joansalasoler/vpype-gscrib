@@ -19,6 +19,7 @@ from .feed_mode import FeedMode
 from .halt_mode import HaltMode
 from .head_mode import HeadMode
 from .length_units import LengthUnits
+from .power_mode import PowerMode
 from .plane import Plane
 from .rack_mode import RackMode
 from .spin_mode import SpinMode
@@ -37,6 +38,7 @@ __all__ = [
     'HaltMode',
     'HeadMode',
     'LengthUnits',
+    'PowerMode',
     'Plane',
     'RackMode',
     'SpinMode',
