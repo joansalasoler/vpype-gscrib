@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=no-member
 
 # G-Code generator for Vpype.
 # Copyright (C) 2025 Joan Sala <contact@joansala.com>
