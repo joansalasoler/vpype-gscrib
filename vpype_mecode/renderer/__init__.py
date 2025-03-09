@@ -9,11 +9,13 @@ the G-code program from a `vpype` document.
 """
 
 from .gcode_builder import GBuilder
-from .gcode_renderer import GRenderer
 from .gcode_context import GContext
+from .gcode_renderer import GRenderer
+from .gcode_state import GState
 
 __all__ = [
     'GBuilder',
     'GContext',
     'GRenderer',
+    'GState',
 ]

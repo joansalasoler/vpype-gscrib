@@ -22,6 +22,7 @@ from .base_enum import BaseEnum
 class HaltMode(BaseEnum):
     """Program termination and pause modes."""
 
+    OFF = 'off'
     PAUSE = 'pause'
     OPTIONAL_PAUSE = 'optional_pause'
     END_WITHOUT_RESET = 'end_without_reset'

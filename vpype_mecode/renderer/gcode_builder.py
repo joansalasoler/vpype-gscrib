@@ -18,12 +18,15 @@
 
 import math
 from collections import namedtuple
+from typing import Optional
 from typeguard import typechecked
 
-from vpype_mecode.enums import *
-from vpype_mecode.excepts import *
 from vpype_mecode.codes import gcode_table
 from vpype_mecode.enums import BaseEnum
+from vpype_mecode.excepts import *
+from vpype_mecode.enums import *
+
+from .gcode_state import GState
 from ..mecode import GMatrix
 
 
@@ -46,46 +49,16 @@ class GBuilder(GMatrix):
     """
 
     def __init__(self, *args, **kwargs) -> None:
+        self._state: GState = GState()
         super().__init__(*args, **kwargs)
-        self._current_tool = 0
-        self._current_spin_mode = SpinMode.OFF
-        self._current_power_mode = PowerMode.OFF
-        self._current_coolant_mode = CoolantMode.OFF
-        self._is_coolant_active = False
-        self._is_tool_active = False
 
     @property
-    def is_tool_active(self) -> bool:
-        """Check if tool is currently active."""
-        return self._is_tool_active
+    def state(self) -> GState:
+        """Current machine state."""
+        return self._state
 
     @property
-    def is_coolant_active(self) -> bool:
-        """Check if coolant is currently active."""
-        return self._is_coolant_active
-
-    @property
-    def current_tool(self) -> int:
-        """Get the current tool number."""
-        return self._current_tool
-
-    @property
-    def current_spin_mode(self) -> SpinMode:
-        """Get the current spin mode."""
-        return self._current_spin_mode
-
-    @property
-    def current_power_mode(self) -> PowerMode:
-        """Get the current power mode."""
-        return self._current_power_mode
-
-    @property
-    def current_coolant_mode(self) -> CoolantMode:
-        """Get the current coolant mode."""
-        return self._current_coolant_mode
-
-    @property
-    def current_head_position(self):
+    def current_head_position(self) -> Position:
         """Get the current head position."""
 
         return Position(
@@ -102,6 +75,7 @@ class GBuilder(GMatrix):
             length_units (LengthUnits): The unit system to use
         """
 
+        self._state.set_length_units(length_units)
         statement = self._get_gcode_from_table(length_units)
         self.write(statement)
 
@@ -113,6 +87,7 @@ class GBuilder(GMatrix):
             plane (Plane): The plane to use for subsequent operations
         """
 
+        self._state.set_plane(plane)
         statement = self._get_gcode_from_table(plane)
         self.write(statement)
 
@@ -124,6 +99,7 @@ class GBuilder(GMatrix):
             mode (DistanceMode): The distance mode to use
         """
 
+        self._state.set_distance_mode(mode)
         self.is_relative = (mode == DistanceMode.RELATIVE)
         statement = self._get_gcode_from_table(mode)
         self.write(statement)
@@ -136,6 +112,7 @@ class GBuilder(GMatrix):
             mode (FeedMode): The feed rate mode to use
         """
 
+        self._state.set_feed_mode(mode)
         statement = self._get_gcode_from_table(mode)
         self.write(statement)
 
@@ -157,25 +134,29 @@ class GBuilder(GMatrix):
             ValueError: If power is less than 0.0
         """
 
-        self._validate_tool_power(power)
+        self._state.set_tool_power(power)
         self.write(f'S{power}')
 
     @typechecked
-    def set_fan_speed(self, speed: int, number: int = 0) -> None:
+    def set_fan_speed(self, speed: int, fan_number: int = 0) -> None:
         """Set the speed of the main fan.
 
         Args:
             speed (int): Fan speed (must be >= 0 and <= 255)
-            number (int): Fan number (must be >= 0)
+            fan_number (int): Fan number (must be >= 0)
 
         Raises:
             ValueError: If speed is not in the valid range
         """
 
-        self._validate_fan_speed(speed)
-        self._validate_fan_number(number)
+        if fan_number < 0:
+            raise ValueError(f'Invalid fan number `{fan_number}`.')
+
+        if speed < 0 or speed > 255:
+            raise ValueError(f'Invalid fan speed `{speed}`.')
+
+        params = f'P{fan_number} S{speed}'
         mode = FanMode.ON if speed > 0 else FanMode.OFF
-        params = f'P{number} S{speed}'
         statement = self._get_gcode_from_table(mode, params)
         self.write(statement)
 
@@ -203,47 +184,44 @@ class GBuilder(GMatrix):
             ValueError: If seconds is less than 1ms
         """
 
-        self._validate_sleep_time(seconds)
+        if seconds < 0.001:
+            raise ValueError(f'Invalid sleep time `{seconds}`.')
+
         params = f'P{units.scale(seconds)}'
         statement = self._get_gcode_from_table(units, params)
         self.write(statement)
 
     @typechecked
-    def tool_on(self, mode: SpinMode, power: float) -> None:
-        """Activate the tool with specified direction and power.
+    def tool_on(self, mode: SpinMode, speed: float) -> None:
+        """Activate the tool with specified direction and speed.
 
-        The power parameter represents tool-specific values that vary
+        The speed parameter represents tool-specific values that vary
         by machine type, such as:
 
         - Spindle rotation speed in RPM
 
         Args:
             mode (SpinMode): Direction of tool rotation (CW/CCW)
-            power (float): Power level for the tool (must be >= 0.0)
+            speed (float): Speed for the tool (must be >= 0.0)
 
         Raises:
-            ValueError: If power is less than 0.0
+            ValueError: If speed is less than 0.0
             ValueError: If mode is OFF or was already active
             ToolStateError: If attempting invalid mode transition
         """
 
-        self._prevent_mode_change(mode, SpinMode.OFF)
-        self._prevent_mode_change(mode, ~self._current_spin_mode)
-        self._validate_tool_power(power)
-        self._current_spin_mode = mode
-        self._is_tool_active = True
+        if mode == SpinMode.OFF:
+            raise ValueError('Not a valid spin mode.')
 
-        speed_statement = f'S{power}'
+        self._state.set_spin_mode(mode, speed)
         mode_statement = self._get_gcode_from_table(mode)
-        statement = f'{speed_statement} {mode_statement}'
+        statement = f'S{speed} {mode_statement}'
         self.write(statement, resp_needed=True)
 
     def tool_off(self) -> None:
         """Deactivate the current tool."""
 
-        self._current_spin_mode = SpinMode.OFF
-        self._is_tool_active = False
-
+        self._state.set_spin_mode(SpinMode.OFF)
         statement = self._get_gcode_from_table(SpinMode.OFF)
         self.write(statement, resp_needed=True)
 
@@ -267,28 +245,23 @@ class GBuilder(GMatrix):
             ToolStateError: If attempting invalid mode transition
         """
 
-        self._prevent_mode_change(mode, PowerMode.OFF)
-        self._prevent_mode_change(mode, ~self._current_power_mode)
-        self._validate_tool_power(power)
-        self._current_power_mode = mode
-        self._is_tool_active = True
+        if mode == PowerMode.OFF:
+            raise ValueError('Not a valid power mode.')
 
-        speed_statement = f'S{power}'
+        self._state.set_power_mode(mode, power)
         mode_statement = self._get_gcode_from_table(mode)
-        statement = f'{speed_statement} {mode_statement}'
+        statement = f'S{power} {mode_statement}'
         self.write(statement, resp_needed=True)
 
     def power_off(self) -> None:
         """Power off the current tool."""
 
-        self._current_power_mode = PowerMode.OFF
-        self._is_tool_active = False
-
+        self._state.set_power_mode(PowerMode.OFF)
         statement = self._get_gcode_from_table(PowerMode.OFF)
         self.write(statement, resp_needed=True)
 
     @typechecked
-    def tool_change(self, mode: RackMode, number: int) -> None:
+    def tool_change(self, mode: RackMode, tool_number: int) -> None:
         """Execute a tool change operation.
 
         Performs a tool change sequence, ensuring proper safety
@@ -296,7 +269,7 @@ class GBuilder(GMatrix):
 
         Args:
             mode (RackMode): Tool change mode to execute
-            number (int): Tool number to select (must be positive)
+            tool_number (int): Tool number to select (must be positive)
 
         Raises:
             ValueError: If tool number is invalid or mode is OFF
@@ -304,15 +277,13 @@ class GBuilder(GMatrix):
             CoolantStateError: If coolant is currently active
         """
 
-        self._validate_tool_number(number)
-        self._prevent_mode_change(mode, RackMode.OFF)
-        self._ensure_tool_is_inactive('Tool change request with tool on.')
-        self._ensure_coolant_is_inactive('Tool change request with coolant on.')
-        self._current_tool = number
+        if mode == RackMode.OFF:
+            raise ValueError('Not a valid rack mode.')
 
-        digits = 2 ** math.ceil(math.log2(len(str(number))))
+        self._state.set_rack_mode(mode, tool_number)
+        tool_digits = 2 ** math.ceil(math.log2(len(str(tool_number))))
         change_statement = self._get_gcode_from_table(mode)
-        statement = f'T{number:0{digits}} {change_statement}'
+        statement = f'T{tool_number:0{tool_digits}} {change_statement}'
         self.write(statement, resp_needed=True)
 
     @typechecked
@@ -326,20 +297,17 @@ class GBuilder(GMatrix):
             ValueError: If mode is OFF or was already active
         """
 
-        self._prevent_mode_change(mode, CoolantMode.OFF)
-        self._prevent_mode_change(mode, ~self._current_coolant_mode)
-        self._current_coolant_mode = mode
-        self._is_coolant_active = True
+        if mode == CoolantMode.OFF:
+            raise ValueError('Not a valid coolant mode.')
 
+        self._state.set_coolant_mode(mode)
         statement = self._get_gcode_from_table(mode)
         self.write(statement, resp_needed=True)
 
     def coolant_off(self) -> None:
         """Deactivate coolant system."""
 
-        self._current_coolant_mode = CoolantMode.OFF
-        self._is_coolant_active = False
-
+        self._state.set_coolant_mode(CoolantMode.OFF)
         statement = self._get_gcode_from_table(CoolantMode.OFF)
         self.write(statement, resp_needed=True)
 
@@ -356,9 +324,10 @@ class GBuilder(GMatrix):
             CoolantStateError: If attempting to halt with coolant active
         """
 
-        self._ensure_tool_is_inactive('Halt request with tool on.')
-        self._ensure_coolant_is_inactive('Halt request with coolant on.')
+        if mode == HaltMode.OFF:
+            raise ValueError('Not a valid halt mode.')
 
+        self._state.set_halt_mode(mode)
         params = self._get_params_string_from_dict(kwargs)
         statement = self._get_gcode_from_table(mode, params)
         self.write(statement, resp_needed=True)
@@ -392,9 +361,22 @@ class GBuilder(GMatrix):
     def move_absolute(self, **kwargs):
         """Move to absolute coordinates without transforms."""
 
-        if self.is_relative: self.absolute()
+        mode_was_relative = self.is_relative
+
+        if mode_was_relative: self.absolute()
         super(GMatrix, self).move(**kwargs)
-        if self.is_relative: self.relative()
+        if mode_was_relative: self.relative()
+
+    def write(self, statement_in: str, resp_needed = False):
+        """Write a G-code statement to the G-code output.
+
+        Args:
+            statement_in (str): G-code statement to write
+            resp_needed (bool): Indicates if a response is expected
+        """
+
+        self._state.set_halt_mode(HaltMode.OFF)
+        super(GMatrix, self).write(statement_in, resp_needed)
 
     @typechecked
     def comment(self, message: str) -> None:
@@ -407,64 +389,12 @@ class GBuilder(GMatrix):
         comment = self._as_comment(message)
         self.write(comment)
 
-    def _ensure_tool_is_inactive(self, message: str) -> None:
-        """Raise an exception if tool is active."""
-
-        if self._is_tool_active:
-            raise ToolStateError(message)
-
-    def _ensure_coolant_is_inactive(self, message: str) -> None:
-        """Raise an exception if coolant is active."""
-
-        if self._is_coolant_active:
-            raise CoolantStateError(message)
-
-    def _prevent_mode_change(self, value: BaseEnum, mode: BaseEnum) -> None:
-        """Raise an exception if `value` equals `mode`"""
-
-        if value == mode:
-            message = f'Invalid mode `{mode}` for `{type(mode)}`.'
-            raise ValueError(message)
-
-    def _validate_tool_number(self, number: int) -> None:
-        """Validate tool number is within acceptable range."""
-
-        if not isinstance(number, int) or number < 1:
-            message = f'Invalid tool number `{number}`.'
-            raise ValueError(message)
-
-    def _validate_tool_power(self, power: float) -> None:
-        """Validate tool power level is within acceptable range."""
-
-        if not isinstance(power, int | float) or power < 0.0:
-            message = f'Invalid tool power `{power}`.'
-            raise ValueError(message)
-
-    def _validate_fan_number(self, number: int) -> None:
-        """Validate fan index is within acceptable range."""
-
-        if not isinstance(number, int) or number < 0:
-            message = f'Invalid fan index `{number}`.'
-            raise ValueError(message)
-
-    def _validate_fan_speed(self, speed: int) -> None:
-        """Validate fan speed is within acceptable range."""
-
-        if not isinstance(speed, int) or speed < 0 or speed > 255:
-            message = f'Invalid fan speed `{speed}`.'
-            raise ValueError(message)
-
-    def _validate_sleep_time(self, seconds: float) -> None:
-        """Validate tool power level is within acceptable range."""
-
-        if not isinstance(seconds, int | float) or seconds < 0.001:
-            message = f'Invalid sleep time `{seconds}`.'
-            raise ValueError(message)
-
     def _get_params_string_from_dict(self, params: dict) -> str:
+        """Converts a dictionary to a G-Code parameters statement"""
+
         return ' '.join(f'{k}{v}' for k, v in params.items())
 
-    def _get_gcode_from_table(self, value: BaseEnum, params: str = None) -> str:
+    def _get_gcode_from_table(self, value: BaseEnum, params: Optional[str] = None) -> str:
         """Generate a G-code statement from the codes table."""
 
         entry = gcode_table.get_entry(value)
@@ -473,7 +403,7 @@ class GBuilder(GMatrix):
 
         return f'{entry.instruction}{args} {comment}'
 
-    def _as_comment(self, text: str) -> None:
+    def _as_comment(self, text: str) -> str:
         """Format text as a G-code comment."""
 
         return self._commentify(text)
