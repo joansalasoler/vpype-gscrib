@@ -337,34 +337,26 @@ command_options = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        option_name='direct_write',
-        is_flag=True,
+        option_name='direct_write_mode',
+        type=DirectWriteMode,
         help="""
-        Sends the generated G-Code directly to a connected printer via a
+        Sends the generated G-Code directly to a connected machine via a
         socket or serial connection.
         """,
     ),
     ConfigOption(
-        option_name='direct_write_mode',
-        type=DirectWriteMode,
-        help="""
-        Communication method for direct writing. Used only if `direct_write`
-        is enabled.
-        """,
-    ),
-    ConfigOption(
-        option_name='printer_host',
+        option_name='host',
         type=TextType(),
         help="""
-        The hostname or IP address of the printer when using direct
+        The hostname or IP address of the machine when using direct
         writing over a network.
         """,
     ),
     ConfigOption(
-        option_name='printer_port',
+        option_name='port',
         type=IntRangeType(min=0),
         help="""
-        The port number used for network communication with the printer
+        The port number used for network communication with the machine
         when using direct writing.
         """,
     ),
@@ -373,14 +365,14 @@ command_options = (
         type=IntRangeType(min=0),
         help="""
         The communication speed (baud rate) for a serial connection to
-        the printer when using direct writing.
+        the machine when using direct writing.
         """,
     ),
     ConfigOption(
         option_name='two_way_comm',
         is_flag=True,
         help="""
-        If enabled, the program will wait for a response from the printer
+        If enabled, the program will wait for a response from the machine
         after sending each G-Code command.
         """,
     ),

@@ -22,5 +22,6 @@ from .base_enum import BaseEnum
 class DirectWriteMode(BaseEnum):
     """Communication mode for direct machine control."""
 
+    OFF = 'off'
     SOCKET = 'socket'
     SERIAL = 'serial'

@@ -57,10 +57,9 @@ class MecodeConfig(BaseModel, BaseConfig):
     comment_char: str = Field('(')
 
     # Direct write settings
-    direct_write: bool = Field(False)
-    direct_write_mode: DirectWriteMode = Field(DirectWriteMode.SOCKET)
-    printer_host: str = Field('localhost')
-    printer_port: int = Field(8000, ge=0)
+    direct_write_mode: DirectWriteMode = Field(DirectWriteMode.OFF)
+    host: str = Field('localhost')
+    port: int = Field(8000, ge=0)
     baudrate: int = Field(250000, ge=0)
     two_way_comm: bool = Field(False)
 

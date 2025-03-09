@@ -27,7 +27,7 @@ want to generate a file, you can pass a filename. ::
 
     g = G(outfile='path/to/file.gcode')
 
-*NOTE:* When using the option direct_write=True or when writing to a file,
+*NOTE:* When using a direct write mode or when writing to a file,
 `g.teardown()` must be called after all commands are executed. If you
 are writing to a file, this can be accomplished automatically by using G as
 a context manager like so:
@@ -91,10 +91,9 @@ class G(object):
     def __init__(self, outfile=None, print_lines='auto', header=None, footer=None,
                  aerotech_include=False,
                  output_digits=6,
-                 direct_write=False,
-                 direct_write_mode='socket',
-                 printer_host='localhost',
-                 printer_port=8000,
+                 direct_write_mode='off',
+                 host='localhost',
+                 port=8000,
                  baudrate=250000,
                  two_way_comm=True,
                  x_axis='X',
@@ -131,22 +130,19 @@ class G(object):
             If true, add aerotech specific functions and var defs to outfile.
         output_digits : int (default: 6)
             How many digits to include after the decimal in the output gcode.
-        direct_write : bool (default: False)
-            If True a socket or serial port is opened to the printer and the
-            GCode is sent directly over.
-        direct_write_mode : str (either 'socket' or 'serial') (default: socket)
-            Specify the channel your printer communicates over, only used if
-            `direct_write` is True.
-        printer_host : str (default: 'localhost')
-            Hostname of the printer, only used if `direct_write` is True.
-        printer_port : int (default: 8000)
-            Port of the printer, only used if `direct_write` is True.
+        direct_write_mode : str ('off', 'socket' or 'serial') (default: off)
+            If 'socket' or 'serial' a port is opened to the machine and the
+            GCode is sent directly over it.
+        host : str (default: 'localhost')
+            Hostname of the machine for direct write mode.
+        port : int (default: 8000)
+            Port of the machine for direct write mode.
         baudrate: int (default: 250000)
-            The baudrate to connect to the printer with.
+            The baudrate to connect to the machine with.
         two_way_comm : bool (default: True)
             If True, mecode waits for a response after every line of GCode is
             sent over the socket. The response is returned by the `write`
-            method. Only applies if `direct_write` is True.
+            method. Only applies in direct write mode.
         x_axis : str (default 'X')
             The name of the x axis (used in the exported gcode)
         y_axis : str (default 'Y')
@@ -175,7 +171,7 @@ class G(object):
         setup : Bool (default: True)
             Whether or not to automatically call the setup function.
         lineend : str (default: 'os')
-            Line ending to use when writing to a file or printer. The special
+            Line ending to use when writing to a file or machine. The special
             value 'os' can be passed to fall back on python's automatic
             lineending insertion.
         comment_char : str (default: ';')
@@ -193,10 +189,10 @@ class G(object):
         self.footer = footer
         self.aerotech_include = aerotech_include
         self.output_digits = output_digits
-        self.direct_write = direct_write
+        self.direct_write = direct_write_mode != 'off'
         self.direct_write_mode = direct_write_mode
-        self.printer_host = printer_host
-        self.printer_port = printer_port
+        self.host = host
+        self.port = port
         self.baudrate = baudrate
         self.two_way_comm = two_way_comm
         self.x_axis = x_axis
@@ -393,7 +389,7 @@ class G(object):
         Parameters
         ----------
         wait : Bool (default: True)
-            Only used if direct_write_model == 'serial'. If True, this method
+            Only used if direct_write_mode == 'serial'. If True, this method
             waits to return until all buffered lines have been acknowledged.
 
         """
@@ -2224,7 +2220,7 @@ class G(object):
                     import socket
                     self._socket = socket.socket(socket.AF_INET,
                                                 socket.SOCK_STREAM)
-                    self._socket.connect((self.printer_host, self.printer_port))
+                    self._socket.connect((self.host, self.port))
                 self._socket.send(statement)
                 if self.two_way_comm is True:
                     response = self._socket.recv(8192)
@@ -2235,7 +2231,7 @@ class G(object):
             elif self.direct_write_mode == 'serial':
                 if self._p is None:
                     from .printer import Printer
-                    self._p = Printer(self.printer_port, self.baudrate)
+                    self._p = Printer(self.port, self.baudrate)
                     self._p.connect()
                     self._p.start()
                 if resp_needed:
