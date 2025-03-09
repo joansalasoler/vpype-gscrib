@@ -300,6 +300,7 @@ command_options = (
     ),
     ConfigOption(
         option_name='aerotech_include',
+        hidden=True,
         is_flag=True,
         help="""
         Adds Aerotech-specific functions and variable definitions to the
@@ -437,6 +438,7 @@ command_options = (
 
     ConfigOption(
         option_name='extrude',
+        hidden=True,
         is_flag=True,
         help="""
         Enables extrusion mode, where filament flow is calculated and
@@ -445,6 +447,7 @@ command_options = (
     ),
     ConfigOption(
         option_name='filament_diameter',
+        hidden=True,
         type=LengthType(),
         help="""
         Diameter of the filament used for 3D printing.
@@ -452,6 +455,7 @@ command_options = (
     ),
     ConfigOption(
         option_name='layer_height',
+        hidden=True,
         type=LengthType(),
         help="""
         The thickness of each printed layer for 3D printing.
@@ -459,6 +463,7 @@ command_options = (
     ),
     ConfigOption(
         option_name='extrusion_width',
+        hidden=True,
         type=LengthType(),
         help="""
         The width of the extruded filament, including any flattening
@@ -467,6 +472,7 @@ command_options = (
     ),
     ConfigOption(
         option_name='extrusion_multiplier',
+        hidden=True,
         type=FloatRangeType(min=0.0),
         help="""
         Adjusts the amount of filament extruded. A value greater than 1
