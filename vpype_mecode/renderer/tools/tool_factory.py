@@ -22,6 +22,7 @@ from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
 from .extruder_tool import ExtruderTool
+from .mapped_beam_tool import MappedBeamTool
 from .marker_tool import MarkerTool
 from .spindle_tool import SpindleTool
 
@@ -53,6 +54,7 @@ class ToolFactory:
             ToolMode.BEAM: BeamTool,
             ToolMode.BLADE: BladeTool,
             ToolMode.EXTRUDER: ExtruderTool,
+            ToolMode.MAPPED_BEAM: MappedBeamTool,
             ToolMode.MARKER: MarkerTool,
             ToolMode.SPINDLE: SpindleTool,
         }

@@ -13,6 +13,7 @@ from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
 from .extruder_tool import ExtruderTool
+from .mapped_beam_tool import MappedBeamTool
 from .marker_tool import MarkerTool
 from .spindle_tool import SpindleTool
 from .tool_factory import ToolFactory
@@ -23,6 +24,7 @@ __all__ = [
     'BeamTool',
     'BladeTool',
     'ExtruderTool',
+    'MappedBeamTool',
     'MarkerTool',
     'SpindleTool'
 ]

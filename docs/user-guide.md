@@ -135,10 +135,10 @@ A grayscale height map image is used to define surface variations:
 * **Texture mapping**: Transform grayscale patterns into detailed
   topographical engravings, creating intricate artistic designs,
   functional surface textures, or even depth-based shading effects.
-
-While currently used for Z-height adjustment, future implementations
-could use height maps to modulate tool power instead. For example,
-to adjust a laser's intensity or control extrusion rates.
+* **Photorealistic engraving**: Use height maps to control laser power,
+  creating smooth gradients for photo engraving.
+* **Dynamic tool modulation**: Adjust not just height, but also laser
+  intensity, or other tool parameters based on image data.
 
 ### Using Height Maps for Z Compensation
 
@@ -168,6 +168,40 @@ between height values, ensuring precise tool movement across the surface.
 In this example, a scale factor of `50.0` means that a white pixel on
 the height map image raises the tool by 50 mm, while black pixels result
 in no height change.
+
+### Using Height Maps for Laser Power Modulation
+
+Height maps can also be used to dynamically adjust laser power based on
+a grayscale image, making it possible to engrave detailed photographs
+with depth-based shading. Instead of modifying the Z height, the grayscale
+values control the laser's intensity, allowing for smooth tonal transitions.
+
+For example, in a laser engraving workflow, darker areas of the height
+map correspond to lower laser power, while lighter areas increase
+intensity. This technique is particularly useful for photo engraving, as
+it preserves fine details and creates natural gradients.
+
+Here's an example of generating G-code with laser power modulation:
+
+```bash
+vpype \
+  read drawing.svg \
+  mecode \
+    --power_mode=dynamic \
+    --tool_mode=mapped-beam \
+    --height_map_path=heightmap.png \
+    --height_map_scale=100.0 \
+    --outfile=output.gcode
+```
+
+**Key Options Explained**:
+
+* **--power_mode=dynamic**: Dynamically adjust laser power.
+* **--tool_mode=mapped-beam**: Enable heightmap to control laser power.
+* **--height_map_scale=100**: Scale factor for power adjustments
+
+By leveraging this technique, you can transform photographs into detailed
+engravings with smooth shading and precise contrast.
 
 ## Advanced Configuration
 

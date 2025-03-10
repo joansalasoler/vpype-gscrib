@@ -20,11 +20,22 @@ from vpype_mecode.renderer.gcode_context import GContext
 from .base_tool import BaseTool
 
 
-class BeamTool(BaseTool):
-    """Beam tool implementation.
+class MappedBeamTool(BaseTool):
+    """Beam implementation with height map-based power modulation.
 
-    This class handles operations for a beam tool, such as a laser,
-    including activation, power control, and deactivation.
+    This class handles basic operations for controlling the machine's
+    beam tool with power adjustments based on a height map. All work
+    movements are processed with the height map to modify beam power,
+    which enables various applications such as:
+
+    - Photo engraving: Converts grayscale images into varying beam
+      intensities to create detailed photographic engravings.
+    - Surface processing: Maintains consistent cutting/engraving depth
+      on uneven surfaces by automatically modulating beam power.
+    - Material adaptation: Maintains consistent cutting depth across
+      materials with varying thickness or density.
+    - Artistic effects: Uses height maps as power maps to create
+      controlled variations in cutting or engraving intensity.
     """
 
     def activate(self, ctx: GContext):
@@ -49,7 +60,6 @@ class BeamTool(BaseTool):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.set_tool_power(ctx.power_level)
         ctx.g.sleep(ctx.time_units, ctx.warmup_delay)
 
     def power_off(self, ctx: GContext):
@@ -75,3 +85,22 @@ class BeamTool(BaseTool):
         """
 
         ctx.g.power_off()
+
+    def get_trace_params(self, ctx: GContext, x: float, y: float) -> dict:
+        """Sets the beam power according to the height map.
+
+        This method sets the appropriate beam power parameter for the
+        current position being traced by querying the height map. The
+        power level is adjusted based on the height value at the specified
+        coordinates and the heightmap scaling factor.
+
+        Args:
+            ctx (GContext): Current rendering context
+            x (float): Target X coordinate of the movement
+            y (float): Target Y coordinate of the movement
+
+        Returns:
+            dict: Tool-specific parameters or an empty dict if none.
+        """
+
+        return { 'S' : ctx.height_map.get_height_at(x, y) }

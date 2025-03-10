@@ -25,5 +25,6 @@ class ToolMode(BaseEnum):
     BEAM = 'beam'
     BLADE = 'blade'
     EXTRUDER = 'extruder'
+    MAPPED_BEAM = 'mapped-beam'
     MARKER = 'marker'
     SPINDLE = 'spindle'
