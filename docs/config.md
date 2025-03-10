@@ -43,7 +43,7 @@ safe_z = "10.0mm"           # Z height for movements between operations
 park_z = "50.0mm"           # Z height when parked
 
 # Heightmap configuration
-height_map =                # Heightmap file path
+height_map_path =           # Heightmap file path
 height_map_scale = 50.0     # Scale of the heightmap
 height_map_tolerance = 0.01 # Heightmap sampling tolerance
 
@@ -80,7 +80,7 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
-# height_map =
+# height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255
@@ -107,7 +107,7 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
-# height_map =
+# height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255
@@ -134,7 +134,7 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
-# height_map =
+# height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255

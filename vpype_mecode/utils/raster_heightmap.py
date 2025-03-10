@@ -29,13 +29,14 @@ from scipy.interpolate import BivariateSpline, RectBivariateSpline
 from skimage import draw
 
 from vpype_mecode.excepts import ImageLoadError
+from .base_heightmap import BaseHeightMap
 
 
 UINT8_MAX = 255.0
 UINT16_MAX = 65535.0
 
 
-class HeightMap:
+class RasterHeightMap(BaseHeightMap):
     """Interpolates height map data from images.
 
     This class processes grayscale image data into a normalized height
@@ -48,7 +49,7 @@ class HeightMap:
         _interpolator (BivariateSpline): Spline interpolator for height values
 
     Example:
-        >>> height_map = HeightMap.from_path('terrain.png')
+        >>> height_map = RasterHeightMap.from_path('terrain.png')
         >>> height_map.set_scale(2.0)
         >>> height = height_map.get_height_at(100, 100)
     """
@@ -61,7 +62,7 @@ class HeightMap:
         self._interpolator = self._create_interpolator(self._height_map)
 
     @classmethod
-    def from_path(cls, path: str) -> 'HeightMap':
+    def from_path(cls, path: str) -> 'RasterHeightMap':
         """Create a HeightMap instance from an image file.
 
         Args:

@@ -151,7 +151,7 @@ vpype \
   mecode \
     --length_units=mm \
     --head_mode=mapped \
-    --height_map=heightmap.png \
+    --height_map_path=heightmap.png \
     --height_map_scale=50.0 \
     --outfile=output.gcode
 ```
@@ -162,7 +162,7 @@ between height values, ensuring precise tool movement across the surface.
 **Understanding the Options:**
 
 * **--head_mode=mapped**: Enables Z-axis height map compensation.
-* **--height_map**: Grayscale image defining height variations.
+* **--height_map_path**: Grayscale image defining height variations.
 * **--height_map_scale**: Scale factor for height adjustments.
 
 In this example, a scale factor of `50.0` means that a white pixel on

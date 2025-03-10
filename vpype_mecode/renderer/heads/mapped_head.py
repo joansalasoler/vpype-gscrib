@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from vpype_mecode.renderer.gcode_context import GContext
-from vpype_mecode.utils import HeightMap
 from .basic_head import BasicHead
 
 
@@ -43,10 +42,6 @@ class MappedHead(BasicHead):
     ensure smooth transitions between different surface heights.
     """
 
-    def __init__(self):
-        super().__init__()
-        self._height_map = None
-
     def plunge(self, ctx: GContext):
         """Plunge the machine head to the work height.
 
@@ -60,12 +55,9 @@ class MappedHead(BasicHead):
             ctx (GContext): The G-code generation context
         """
 
-        height_map = self._get_height_map(ctx)
         cx, cy, cz = ctx.g.current_head_position
-        map_z = height_map.get_height_at(cx, cy)
+        work_z = self._compute_work_z(ctx, cx, cy)
         plunge_offset = ctx.plunge_z - ctx.work_z
-
-        work_z = map_z + ctx.work_z
         plunge_z = work_z + plunge_offset
 
         ctx.g.move(z=plunge_z, F=ctx.travel_speed)
@@ -86,21 +78,28 @@ class MappedHead(BasicHead):
             tool_params (dict): Tool-specific parameters
         """
 
-        height_map = self._get_height_map(ctx)
-        cx, cy, cz = ctx.g.current_head_position
-        points = height_map.sample_path([cx, cy, x, y])
+        work_z = self._compute_work_z(ctx, x, y)
+        params = { 'F' : ctx.work_speed, **tool_params }
+        ctx.g.move(x=x, y=y, z=work_z, **params)
 
-        for x, y, map_z in points[1:]:
-            work_z = map_z + ctx.work_z
-            params = { 'F' : ctx.work_speed, **tool_params }
-            ctx.g.move(x=x, y=y, z=work_z, **params)
+    def _compute_work_z(self, ctx: GContext, x: float, y: float) -> float:
+        """Returns the work Z position for a given XY position.
 
-    def _get_height_map(self, ctx: GContext):
-        """Obtain or create the heightmap instance to use"""
+        This method calculates the work Z position by adding the
+        configured work_z offset to the height map value at the current
+        XY position. Notice that the height map value, which is provided
+        in work units is scaled down to pixels.
 
-        if not isinstance(self._height_map, HeightMap):
-            self._height_map = HeightMap.from_path(ctx.height_map)
-            self._height_map.set_tolerance(ctx.height_map_tolerance)
-            self._height_map.set_scale(ctx.height_map_scale)
+        Args:
+            ctx (GContext): The G-code generation context
+            x (float): The target x-coordinate
+            y (float): The target y-coordinate
 
-        return self._height_map
+        Returns:
+            float: The work Z position
+        """
+
+        z_in_units = ctx.height_map.get_height_at(x, y)
+        z_in_pixels = ctx.length_units.to_pixels(z_in_units)
+
+        return ctx.work_z + z_in_pixels

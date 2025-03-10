@@ -82,7 +82,7 @@ class RenderConfig(BaseModel, BaseConfig):
     park_z: float = Field(vp.convert_length('50mm'))
 
     # Heightmap transformation parameters
-    height_map: Optional[str] = Field(None)
+    height_map_path: Optional[str] = Field(None)
     height_map_scale: float = Field(50.0, gt=0)
     height_map_tolerance: float = Field(0.01, ge=0)
 

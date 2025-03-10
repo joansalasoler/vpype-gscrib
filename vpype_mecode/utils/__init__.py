@@ -4,8 +4,12 @@
 G-code generation utilities.
 """
 
-from .heightmap import HeightMap
+from .base_heightmap import BaseHeightMap
+from .flat_heightmap import FlatHeightMap
+from .raster_heightmap import RasterHeightMap
 
 __all__ = [
-    'HeightMap',
+    'BaseHeightMap',
+    'FlatHeightMap',
+    'RasterHeightMap',
 ]

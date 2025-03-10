@@ -250,7 +250,7 @@ command_options = (
     # ------------------------------------------------------------------
 
     ConfigOption(
-        option_name='height_map',
+        option_name='height_map_path',
         type=PathType(exists=True, dir_okay=False, resolve_path=True),
         help="""
         Path to a heightmap image file that defines surface variations

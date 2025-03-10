@@ -1,9 +1,10 @@
 import pytest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from dataclasses import FrozenInstanceError
 from vpype_mecode.renderer import GBuilder, GContext
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.enums import LengthUnits
+from vpype_mecode.utils import BaseHeightMap
 
 
 # --------------------------------------------------------------------
@@ -40,8 +41,9 @@ def create_test_render_config(values_dict):
 def test_gcontext_initialization(mock_gbuilder, render_config):
     ctx = GContext(mock_gbuilder, render_config)
     assert ctx.g == mock_gbuilder
-    assert ctx.plunge_z == 2.0
-    assert ctx.work_z == 1.0
+    assert getattr(ctx, 'plunge_z') == 2.0
+    assert getattr(ctx, 'work_z') == 1.0
+    assert isinstance(ctx.height_map, BaseHeightMap)
 
 def test_gcontext_property_immutability(mock_gcontext):
     with pytest.raises(FrozenInstanceError):

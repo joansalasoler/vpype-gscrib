@@ -30,6 +30,11 @@ class LengthUnits(BaseEnum):
         self.scale_factor = 1.0 / vpype.convert_length(value)
 
     def scale(self, value_in_px: float) -> float:
-        """Scale a value in `px` to this unit"""
+        """Scale a value in pixels to this unit"""
 
         return value_in_px * self.scale_factor
+
+    def to_pixels(self, value_in_units: float) -> float:
+        """Scale a value in this unit to pixels"""
+
+        return value_in_units / self.scale_factor

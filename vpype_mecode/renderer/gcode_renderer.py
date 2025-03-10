@@ -93,6 +93,7 @@ class GRenderer(DocumentRenderer):
         self._ctx_queue = self._build_contexts(builder, configs)
         self._document_context = self._switch_context()
         self._context = self._document_context
+        self._heightmap = None
 
     def _switch_context(self) -> GContext:
         """Switch to the next context in the queue."""
@@ -217,8 +218,16 @@ class GRenderer(DocumentRenderer):
             y (float): Target Y coordinate of the segment
         """
 
-        tool_params = self._tool.get_trace_params(self._context, x, y)
-        self._head.trace_to(self._context, x, y, tool_params)
+        # Splits the current segment into smaller ones where the surface
+        # height varies significantly (based on tolerance). If no height
+        # map is available, the segment is traced as is.
+
+        ctx = self._context
+        cx, cy, cz = self._g.current_head_position
+
+        for x, y, z in ctx.height_map.sample_path([cx, cy, x, y])[1:]:
+            tool_params = self._tool.get_trace_params(ctx, x, y)
+            self._head.trace_to(ctx, x, y, tool_params)
 
     def end_path(self, path: array):
         """This method is invoked once per path after all segments of

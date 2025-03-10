@@ -21,6 +21,7 @@ from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
 from vpype_mecode.renderer.gcode_builder import GBuilder
 from vpype_mecode.config import RenderConfig
+from vpype_mecode.utils import BaseHeightMap, FlatHeightMap, RasterHeightMap
 from vpype_mecode.enums import *
 
 
@@ -67,13 +68,21 @@ class GContext():
         self._g = builder
         self._config = config
         self._length_units = config.length_units
+        self._height_map = self._build_height_map(config)
         self._init_properties(config)
         self._frozen = True
 
     @property
     def g(self) -> GBuilder:
         """The G-code builder instance"""
+
         return self._g
+
+    @property
+    def height_map(self) -> BaseHeightMap:
+        """Height map instance for this context"""
+
+        return self._height_map
 
     @typechecked
     def scale_length(self, length: float) -> float:
@@ -100,6 +109,18 @@ class GContext():
             if name in self._scale_properties:
                 value = self.scale_length(value)
             setattr(self, name, value)
+
+    def _build_height_map(self, config: RenderConfig):
+        """Builds a height map instance for a context."""
+
+        if self._config.height_map_path is None:
+            return FlatHeightMap()
+
+        height_map = RasterHeightMap.from_path(config.height_map_path)
+        height_map.set_tolerance(config.height_map_tolerance)
+        height_map.set_scale(config.height_map_scale)
+
+        return height_map
 
     def __setattr__(self, name, value):
         """Ensure all the properties of this class are read only"""

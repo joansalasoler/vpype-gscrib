@@ -5,8 +5,8 @@ from numpy import ndarray, float32
 from scipy.interpolate import RectBivariateSpline
 
 from vpype_mecode.excepts import ImageLoadError
-from vpype_mecode.utils import HeightMap
-from vpype_mecode.utils.heightmap import UINT8_MAX, UINT16_MAX
+from vpype_mecode.utils import RasterHeightMap
+from vpype_mecode.utils.raster_heightmap import UINT8_MAX, UINT16_MAX
 
 
 # --------------------------------------------------------------------
@@ -15,7 +15,7 @@ from vpype_mecode.utils.heightmap import UINT8_MAX, UINT16_MAX
 
 @pytest.fixture
 def height_map(sample_uint8_image):
-    return HeightMap(sample_uint8_image)
+    return RasterHeightMap(sample_uint8_image)
 
 @pytest.fixture
 def sample_uint8_image():
@@ -43,14 +43,14 @@ def sample_uint16_image():
 # --------------------------------------------------------------------
 
 def test_height_map_init(sample_uint8_image):
-    height_map = HeightMap(sample_uint8_image)
+    height_map = RasterHeightMap(sample_uint8_image)
     assert isinstance(height_map._height_map, ndarray)
     assert isinstance(height_map._interpolator, RectBivariateSpline)
     assert height_map._height_map.dtype == float32
     assert height_map._scale_z == 1.0
 
 def test_init_with_uint8_image(sample_uint8_image):
-    height_map = HeightMap(sample_uint8_image)
+    height_map = RasterHeightMap(sample_uint8_image)
     assert numpy.all(height_map._height_map >= 0)
     assert numpy.all(height_map._height_map <= 1)
 
@@ -60,7 +60,7 @@ def test_init_with_uint8_image(sample_uint8_image):
     assert map_value == pytest.approx(expected)
 
 def test_init_with_uint16_image(sample_uint16_image):
-    height_map = HeightMap(sample_uint16_image)
+    height_map = RasterHeightMap(sample_uint16_image)
     assert numpy.all(height_map._height_map >= 0)
     assert numpy.all(height_map._height_map <= 1)
 
@@ -72,8 +72,8 @@ def test_init_with_uint16_image(sample_uint16_image):
 @patch('cv2.imread')
 def test_create_from_path_success(mock_imread, sample_uint8_image):
     mock_imread.return_value = sample_uint8_image
-    height_map = HeightMap.from_path('test_image.png')
-    assert isinstance(height_map, HeightMap)
+    height_map = RasterHeightMap.from_path('test_image.png')
+    assert isinstance(height_map, RasterHeightMap)
     assert height_map._scale_z == 1.0
 
 @patch('cv2.imread')
@@ -81,7 +81,7 @@ def test_create_from_path_failure(mock_imread):
     mock_imread.return_value = None
 
     with pytest.raises(ImageLoadError):
-        HeightMap.from_path('nonexistent_image.png')
+        RasterHeightMap.from_path('nonexistent_image.png')
 
 def test_get_height_at(height_map):
     height = height_map.get_height_at(5, 5)
