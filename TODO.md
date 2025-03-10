@@ -50,6 +50,17 @@ could be used for this purpose.
 A system to bring the machine to the tool and grab it —or even dip a
 brush into paint.
 
+## G-code Optimization Postprocessor
+
+The current implementation prioritizes safety and consistency by
+explicitly setting all parameters in each G-code command. While this
+approach works well for direct machine control, it generates redundant
+commands and verbose output files.
+
+A postprocessor could optimize the G-code by removing duplicate
+parameters and omitting unchanged values, resulting in more compact and
+efficient files while maintaining the same machine behavior.
+
 ## G-code Commands
 
 * **G43, G44:** Tool Length Compensation
