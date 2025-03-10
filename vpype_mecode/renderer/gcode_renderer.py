@@ -217,7 +217,8 @@ class GRenderer(DocumentRenderer):
             y (float): Target Y coordinate of the segment
         """
 
-        self._head.trace_to(self._context, x, y)
+        tool_params = self._tool.get_trace_params(self._context, x, y)
+        self._head.trace_to(self._context, x, y, tool_params)
 
     def end_path(self, path: array):
         """This method is invoked once per path after all segments of

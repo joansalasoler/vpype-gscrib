@@ -80,7 +80,7 @@ class BasicHead(BaseHead):
 
         ctx.g.move(x=x, y=y, F=ctx.travel_speed)
 
-    def trace_to(self, ctx: GContext, x: float, y: float):
+    def trace_to(self, ctx: GContext, x: float, y: float, tool_params: dict):
         """Trace a path to a specified position at work speed.
 
         Generates G-code commands to move the machine head to the
@@ -90,9 +90,11 @@ class BasicHead(BaseHead):
             ctx (GContext): The G-code generation context
             x (float): The target x-coordinate
             y (float): The target y-coordinate
+            tool_params (dict): Tool-specific parameters
         """
 
-        ctx.g.move(x=x, y=y, F=ctx.work_speed)
+        params = { 'F' : ctx.work_speed, **tool_params }
+        ctx.g.move(x=x, y=y, **params)
 
     def park_for_service(self, ctx: GContext):
         """Park the machine head for service.

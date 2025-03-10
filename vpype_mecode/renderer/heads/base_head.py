@@ -78,7 +78,7 @@ class BaseHead(ABC):
         """
 
     @abstractmethod
-    def trace_to(self, ctx: GContext, x: float, y: float):
+    def trace_to(self, ctx: GContext, x: float, y: float, tool_params: dict):
         """Move the head to a new XY position using controlled movement.
 
         Generates G-code commands for controlled, working moves. Used
@@ -89,6 +89,7 @@ class BaseHead(ABC):
             ctx (GContext): The G-code generation context
             x (float): Target X coordinate in current coordinate system.
             y (float): Target Y coordinate in current coordinate system.
+            tool_params (dict): Tool-specific parameters for the movement.
         """
 
     @abstractmethod

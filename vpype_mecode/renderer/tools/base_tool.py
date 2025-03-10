@@ -84,3 +84,33 @@ class BaseTool(ABC):
         Args:
             ctx (GContext): The G-code generation context
         """
+
+    def get_trace_params(self, ctx: GContext, x: float, y: float) -> dict:
+        """Get tool-specific parameters for trace movements.
+
+        This method allows tools to inject additional parameters into
+        movement commands for work operations. The parameters returned
+        by this method will be merged with the basic movement parameters
+        (X, Y, Z, F) when generating G1 commands.
+
+        For example:
+
+        - Laser tools might add power parameters (S)
+        - Extruder tools might add extrusion parameters (E)
+
+        Args:
+            ctx (GContext): Current rendering context
+            x (float): Target X coordinate of the movement
+            y (float): Target Y coordinate of the movement
+
+        Returns:
+            dict: Tool-specific parameters or an empty dict if none.
+
+        Example:
+            A laser tool might return {'S': 1000} to set laser power to
+            1000 during trace movements, resulting in a G1 command like:
+
+            G1 X100 Y100 F500 S1000
+        """
+
+        return {}

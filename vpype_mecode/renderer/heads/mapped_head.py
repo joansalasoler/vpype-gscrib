@@ -71,7 +71,7 @@ class MappedHead(BasicHead):
         ctx.g.move(z=plunge_z, F=ctx.travel_speed)
         ctx.g.move(z=work_z, F=ctx.plunge_speed)
 
-    def trace_to(self, ctx: GContext, x: float, y: float):
+    def trace_to(self, ctx: GContext, x: float, y: float, tool_params: dict):
         """Trace a path to a specified position at work speed.
 
         Generates G-code commands to move the machine head to the
@@ -83,6 +83,7 @@ class MappedHead(BasicHead):
             ctx (GContext): The G-code generation context
             x (float): The target x-coordinate
             y (float): The target y-coordinate
+            tool_params (dict): Tool-specific parameters
         """
 
         height_map = self._get_height_map(ctx)
@@ -91,7 +92,8 @@ class MappedHead(BasicHead):
 
         for x, y, map_z in points[1:]:
             work_z = map_z + ctx.work_z
-            ctx.g.move(x=x, y=y, z=work_z, F=ctx.work_speed)
+            params = { 'F' : ctx.work_speed, **tool_params }
+            ctx.g.move(x=x, y=y, z=work_z, **params)
 
     def _get_height_map(self, ctx: GContext):
         """Obtain or create the heightmap instance to use"""
