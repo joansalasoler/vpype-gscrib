@@ -157,11 +157,19 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name='hotend_temperature',
+        type=IntegerType(),
+        help="""
+        The temperature at which the hotend is set during operation,
+        measured in celsius degrees.
+        """,
+    ),
+    ConfigOption(
         option_name='bed_temperature',
         type=IntegerType(),
         help="""
         The temperature at which the heated bed is set during operation,
-        measured in celcius degrees.
+        measured in celsius degrees.
         """,
     ),
     ConfigOption(
@@ -279,6 +287,132 @@ command_options = (
     ),
 
     # ------------------------------------------------------------------
+    # 3D Printing Settings
+    # ------------------------------------------------------------------
+
+    ConfigOption(
+        option_name='layer_height',
+        type=LengthType(min=0.001),
+        help="""
+        The height of each extruded layer in millimeters. This parameter
+        is used to determine how much filament is extruded per layer.
+        """,
+    ),
+    ConfigOption(
+        option_name='nozzle_diameter',
+        type=LengthType(min=0.001),
+        help="""
+        The diameter of the 3D printer's extrusion nozzle. This determines
+        the width of the extruded filament and affects the extrusion rate.
+        """,
+    ),
+    ConfigOption(
+        option_name='filament_diameter',
+        type=LengthType(min=0.001),
+        help="""
+        The diameter of the filament used for extrusion. This affects
+        the volume of plastic extruded.
+        """,
+    ),
+    ConfigOption(
+        option_name='retraction_distance',
+        type=LengthType(min=0.0),
+        help="""
+        The length of filament that is retracted to reduce stringing and
+        oozing during non-extrusion moves.
+        """,
+    ),
+    ConfigOption(
+        option_name='retraction_speed',
+        type=LengthType(),
+        help="""
+        The speed at which the filament is retracted. This setting only
+        affects extrusion-based printing. Higher speeds help prevent
+        stringing but may cause filament grinding.
+        """,
+    ),
+
+    # ------------------------------------------------------------------
+    # 3D Printing Settings (mecode)
+    # ------------------------------------------------------------------
+
+    ConfigOption(
+        option_name='layer_height',
+        type=LengthType(),
+        help="""
+        The thickness of each printed layer for 3D printing.
+        """,
+    ),
+    ConfigOption(
+        option_name='filament_diameter',
+        type=LengthType(),
+        help="""
+        Diameter of the filament used for 3D printing.
+        """,
+    ),
+    ConfigOption(
+        option_name='extrusion_width',
+        type=LengthType(),
+        help="""
+        The width of the extruded filament, including any flattening
+        effect.
+        """,
+    ),
+    ConfigOption(
+        option_name='extrusion_multiplier',
+        type=FloatRangeType(min=0.0),
+        help="""
+        Adjusts the amount of filament extruded. A value greater than 1
+        increases extrusion; a value less than 1 reduces it.
+        """,
+    ),
+
+    # ------------------------------------------------------------------
+    # Direct Writing to Device (mecode)
+    # ------------------------------------------------------------------
+
+    ConfigOption(
+        option_name='direct_write_mode',
+        type=DirectWriteMode,
+        help="""
+        Sends the generated G-Code directly to a connected machine via a
+        socket or serial connection.
+        """,
+    ),
+    ConfigOption(
+        option_name='host',
+        type=TextType(),
+        help="""
+        The hostname or IP address of the machine when using direct
+        writing over a network.
+        """,
+    ),
+    ConfigOption(
+        option_name='port',
+        type=IntRangeType(min=0),
+        help="""
+        The port number used for network communication with the machine
+        when using direct writing.
+        """,
+    ),
+    ConfigOption(
+        option_name='baudrate',
+        type=IntRangeType(min=0),
+        help="""
+        The communication speed (baud rate) for a serial connection to
+        the machine when using direct writing.
+        """,
+    ),
+    ConfigOption(
+        option_name='two_way_comm',
+        is_flag=True,
+        help="""
+        If enabled, the program will wait for a response from the machine
+        after sending each G-Code command.
+        """,
+    ),
+
+    # ------------------------------------------------------------------
     # G-Code Output Options (mecode)
     # ------------------------------------------------------------------
 
@@ -333,51 +467,6 @@ command_options = (
     ),
 
     # ------------------------------------------------------------------
-    # Direct Writing to Printer (mecode)
-    # ------------------------------------------------------------------
-
-    ConfigOption(
-        option_name='direct_write_mode',
-        type=DirectWriteMode,
-        help="""
-        Sends the generated G-Code directly to a connected machine via a
-        socket or serial connection.
-        """,
-    ),
-    ConfigOption(
-        option_name='host',
-        type=TextType(),
-        help="""
-        The hostname or IP address of the machine when using direct
-        writing over a network.
-        """,
-    ),
-    ConfigOption(
-        option_name='port',
-        type=IntRangeType(min=0),
-        help="""
-        The port number used for network communication with the machine
-        when using direct writing.
-        """,
-    ),
-    ConfigOption(
-        option_name='baudrate',
-        type=IntRangeType(min=0),
-        help="""
-        The communication speed (baud rate) for a serial connection to
-        the machine when using direct writing.
-        """,
-    ),
-    ConfigOption(
-        option_name='two_way_comm',
-        is_flag=True,
-        help="""
-        If enabled, the program will wait for a response from the machine
-        after sending each G-Code command.
-        """,
-    ),
-
-    # ------------------------------------------------------------------
     # Axis Naming (mecode)
     # ------------------------------------------------------------------
 
@@ -421,54 +510,6 @@ command_options = (
         type=TextType(),
         help="""
         Custom label for the machine's K axis in the generated G-Code.
-        """,
-    ),
-
-    # ------------------------------------------------------------------
-    # 3D Printing Settings (mecode)
-    # ------------------------------------------------------------------
-
-    ConfigOption(
-        option_name='extrude',
-        hidden=True,
-        is_flag=True,
-        help="""
-        Enables extrusion mode, where filament flow is calculated and
-        added to move commands.
-        """,
-    ),
-    ConfigOption(
-        option_name='filament_diameter',
-        hidden=True,
-        type=LengthType(),
-        help="""
-        Diameter of the filament used for 3D printing.
-        """,
-    ),
-    ConfigOption(
-        option_name='layer_height',
-        hidden=True,
-        type=LengthType(),
-        help="""
-        The thickness of each printed layer for 3D printing.
-        """,
-    ),
-    ConfigOption(
-        option_name='extrusion_width',
-        hidden=True,
-        type=LengthType(),
-        help="""
-        The width of the extruded filament, including any flattening
-        effect.
-        """,
-    ),
-    ConfigOption(
-        option_name='extrusion_multiplier',
-        hidden=True,
-        type=FloatRangeType(min=0.0),
-        help="""
-        Adjusts the amount of filament extruded. A value greater than 1
-        increases extrusion; a value less than 1 reduces it.
         """,
     ),
 

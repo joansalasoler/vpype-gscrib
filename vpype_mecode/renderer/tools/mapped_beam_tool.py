@@ -100,7 +100,7 @@ class MappedBeamTool(BaseTool):
             y (float): Target Y coordinate of the movement
 
         Returns:
-            dict: Tool-specific parameters or an empty dict if none.
+            dict: Dictionary with the power parameter set (S).
         """
 
         return { 'S' : ctx.height_map.get_height_at(x, y) }

@@ -68,18 +68,26 @@ class RenderConfig(BaseModel, BaseConfig):
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)
     plunge_speed: float = Field(vp.convert_length('100mm'), ge=0)
     travel_speed: float = Field(vp.convert_length('1000mm'), ge=0)
+    retraction_speed: float = Field(vp.convert_length('2100mm'), ge=0)
 
     # Fan parameters
     fan_speed: int = Field(255, ge=0, le=255)
 
-    # Bed parameters
+    # Bed and hotend parameters
     bed_temperature: int = Field(60)
+    hotend_temperature: int = Field(120)
 
     # Predefined Z-axis positions
     work_z: float = Field(vp.convert_length('0mm'))
     plunge_z: float = Field(vp.convert_length('1mm'))
     safe_z: float = Field(vp.convert_length('10mm'))
     park_z: float = Field(vp.convert_length('50mm'))
+
+    # Extrusion parameters
+    nozzle_diameter: float = Field(vp.convert_length('0.4mm'), gt=0)
+    filament_diameter: float = Field(vp.convert_length('1.75mm'), gt=0)
+    layer_height: float = Field(vp.convert_length('0.2mm'), gt=0)
+    retraction_distance: float = Field(vp.convert_length('1.5mm'), ge=0)
 
     # Heightmap transformation parameters
     height_map_path: Optional[str] = Field(None)
@@ -106,8 +114,13 @@ class RenderConfig(BaseModel, BaseConfig):
         'work_speed': 'px/min',
         'plunge_speed': 'px/min',
         'travel_speed': 'px/min',
+        'retraction_speed': 'px/min',
         'work_z': 'px',
         'plunge_z': 'px',
         'safe_z': 'px',
         'park_z': 'px',
+        'nozzle_diameter': 'px',
+        'filament_diameter': 'px',
+        'layer_height': 'px',
+        'retraction_distance': 'px',
     }

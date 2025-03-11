@@ -54,6 +54,7 @@ class GContext():
         'work_speed',
         'plunge_speed',
         'travel_speed',
+        'retraction_speed',
     )
 
     @typechecked

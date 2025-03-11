@@ -40,6 +40,13 @@ plunge_z = "1.0mm"          # Z height for initial material contact
 safe_z = "10.0mm"           # Z height for movements between operations
 park_z = "50.0mm"           # Z height when parked
 
+# Extrusion parameters
+nozzle_diameter = "0.4mm"     # Diameter of the extruder's noozle
+filament_diameter = "1.75mm"  # Diameter of the extruded filament
+layer_height = "0.2mm"        # Height of each layer
+retraction_distance = "1.5mm" # How much filament to retract
+retraction_speed = "2100mm"   # Speed at which to retract filament
+
 # Heightmap configuration
 height_map_path =           # Heightmap file path
 height_map_scale = 50.0     # Scale of the heightmap
@@ -48,6 +55,7 @@ height_map_tolerance = 0.01 # Heightmap sampling tolerance
 # Other parameters
 fan_speed = 255             # min = 0, max = 255
 bed_temperature = 60        # Celsius degrees
+hotend_temperature = 120    # Celsius degrees
 
 # =====================================================================
 # Layer-Specific Settings
@@ -78,11 +86,17 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# nozzle_diameter = "0.4mm"
+# filament_diameter = "1.75mm"
+# layer_height = "0.2mm"
+# retraction_distance = "1.5mm"
+# retraction_speed = "2100mm"
 # height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
+# hotend_temperature = 120
 
 [layer-1]
 
@@ -105,11 +119,17 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# nozzle_diameter = "0.4mm"
+# filament_diameter = "1.75mm"
+# layer_height = "0.2mm"
+# retraction_distance = "1.5mm"
+# retraction_speed = "2100mm"
 # height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
+# hotend_temperature = 120
 
 [layer-2]
 
@@ -132,8 +152,14 @@ bed_temperature = 60        # Celsius degrees
 # plunge_z = "1.0mm"
 # safe_z = "10.0mm"
 # park_z = "50.0mm"
+# nozzle_diameter = "0.4mm"
+# filament_diameter = "1.75mm"
+# layer_height = "0.2mm"
+# retraction_distance = "1.5mm"
+# retraction_speed = "2100mm"
 # height_map_path =
 # height_map_scale = 50.0
 # height_map_tolerance = 0.01
 # fan_speed = 255
 # bed_temperature = 60
+# hotend_temperature = 120

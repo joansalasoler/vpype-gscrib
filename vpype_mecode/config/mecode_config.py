@@ -42,10 +42,11 @@ class MecodeConfig(BaseModel, BaseConfig):
         >>> print(mecode_config.outfile)
     """
 
-    # Predefined settings (do not change!)
+    # Predefined settings (do not change)
     setup: bool = Field(False)
     absolute: bool = Field(True)
     print_lines: bool | str = Field('auto')
+    extrude: bool = Field(False)
 
     # Output settings
     outfile: Optional[str] = Field(None)
@@ -71,10 +72,9 @@ class MecodeConfig(BaseModel, BaseConfig):
     j_axis: str = Field('J')
     k_axis: str = Field('K')
 
-    # 3D printing settings
-    extrude: bool = Field(False)
+    # Extrusion parameters (currently unused)
     filament_diameter: float = Field(vp.convert_length('1.75mm'))
-    layer_height: Optional[float] = Field(vp.convert_length('0.19mm'))
+    layer_height: Optional[float] = Field(vp.convert_length('0.2mm'))
     extrusion_width: Optional[float] = Field(vp.convert_length('0.35mm'))
     extrusion_multiplier: float = Field(1.0)
 
