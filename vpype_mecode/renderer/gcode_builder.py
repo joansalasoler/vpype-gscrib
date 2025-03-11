@@ -105,6 +105,18 @@ class GBuilder(GMatrix):
         self.write(statement)
 
     @typechecked
+    def set_extrusion_mode(self, mode: ExtrusionMode) -> None:
+        """Set the extrusion mode for subsequent commands.
+
+        Args:
+            mode (ExtrusionMode): The extrusion mode to use
+        """
+
+        self._state.set_extrusion_mode(mode)
+        statement = self._get_gcode_from_table(mode)
+        self.write(statement)
+
+    @typechecked
     def set_feed_mode(self, mode: FeedMode) -> None:
         """Set the feed rate mode for subsequent commands.
 
@@ -169,7 +181,21 @@ class GBuilder(GMatrix):
             temp (float): Target temperature
         """
 
-        statement = self._get_gcode_from_table(units, f'S{temp}')
+        bed_units = BedTemperature.from_units(units)
+        statement = self._get_gcode_from_table(bed_units, f'S{temp}')
+        self.write(statement)
+
+    @typechecked
+    def set_hotend_temperature(self, units: TemperatureUnits, temp: int) -> None:
+        """Set the temperature of the hotend and return immediately.
+
+        Args:
+            units (TemperatureUnits): Temperature units
+            temp (float): Target temperature
+        """
+
+        hotend_units = HotendTemperature.from_units(units)
+        statement = self._get_gcode_from_table(hotend_units, f'S{temp}')
         self.write(statement)
 
     @typechecked

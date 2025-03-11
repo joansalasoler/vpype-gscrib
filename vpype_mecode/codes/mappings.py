@@ -51,6 +51,18 @@ gcode_table = GCodeTable((
     ),
 
     # ------------------------------------------------------------------
+    # Extrusion Modes
+    # ------------------------------------------------------------------
+
+    GCodeEntry(ExtrusionMode.ABSOLUTE,
+        'M82', 'Set extrusion mode, absolute'
+    ),
+
+    GCodeEntry(ExtrusionMode.RELATIVE,
+        'M83', 'Set extrusion mode, relative'
+    ),
+
+    # ------------------------------------------------------------------
     # Feed Rate Modes
     # ------------------------------------------------------------------
 
@@ -138,12 +150,20 @@ gcode_table = GCodeTable((
     # Temperature Control
     # ------------------------------------------------------------------
 
-    GCodeEntry(TemperatureUnits.CELSIUS,
+    GCodeEntry(BedTemperature.CELSIUS,
         'M140', 'Set bed temperature, celsius'
     ),
 
-    GCodeEntry(TemperatureUnits.KELVIN,
+    GCodeEntry(BedTemperature.KELVIN,
         'M140', 'Set bed temperature, kelvin'
+    ),
+
+    GCodeEntry(HotendTemperature.CELSIUS,
+        'M104', 'Set hotend temperature, celsius'
+    ),
+
+    GCodeEntry(HotendTemperature.KELVIN,
+        'M104', 'Set hotend temperature, kelvin'
     ),
 
     # ------------------------------------------------------------------
@@ -194,12 +214,16 @@ gcode_table = GCodeTable((
         'M30', 'End of program, stop and reset'
     ),
 
-    GCodeEntry(HaltMode.PALLET_EXCHANGE_AND_END,
+    GCodeEntry(HaltMode.PALLET_EXCHANGE,
         'M60', 'Exchange pallet and end program'
     ),
 
-    GCodeEntry(HaltMode.WAIT_FOR_BED_TEMP,
-        'M190', 'Wait for bed to reach temp, celsius'
+    GCodeEntry(HaltMode.WAIT_FOR_BED,
+        'M190', 'Wait for bed to reach temperature'
     ),
+
+    GCodeEntry(HaltMode.WAIT_FOR_HOTEND,
+        'M109', 'Wait for hotend to reach temperature'
+    )
 
 ))

@@ -31,7 +31,7 @@ class HeatedBed(BaseBed):
 
     def turn_on(self, ctx: GContext):
         units = TemperatureUnits.CELSIUS
-        halt_mode = HaltMode.WAIT_FOR_BED_TEMP
+        halt_mode = HaltMode.WAIT_FOR_BED
         ctx.g.set_bed_temperature(units, ctx.bed_temperature)
         ctx.g.halt_program(halt_mode, S=ctx.bed_temperature)
 

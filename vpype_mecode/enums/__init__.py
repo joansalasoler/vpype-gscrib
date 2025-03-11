@@ -14,6 +14,7 @@ from .base_enum import BaseEnum
 from .coolant_mode import CoolantMode
 from .direct_write_mode import DirectWriteMode
 from .distance_mode import DistanceMode
+from .extrusion_mode import ExtrusionMode
 from .fan_mode import FanMode
 from .feed_mode import FeedMode
 from .halt_mode import HaltMode
@@ -23,6 +24,8 @@ from .power_mode import PowerMode
 from .plane import Plane
 from .rack_mode import RackMode
 from .spin_mode import SpinMode
+from .bed_temperature import BedTemperature
+from .hotend_temperature import HotendTemperature
 from .temperature_units import TemperatureUnits
 from .bed_mode import BedMode
 from .time_units import TimeUnits
@@ -33,6 +36,7 @@ __all__ = [
     'CoolantMode',
     'DirectWriteMode',
     'DistanceMode',
+    'ExtrusionMode',
     'FanMode',
     'FeedMode',
     'HaltMode',
@@ -42,6 +46,8 @@ __all__ = [
     'Plane',
     'RackMode',
     'SpinMode',
+    'BedTemperature',
+    'HotendTemperature',
     'TemperatureUnits',
     'BedMode',
     'TimeUnits',

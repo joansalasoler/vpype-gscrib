@@ -38,6 +38,7 @@ class GState:
         self._current_spin_mode: SpinMode = SpinMode.OFF
         self._current_power_mode: PowerMode = PowerMode.OFF
         self._current_distance_mode: DistanceMode = DistanceMode.ABSOLUTE
+        self._current_extrusion_mode: ExtrusionMode = ExtrusionMode.ABSOLUTE
         self._current_coolant_mode: CoolantMode = CoolantMode.OFF
         self._current_feed_mode: FeedMode = FeedMode.MINUTE
         self._current_rack_mode: RackMode = RackMode.OFF
@@ -86,6 +87,11 @@ class GState:
     def current_distance_mode(self) -> DistanceMode:
         """Get the current distance mode."""
         return self._current_distance_mode
+
+    @property
+    def current_extrusion_mode(self) -> ExtrusionMode:
+        """Get the current extrusion mode."""
+        return self._current_extrusion_mode
 
     @property
     def current_feed_mode(self) -> FeedMode:
@@ -155,6 +161,16 @@ class GState:
         """
 
         self._current_distance_mode = mode
+
+    @typechecked
+    def set_extrusion_mode(self, mode: ExtrusionMode) -> None:
+        """Set the coordinate input mode for extrusion.
+
+        Args:
+            mode (ExtrusionMode): The extrusion mode to use
+        """
+
+        self._current_extrusion_mode = mode
 
     @typechecked
     def set_feed_mode(self, mode: FeedMode) -> None:
