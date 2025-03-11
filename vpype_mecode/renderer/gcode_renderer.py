@@ -22,6 +22,7 @@ from typing import List, Tuple
 from importlib.metadata import version
 
 from numpy import array
+from typeguard import typechecked
 from vpype import Document, LineCollection
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.processor import DocumentRenderer
@@ -81,6 +82,7 @@ class GRenderer(DocumentRenderer):
     _HEAD_SEPARATOR = '=' * 60
     _SECTION_SEPARATOR = '-' * 60
 
+    @typechecked
     def __init__(self, builder: GBuilder, configs: List[RenderConfig]):
         """G-code renderer initialization.
 
@@ -89,11 +91,10 @@ class GRenderer(DocumentRenderer):
             config (List[RenderConfig]): Configuration parameters
         """
 
-        self._g = builder
+        self._g: GBuilder = builder
         self._ctx_queue = self._build_contexts(builder, configs)
         self._document_context = self._switch_context()
         self._context = self._document_context
-        self._heightmap = None
 
     def _switch_context(self) -> GContext:
         """Switch to the next context in the queue."""
@@ -120,6 +121,7 @@ class GRenderer(DocumentRenderer):
             self._ctx_queue[0]
         )
 
+    @typechecked
     def begin_document(self, document: Document):
         """This method is invoked once per document before any of the
         document layers are processed.
@@ -153,6 +155,7 @@ class GRenderer(DocumentRenderer):
 
         self._bed.turn_on(self._context)
 
+    @typechecked
     def begin_layer(self, layer: LineCollection):
         """Each layer is composed of one or more paths. This method is
         invoked once per layer before any paths are processed.
@@ -183,6 +186,7 @@ class GRenderer(DocumentRenderer):
         self._coolant.turn_on(self._context)
         self._fan.turn_on(self._context)
 
+    @typechecked
     def begin_path(self, path: array):
         """Each path is composed of one or more segments. This method is
         invoked once per path before any of its segments are processed.
@@ -205,6 +209,7 @@ class GRenderer(DocumentRenderer):
         self._head.plunge(self._context)
         self._tool.power_on(self._context)
 
+    @typechecked
     def trace_segment(self, path: array, x: float, y: float):
         """This method is called once per segment within a path,
         receiving the segment's x and y coordinates.
@@ -229,6 +234,7 @@ class GRenderer(DocumentRenderer):
             tool_params = self._tool.get_trace_params(ctx, x, y)
             self._head.trace_to(ctx, x, y, tool_params)
 
+    @typechecked
     def end_path(self, path: array):
         """This method is invoked once per path after all segments of
         the path have been processed.
@@ -245,6 +251,7 @@ class GRenderer(DocumentRenderer):
         self._tool.power_off(self._context)
         self._head.retract(self._context)
 
+    @typechecked
     def end_layer(self, layer: LineCollection):
         """This method is invoked once per layer after all paths on the
         layer have been processed.
@@ -264,6 +271,7 @@ class GRenderer(DocumentRenderer):
         self._fan.turn_off(self._context)
         self._coolant.turn_off(self._context)
 
+    @typechecked
     def end_document(self, document: Document):
         """This method is invoked once per document after all layers on
         the document have been processed.
@@ -284,6 +292,7 @@ class GRenderer(DocumentRenderer):
         self._g.halt_program(HaltMode.END_WITH_RESET)
         self._g.teardown()
 
+    @typechecked
     def process_error(self, e: Exception):
         """Invoked if an error occurs during the processing.
 

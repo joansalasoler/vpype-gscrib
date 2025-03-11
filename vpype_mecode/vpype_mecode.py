@@ -90,8 +90,8 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
     except VpypeMecodeError as e:
         raise click.UsageError(str(e))
     except ValidationError as e:
-        message = e.errors()[0]['msg']
-        raise click.UsageError(message)
+        error_message = e.errors()[0]['msg']
+        raise click.UsageError(error_message)
     except FileNotFoundError as e:
         raise click.UsageError(f"File not found: {e.filename}")
 
