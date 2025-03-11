@@ -294,8 +294,8 @@ command_options = (
         option_name='layer_height',
         type=LengthType(min=0.001),
         help="""
-        The height of each extruded layer in millimeters. This parameter
-        is used to determine how much filament is extruded per layer.
+        The height of each extruded layer. This parameter is used to
+        determine how much filament is extruded per layer.
         """,
     ),
     ConfigOption(
@@ -326,44 +326,8 @@ command_options = (
         option_name='retraction_speed',
         type=LengthType(),
         help="""
-        The speed at which the filament is retracted. This setting only
-        affects extrusion-based printing. Higher speeds help prevent
-        stringing but may cause filament grinding.
-        """,
-    ),
-
-    # ------------------------------------------------------------------
-    # 3D Printing Settings (mecode)
-    # ------------------------------------------------------------------
-
-    ConfigOption(
-        option_name='layer_height',
-        type=LengthType(),
-        help="""
-        The thickness of each printed layer for 3D printing.
-        """,
-    ),
-    ConfigOption(
-        option_name='filament_diameter',
-        type=LengthType(),
-        help="""
-        Diameter of the filament used for 3D printing.
-        """,
-    ),
-    ConfigOption(
-        option_name='extrusion_width',
-        type=LengthType(),
-        help="""
-        The width of the extruded filament, including any flattening
-        effect.
-        """,
-    ),
-    ConfigOption(
-        option_name='extrusion_multiplier',
-        type=FloatRangeType(min=0.0),
-        help="""
-        Adjusts the amount of filament extruded. A value greater than 1
-        increases extrusion; a value less than 1 reduces it.
+        The speed at which the filament is retracted. Higher speeds help
+        prevent stringing but may cause filament grinding.
         """,
     ),
 
