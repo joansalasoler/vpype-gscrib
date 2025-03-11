@@ -150,15 +150,18 @@ class GMatrix(G):
     @property
     def current_position(self):
         """Compute the current position in the transformed coordinate system."""
-        x = self._current_position.get('x', 0)
-        y = self._current_position.get('y', 0)
-        z = self._current_position.get('z', 0)
+
+        current_position = self._current_position.copy()
+
+        x = current_position.get('x', 0)
+        y = current_position.get('y', 0)
+        z = current_position.get('z', 0)
 
         point = np.array([x, y, z, 1])
         transform = np.linalg.inv(self.matrix_stack[-1]) @ point
 
-        return {
-            'x': transform[0],
-            'y': transform[1],
-            'z': transform[2]
-        }
+        current_position['x'] = transform[0]
+        current_position['y'] = transform[1]
+        current_position['z'] = transform[2]
+
+        return current_position
