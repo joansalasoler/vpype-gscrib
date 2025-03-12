@@ -37,9 +37,9 @@ class MecodeConfig(BaseModel, BaseConfig):
     about the properties of this class.
 
     Example:
-        >>> params = { 'outfile': 'output.gcode' }
+        >>> params = { 'output': 'output.gcode' }
         >>> mecode_config = MecodeConfig.model_validate(params)
-        >>> print(mecode_config.outfile)
+        >>> print(mecode_config.output)
     """
 
     # Predefined settings (do not change)
@@ -49,20 +49,20 @@ class MecodeConfig(BaseModel, BaseConfig):
     extrude: bool = Field(False)
 
     # Output settings
-    outfile: Optional[str] = Field(None)
+    output: Optional[str] = Field(None)
     header: Optional[str] = Field(None)
     footer: Optional[str] = Field(None)
     aerotech_include: bool = Field(False)
-    output_digits: int = Field(6, ge=0)
-    lineend: str = Field('os')
-    comment_char: str = Field('(')
+    decimal_places: int = Field(5, ge=0)
+    comment_symbols: str = Field('(')
+    line_endings: str = Field('os')
 
     # Direct write settings
     direct_write_mode: DirectWriteMode = Field(DirectWriteMode.OFF)
     host: str = Field('localhost')
     port: int = Field(8000, ge=0)
     baudrate: int = Field(250000, ge=0)
-    two_way_comm: bool = Field(False)
+    wait_for_response: bool = Field(False)
 
     # Axis naming settings
     x_axis: str = Field('X')

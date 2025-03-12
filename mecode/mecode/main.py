@@ -90,12 +90,12 @@ class G(object):
 
     def __init__(self, output=None, print_lines='auto', header=None, footer=None,
                  aerotech_include=False,
-                 output_digits=5,
+                 decimal_places=5,
                  direct_write_mode='off',
                  host='localhost',
                  port=8000,
                  baudrate=250000,
-                 two_way_comm=True,
+                 wait_for_response=True,
                  x_axis='X',
                  y_axis='Y',
                  z_axis='Z',
@@ -108,8 +108,8 @@ class G(object):
                  extrusion_width=0.35,
                  extrusion_multiplier=1,
                  setup=True,
-                 lineend='os',
-                 comment_char=';',
+                 line_endings='os',
+                 comment_symbols=';',
                  absolute=False):
         """
         Parameters
@@ -129,7 +129,7 @@ class G(object):
         aerotech_include : bool (default: False)
             If true, add aerotech specific functions and var defs to the
             output file.
-        output_digits : int (default: 5)
+        decimal_places : int (default: 5)
             How many digits to include after the decimal in the output gcode.
         direct_write_mode : str ('off', 'socket' or 'serial') (default: off)
             If 'socket' or 'serial' a port is opened to the machine and the
@@ -140,7 +140,7 @@ class G(object):
             Port of the machine for direct write mode.
         baudrate: int (default: 250000)
             The baudrate to connect to the machine with.
-        two_way_comm : bool (default: True)
+        wait_for_response : bool (default: True)
             If True, mecode waits for a response after every line of GCode is
             sent over the socket. The response is returned by the `write`
             method. Only applies in direct write mode.
@@ -171,11 +171,11 @@ class G(object):
             command will be multiplied by this number before being applied.
         setup : Bool (default: True)
             Whether or not to automatically call the setup function.
-        lineend : str (default: 'os')
+        line_endings : str (default: 'os')
             Line ending to use when writing to a file or machine. The special
             value 'os' can be passed to fall back on python's automatic
             line-ending insertion.
-        comment_char : str (default: ';')
+        comment_symbols : str (default: ';')
             Character to use when outputting comments.
             Special case handling for parenthesis comments. If "(" is specified
             as the comment symbol, the comments will be wrapped in both opening
@@ -189,20 +189,20 @@ class G(object):
         self.header = header
         self.footer = footer
         self.aerotech_include = aerotech_include
-        self.output_digits = output_digits
+        self.output_digits = decimal_places
         self.direct_write = direct_write_mode != 'off'
         self.direct_write_mode = direct_write_mode
         self.host = host
         self.port = port
         self.baudrate = baudrate
-        self.two_way_comm = two_way_comm
+        self.wait_for_response = wait_for_response
         self.x_axis = x_axis
         self.y_axis = y_axis
         self.z_axis = z_axis
         self.i_axis = i_axis
         self.j_axis = j_axis
         self.k_axis = k_axis
-        self._comment_char = comment_char
+        self._comment_symbols = comment_symbols
 
         self._current_position = defaultdict(float)
         self.is_relative = not absolute
@@ -226,13 +226,13 @@ class G(object):
         # If the user passes in a line ending then we need to open the output
         # file in binary mode, otherwise python will try to be smart and
         # convert line endings in a platform dependent way.
-        if lineend == 'os':
+        if line_endings == 'os':
             mode = 'w+'
-            self.lineend = '\n'
+            self.line_endings = '\n'
         else:
             mode = 'wb+'
-            chars = bytes(lineend, 'utf-8')
-            self.lineend = chars.decode('unicode-escape')
+            chars = bytes(line_endings, 'utf-8')
+            self.line_endings = chars.decode('unicode-escape')
 
         if is_str(self.outfile):
             self.out_fd = open(self.outfile, mode)
@@ -270,7 +270,7 @@ class G(object):
     def format_comment(self, text):
         """Formats a text as a G-code comment"""
 
-        return self._enclose_comment(text, self._comment_char)
+        return self._enclose_comment(text, self._comment_symbols)
 
     def _enclose_comment(self, text: str, open_symbols: str) -> str:
         """Enclose or prepend text with comment symbols.
@@ -2238,7 +2238,7 @@ class G(object):
         if self.print_lines is True or (self.print_lines == 'auto' and self.outfile is None):
             print(statement_in)
         self._write_out(statement_in)
-        statement = encode2To3(statement_in + self.lineend)
+        statement = encode2To3(statement_in + self.line_endings)
         if self.direct_write is True:
             if self.direct_write_mode == 'socket':
                 if self._socket is None:
@@ -2247,7 +2247,7 @@ class G(object):
                                                 socket.SOCK_STREAM)
                     self._socket.connect((self.host, self.port))
                 self._socket.send(statement)
-                if self.two_way_comm is True:
+                if self.wait_for_response is True:
                     response = self._socket.recv(8192)
                     response = decode2To3(response)
                     if response[0] != '%':
@@ -2324,7 +2324,7 @@ class G(object):
             Formatted line with proper ending and encoding
         """
 
-        formatted = line.rstrip() + self.lineend
+        formatted = line.rstrip() + self.line_endings
 
         if self._is_binary_mode():
             return encode2To3(formatted)

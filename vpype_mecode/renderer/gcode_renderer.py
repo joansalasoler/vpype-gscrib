@@ -142,8 +142,8 @@ class GRenderer(DocumentRenderer):
         width, height = document.page_size
 
         self._write_document_header(document)
+        self._write_user_header()
 
-        self._g._write_header()
         self._g.set_distance_mode(DistanceMode.ABSOLUTE)
         self._g.set_feed_mode(FeedMode.MINUTE)
         self._g.select_units(length_units)
@@ -289,6 +289,8 @@ class GRenderer(DocumentRenderer):
         self._context = self._document_context
         self._bed.turn_off(self._context)
         self._head.park_for_service(self._context)
+
+        self._write_user_footer()
         self._g.halt_program(HaltMode.END_WITH_RESET)
         self._g.teardown()
 
@@ -323,6 +325,20 @@ class GRenderer(DocumentRenderer):
         """Coordinates of the first point to render from a path."""
 
         return path[0].real, path[0].imag
+
+    def _write_user_header(self):
+        """Write user-defined G-code header."""
+
+        if self._document_context.header_gcode is not None:
+            path = self._document_context.header_gcode
+            self._write_include_file(path)
+
+    def _write_user_footer(self):
+        """Write user-defined G-code footer."""
+
+        if self._document_context.footer_gcode is not None:
+            path = self._document_context.footer_gcode
+            self._write_include_file(path)
 
     def _write_document_header(self, document: Document):
         """Write document information as G-code header comments."""
@@ -382,3 +398,9 @@ class GRenderer(DocumentRenderer):
 
             for key, value in changed_settings.items():
                 self._g.comment(f'@set {key} = {value}')
+
+    def _write_include_file(self, path: str) -> None:
+        """Write an include file as G-code comments."""
+
+        with open(path) as f:
+            self._g._write_out(lines=f.readlines())

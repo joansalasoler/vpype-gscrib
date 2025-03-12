@@ -62,11 +62,11 @@ class ExtruderTool(BaseTool):
             ctx (GContext): Current rendering context
         """
 
-        distance = ctx.length_units.scale(ctx.retraction_distance)
+        distance = ctx.length_units.scale(ctx.retract_length)
         current_position = ctx.g.current_position.get('E', 0.0)
         new_position = current_position + distance
 
-        ctx.g.move(E=new_position, F=ctx.retraction_speed)
+        ctx.g.move(E=new_position, F=ctx.retract_speed)
 
     def power_off(self, ctx: GContext):
         """Retract filament after tracing a path.
@@ -78,11 +78,11 @@ class ExtruderTool(BaseTool):
             ctx (GContext): Current rendering context
         """
 
-        distance = ctx.length_units.scale(ctx.retraction_distance)
+        distance = ctx.length_units.scale(ctx.retract_length)
         current_position = ctx.g.current_position.get('E', 0.0)
         new_position = current_position - distance
 
-        ctx.g.move(E=new_position, F=ctx.retraction_speed)
+        ctx.g.move(E=new_position, F=ctx.retract_speed)
 
     def deactivate(self, ctx: GContext):
         """Deactivate the extruder tool.

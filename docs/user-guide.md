@@ -71,7 +71,7 @@ Incorrect G-code can damage your machine, tools, or workpiece.
 Use the `mecode` pipe to generate G-code from an SVG:
 
 ```bash
-vpype read drawing.svg mecode --outfile=output.gcode
+vpype read drawing.svg mecode --output=output.gcode
 ```
 
 ### Specifying Length Units
@@ -79,7 +79,7 @@ vpype read drawing.svg mecode --outfile=output.gcode
 You can use metric (mm) or imperial (inches) units:
 
 ```bash
-vpype read drawing.svg mecode --length_units=in --outfile=output.gcode
+vpype read drawing.svg mecode --length-units=in --output=output.gcode
 ```
 
 ## Advanced Usage & Optimization
@@ -93,7 +93,7 @@ vpype \
   linesimplify --tolerance=0.1mm \
   reloop --tolerance=0.1mm \
   linesort --two-opt --passes=250 \
-  mecode --outfile=output.gcode
+  mecode --output=output.gcode
 ```
 
 **What Each Command Does:**
@@ -149,11 +149,11 @@ height during machining:
 vpype \
   read drawing.svg \
   mecode \
-    --length_units=mm \
-    --head_mode=mapped \
-    --height_map_path=heightmap.png \
-    --height_map_scale=50.0 \
-    --outfile=output.gcode
+    --length-units=mm \
+    --head-mode=mapped \
+    --height-map-path=heightmap.png \
+    --height-map-scale=50.0 \
+    --output=output.gcode
 ```
 
 By setting the head mode to `mapped`, the system smoothly interpolates
@@ -161,9 +161,9 @@ between height values, ensuring precise tool movement across the surface.
 
 **Understanding the Options:**
 
-* **--head_mode=mapped**: Enables Z-axis height map compensation.
-* **--height_map_path**: Grayscale image defining height variations.
-* **--height_map_scale**: Scale factor for height adjustments.
+* **--head-mode=mapped**: Enables Z-axis height map compensation.
+* **--height-map-path**: Grayscale image defining height variations.
+* **--height-map-scale**: Scale factor for height adjustments.
 
 In this example, a scale factor of `50.0` means that a white pixel on
 the height map image raises the tool by 50 mm, while black pixels result
@@ -187,18 +187,18 @@ Here's an example of generating G-code with laser power modulation:
 vpype \
   read drawing.svg \
   mecode \
-    --power_mode=dynamic \
-    --tool_mode=mapped-beam \
-    --height_map_path=heightmap.png \
-    --height_map_scale=100.0 \
-    --outfile=output.gcode
+    --power-mode=dynamic \
+    --tool-mode=mapped-beam \
+    --height-map-path=heightmap.png \
+    --height-map-scale=100.0 \
+    --output=output.gcode
 ```
 
 **Key Options Explained**:
 
-* **--power_mode=dynamic**: Dynamically adjust laser power.
-* **--tool_mode=mapped-beam**: Enable heightmap to control laser power.
-* **--height_map_scale=100**: Scale factor for power adjustments
+* **--power-mode=dynamic**: Dynamically adjust laser power.
+* **--tool-mode=mapped-beam**: Enable heightmap to control laser power.
+* **--height-map-scale=100**: Scale factor for power adjustments
 
 By leveraging this technique, you can transform photographs into detailed
 engravings with smooth shading and precise contrast.
@@ -221,30 +221,30 @@ example.
 # unless specifically overridden in their [layer-X] section.
 
 [document]
-length_units = "mm"          # Using metric units
-tool_mode = "marker"         # Using marker mode for pen plotting
-rack_mode = "manual"         # Manual tool changes for different pens
-travel_speed = "3000mm"      # Speed for non-drawing moves
-safe_z = "1cm"               # Safe height for non-drawing moves
-plunge_z = "1mm"             # Height at which to begin plunging
+length-units = "mm"          # Using metric units
+tool-mode = "marker"         # Using marker mode for pen plotting
+rack-mode = "manual"         # Manual tool changes for different pens
+travel-speed = "3000mm"      # Speed for non-drawing moves
+safe-z = "1cm"               # Safe height for non-drawing moves
+plunge-z = "1mm"             # Height at which to begin plunging
 
 # Settings for first layer (black fine liner)
 
 [layer-0]
-work_speed = "1200mm"        # Faster speed for simple lines
-plunge_speed = "500mm"       # Gentle pen lowering speed
+work-speed = "1200mm"        # Faster speed for simple lines
+plunge-speed = "500mm"       # Gentle pen lowering speed
 
 # Settings for second layer (red marker)
 
 [layer-1]
-work_speed = "800mm"         # Slower for better ink flow
-plunge_speed = "400mm"       # Gentler pen lowering for softer tip
+work-speed = "800mm"         # Slower for better ink flow
+plunge-speed = "400mm"       # Gentler pen lowering for softer tip
 
 # Settings for third layer (thick marker)
 
 [layer-2]
-work_speed = "600mm"         # Even slower for thick lines
-plunge_speed = "50mm"        # Very gentle pen lowering
+work-speed = "600mm"         # Even slower for thick lines
+plunge-speed = "50mm"        # Very gentle pen lowering
 ```
 
 ### Using a Configuration File
@@ -252,5 +252,5 @@ plunge_speed = "50mm"        # Very gentle pen lowering
 To apply a configuration file:
 
 ```bash
-vpype read drawing.svg mecode --render_config=config.toml --outfile=output.gcode
+vpype read drawing.svg mecode --config=config.toml --output=output.gcode
 ```

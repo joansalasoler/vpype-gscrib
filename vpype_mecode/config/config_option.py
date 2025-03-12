@@ -122,8 +122,10 @@ class ConfigOption(Option):
 
         return value
 
-    def _default_for(self, field_name: str) -> Any:
+    def _default_for(self, option_name: str) -> Any:
         """Obtain the default value for a parameter."""
+
+        field_name = option_name.replace('-', '_')
 
         if field_name not in self._config_fields:
             raise ValueError(

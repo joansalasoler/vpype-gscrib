@@ -79,7 +79,7 @@ vpype mecode --help
 
 ## Project Structure
 
-Here's a brief overview of the `vpype_mecode` project structure:
+Here's a brief overview of the `vpype-mecode` project structure:
 
 ```bash
 vpype-mecode/
@@ -134,7 +134,7 @@ The following steps outline how to add a new parameter.
 
 ```python
 ConfigOption(
-    option_name='length_units',
+    option_name='length-units',
     help="Choose the unit of measurement for the output G-Code.",
     type=LengthUnits,
 )
@@ -300,7 +300,7 @@ class HeadFactory:
 **Test your component:**
 
 ```bash
-vpype read input.svg mecode --head_mode=custom --outfile=output.gcode
+vpype read input.svg mecode --head-mode=custom --output=output.gcode
 ```
 
 ## Contributing

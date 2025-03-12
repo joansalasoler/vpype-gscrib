@@ -44,6 +44,10 @@ class RenderConfig(BaseModel, BaseConfig):
         >>> print(renderer_config.length_units)
     """
 
+    # Custom program header and footer
+    header_gcode: Optional[str] = Field(None)
+    footer_gcode: Optional[str] = Field(None)
+
     # Length and time units
     length_units: LengthUnits = Field(LengthUnits.MILLIMETERS)
     time_units: TimeUnits = Field(TimeUnits.SECONDS)
@@ -68,7 +72,7 @@ class RenderConfig(BaseModel, BaseConfig):
     work_speed: float = Field(vp.convert_length('500mm'), ge=0)
     plunge_speed: float = Field(vp.convert_length('100mm'), ge=0)
     travel_speed: float = Field(vp.convert_length('1000mm'), ge=0)
-    retraction_speed: float = Field(vp.convert_length('2100mm'), ge=0)
+    retract_speed: float = Field(vp.convert_length('2100mm'), ge=0)
 
     # Fan parameters
     fan_speed: int = Field(255, ge=0, le=255)
@@ -87,7 +91,7 @@ class RenderConfig(BaseModel, BaseConfig):
     nozzle_diameter: float = Field(vp.convert_length('0.4mm'), gt=0)
     filament_diameter: float = Field(vp.convert_length('1.75mm'), gt=0)
     layer_height: float = Field(vp.convert_length('0.2mm'), gt=0)
-    retraction_distance: float = Field(vp.convert_length('1.5mm'), ge=0)
+    retract_length: float = Field(vp.convert_length('1.5mm'), ge=0)
 
     # Heightmap transformation parameters
     height_map_path: Optional[str] = Field(None)
@@ -114,7 +118,7 @@ class RenderConfig(BaseModel, BaseConfig):
         'work_speed': 'px/min',
         'plunge_speed': 'px/min',
         'travel_speed': 'px/min',
-        'retraction_speed': 'px/min',
+        'retract_speed': 'px/min',
         'work_z': 'px',
         'plunge_z': 'px',
         'safe_z': 'px',
@@ -122,5 +126,5 @@ class RenderConfig(BaseModel, BaseConfig):
         'nozzle_diameter': 'px',
         'filament_diameter': 'px',
         'layer_height': 'px',
-        'retraction_distance': 'px',
+        'retract_length': 'px',
     }

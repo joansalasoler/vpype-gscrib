@@ -29,9 +29,11 @@ import click
 import vpype
 import vpype_cli
 
+from tomli import TOMLDecodeError
 from pydantic import ValidationError
 from vpype import Document
 
+from vpype_mecode import __version__
 from vpype_mecode.vpype_options import command_options
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
@@ -54,6 +56,11 @@ from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
   line as global defaults or in a TOML file than contains specific
   settings for each layer of the document.
   """
+)
+@click.version_option(
+    version=__version__,
+    prog_name='vpype-mecode',
+    message='%(prog)s %(version)s'
 )
 @vpype_cli.global_processor
 def vpype_mecode(document: Document, **kwargs) -> Document:
@@ -91,6 +98,9 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
         raise click.UsageError(str(e))
     except ValidationError as e:
         error_message = e.errors()[0]['msg']
+        raise click.UsageError(error_message)
+    except TOMLDecodeError as e:
+        error_message = f"Cannot read configuration file: {e}"
         raise click.UsageError(error_message)
     except FileNotFoundError as e:
         raise click.UsageError(f"File not found: {e.filename}")
@@ -134,7 +144,7 @@ def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
     """Create and validate the rendering configurations, either from
     the command line parameters or a TOML file."""
 
-    config_path = params['render_config']
+    config_path = params['config']
 
     if config_path is None:
         return [RenderConfig.model_validate(params),]
@@ -168,4 +178,6 @@ except ValidationError as e:
 except click.BadParameter as e:
     message = f"Invalid value in file 'vpype.toml': {e.message}"
     _config_exception = click.UsageError(message)
-
+except TOMLDecodeError as e:
+    message = f"Cannot read 'vpype.toml': {e.message}"
+    _config_exception = click.UsageError(message)

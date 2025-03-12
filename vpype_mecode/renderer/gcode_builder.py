@@ -412,7 +412,7 @@ class GBuilder(GMatrix):
             message (str): Text of the comment
         """
 
-        comment = self._as_comment(message)
+        comment = self.format_comment(message)
         self.write(comment)
 
     def _get_params_string_from_dict(self, params: dict) -> str:
@@ -424,12 +424,7 @@ class GBuilder(GMatrix):
         """Generate a G-code statement from the codes table."""
 
         entry = gcode_table.get_entry(value)
-        comment = self._as_comment(entry.description)
+        comment = self.format_comment(entry.description)
         args = f' {params}' if params else ''
 
         return f'{entry.instruction}{args} {comment}'
-
-    def _as_comment(self, text: str) -> str:
-        """Format text as a G-code comment."""
-
-        return self._commentify(text)
