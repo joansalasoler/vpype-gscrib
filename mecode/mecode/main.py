@@ -88,7 +88,7 @@ except NameError:
 
 class G(object):
 
-    def __init__(self, outfile=None, print_lines='auto', header=None, footer=None,
+    def __init__(self, output=None, print_lines='auto', header=None, footer=None,
                  aerotech_include=False,
                  output_digits=6,
                  direct_write_mode='off',
@@ -114,12 +114,12 @@ class G(object):
         """
         Parameters
         ----------
-        outfile : path or None (default: None)
+        output : path or None (default: None)
             If a path is specified, the compiled gcode will be writen to that
             file.
         print_lines : bool (default: 'auto')
             Whether or not to print the compiled GCode to stdout. If set to
-            'auto' then lines will be printed if no outfile given.
+            'auto' then lines will be printed if no output file given.
         header : path or None (default: None)
             Optional path to a file containing lines to be written at the
             beginning of the output file
@@ -127,7 +127,8 @@ class G(object):
             Optional path to a file containing lines to be written at the end
             of the output file.
         aerotech_include : bool (default: False)
-            If true, add aerotech specific functions and var defs to outfile.
+            If true, add aerotech specific functions and var defs to the
+            output file.
         output_digits : int (default: 6)
             How many digits to include after the decimal in the output gcode.
         direct_write_mode : str ('off', 'socket' or 'serial') (default: off)
@@ -183,7 +184,7 @@ class G(object):
             Should the system default to relative or absolute mode
 
         """
-        self.outfile = outfile
+        self.outfile = output
         self.print_lines = print_lines
         self.header = header
         self.footer = footer
@@ -232,10 +233,10 @@ class G(object):
             mode = 'wb+'
             self.lineend = lineend
 
-        if is_str(outfile):
-            self.out_fd = open(outfile, mode)
-        elif outfile is not None:  # if outfile not str assume it is an open file
-            self.out_fd = outfile
+        if is_str(self.outfile):
+            self.out_fd = open(self.outfile, mode)
+        elif self.outfile is not None:  # if outfile not str assume it is an open file
+            self.out_fd = self.outfile
         else:
             self.out_fd = None
 
@@ -2259,22 +2260,61 @@ class G(object):
 
     # Private Interface  ######################################################
 
-    def _write_out(self, line=None, lines=None):
-        """ Writes given `line` or `lines` to the output file.
+    def _write_out(self, line: str | None = None, lines: list[str] | None = None) -> None:
+        """Writes the given line(s) to the output file.
+
+        Args:
+            line: A single line to write to the output file
+            lines: Multiple lines to write to the output file
+
+        Note:
+            - If both line and lines are provided, both will be written
+            - If output file descriptor (out_fd) is not set, the method
+              returns without writing
         """
-        # Only write if user requested an output file.
+
         if self.out_fd is None:
             return
 
+        # Handle multiple lines
+
         if lines is not None:
-            for line in lines:
-                self._write_out(line)
+            for current_line in lines:
+                formatted_line = self._format_line(current_line)
+                self.out_fd.write(formatted_line)
 
-        line = line.rstrip() + self.lineend  # add lineend character
-        if hasattr(self.out_fd, 'mode') and 'b' in self.out_fd.mode:  # encode the string to binary if needed
-            line = encode2To3(line)
-        self.out_fd.write(line)
+        # Handle single line
 
+        if line is not None:
+            formatted_line = self._format_line(line)
+            self.out_fd.write(formatted_line)
+
+    def _format_line(self, line: str) -> str | bytes:
+        """Formats a single line by adding line ending and converting
+        to bytes if needed.
+
+        Args:
+            line: The line to format
+
+        Returns:
+            Formatted line with proper ending and encoding
+        """
+
+        formatted = line.rstrip() + self.lineend
+
+        if self._is_binary_mode():
+            return encode2To3(formatted)
+
+        return formatted
+
+    def _is_binary_mode(self) -> bool:
+        """Checks if the output file descriptor is in binary mode.
+
+        Returns:
+            True if the file is in binary mode, False otherwise
+        """
+
+        return hasattr(self.out_fd, 'mode') and 'b' in self.out_fd.mode
 
     def _meander_passes(self, minor, spacing):
         if minor > 0:
