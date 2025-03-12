@@ -90,7 +90,7 @@ class G(object):
 
     def __init__(self, output=None, print_lines='auto', header=None, footer=None,
                  aerotech_include=False,
-                 output_digits=6,
+                 output_digits=5,
                  direct_write_mode='off',
                  host='localhost',
                  port=8000,
@@ -129,7 +129,7 @@ class G(object):
         aerotech_include : bool (default: False)
             If true, add aerotech specific functions and var defs to the
             output file.
-        output_digits : int (default: 6)
+        output_digits : int (default: 5)
             How many digits to include after the decimal in the output gcode.
         direct_write_mode : str ('off', 'socket' or 'serial') (default: off)
             If 'socket' or 'serial' a port is opened to the machine and the
@@ -297,7 +297,7 @@ class G(object):
         """
 
         cmd = 'G0 ' if rapid else 'G1 '
-        self.write(cmd + "A{:.{digits}f}".format(a, digits=self.output_digits))
+        self.write(f'{cmd}A{self._format_float(a)}')
 
 
     # GCode Aliases  ########################################################
@@ -681,11 +681,16 @@ class G(object):
             self.write(plane_selector)
             args = self._format_args(**dims)
             if helix_dim is None:
-                self.write('{0} {1} R{2:.{digits}f}'.format(command, args, radius,
-                                                            digits=self.output_digits))
+                self.write(f'{command} {args} R{self._format_float(radius)}')
             else:
-                self.write('{0} {1} R{2:.{digits}f} G1 {3}{4}'.format(
-                    command, args, radius, helix_dim.upper(), helix_len, digits=self.output_digits))
+                self.write('{0} {1} R{2} G1 {3}{4}'.format(
+                    command,
+                    args,
+                    self._format_float(radius),
+                    helix_dim.upper(),
+                    helix_len
+                ))
+
                 dims[helix_dim] = helix_len
 
             self._update_current_position(**dims)
@@ -2316,6 +2321,22 @@ class G(object):
 
         return hasattr(self.out_fd, 'mode') and 'b' in self.out_fd.mode
 
+    def _format_float(self, number: float) -> str:
+        """Formats a number to the specified number of decimal places.
+
+        Args:
+            number: The number to format
+
+        Returns:
+            The formatted number as a string
+        """
+
+        return np.format_float_positional(
+            number,
+            precision=self.output_digits,
+            trim='-'
+        )
+
     def _meander_passes(self, minor, spacing):
         if minor > 0:
             passes = math.ceil(minor / spacing)
@@ -2335,21 +2356,22 @@ class G(object):
                 self._write_out(lines=fd.readlines())
 
     def _format_args(self, x=None, y=None, z=None, i=None, j=None, k=None, **kwargs):
-        d = self.output_digits
         args = []
+
         if x is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.x_axis, x, digits=d))
+            args.append(f'{self.x_axis}{self._format_float(x)}')
         if y is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.y_axis, y, digits=d))
+            args.append(f'{self.y_axis}{self._format_float(y)}')
         if z is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.z_axis, z, digits=d))
+            args.append(f'{self.z_axis}{self._format_float(z)}')
         if i is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.i_axis, i, digits=d))
+            args.append(f'{self.i_axis}{self._format_float(i)}')
         if j is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.j_axis, j, digits=d))
+            args.append(f'{self.j_axis}{self._format_float(j)}')
         if k is not None:
-            args.append('{0}{1:.{digits}f}'.format(self.k_axis, k, digits=d))
-        args += ['{0}{1:.{digits}f}'.format(k, kwargs[k], digits=d) for k in sorted(kwargs)]
+            args.append(f'{self.k_axis}{self._format_float(k)}')
+
+        args += [f'{k}{self._format_float(kwargs[k])}' for k in sorted(kwargs)]
         args = ' '.join(args)
         return args
 

@@ -21,7 +21,7 @@ class TestGFixture(unittest.TestCase):
 
     def setUp(self):
         self.outfile = TemporaryFile('w+')
-        self.g = self.getGClass()(outfile=self.outfile, print_lines=False,
+        self.g = self.getGClass()(output=self.outfile, print_lines=False,
                    aerotech_include=False)
         self.expected = ""
         if self.g.is_relative:
@@ -72,7 +72,7 @@ class TestG(TestGFixture):
         self.expect_cmd('G92 ; set home')
         self.assert_output()
         g.set_home(x=10, y=20, A=5)
-        self.expect_cmd('G92 X10.000000 Y20.000000 A5.000000 ; set home')
+        self.expect_cmd('G92 X10 Y20 A5 ; set home')
         self.assert_output()
         self.assert_position({'A': 5.0, 'x': 10.0, 'y': 20.0, 'z': 0})
         g.set_home(y=0)
@@ -117,7 +117,7 @@ class TestG(TestGFixture):
     def test_setup(self):
         self.outfile.close()
         self.outfile = TemporaryFile()
-        self.g = G(outfile=self.outfile, print_lines=False, aerotech_include=True)
+        self.g = G(output=self.outfile, print_lines=False, aerotech_include=True)
         self.expected = ""
         with open(os.path.join(HERE, '../header.txt')) as f:
             lines = f.read()
@@ -129,7 +129,7 @@ class TestG(TestGFixture):
         self.g.home()
         self.expect_cmd("""
         G90 ; absolute
-        G1 X0.000000 Y0.000000
+        G1 X0 Y0
         G91 ; relative
         """)
         self.assert_output()
@@ -143,16 +143,16 @@ class TestG(TestGFixture):
         self.g.move(10, 10, 10)
         self.assert_position({'x': 30.0, 'y': 30.0, 'A': 50, 'z': 10})
         self.expect_cmd("""
-        G1 X10.000000 Y10.000000
-        G1 X10.000000 Y10.000000 A50.000000
-        G1 X10.000000 Y10.000000 Z10.000000
+        G1 X10 Y10
+        G1 X10 Y10 A50
+        G1 X10 Y10 Z10
         """)
         self.assert_output()
 
         self.g.abs_move(20, 20, 0)
         self.expect_cmd("""
         G90 ; absolute
-        G1 X20.000000 Y20.000000 Z0.000000
+        G1 X20 Y20 Z0
         G91 ; relative
         """)
         self.assert_output()
@@ -168,7 +168,7 @@ class TestG(TestGFixture):
                                         'E': 0.45635101227893116})
         self.expect_cmd("""
         G90 ; absolute
-        G1 X30.000000 Y30.000000 E0.456351
+        G1 X30 Y30 E0.45635
         G91 ; relative
         """)
 
@@ -178,7 +178,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 40.0, 'y': 30.0, 'A':50, 'z': 0,
                         'E': 0.7790399076627088})
         self.expect_cmd("""
-        G1 X10.000000 E0.322689
+        G1 X10 E0.32269
         """)
         self.assert_output()
 
@@ -187,7 +187,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 40.0, 'y': 40.0, 'A':50,  'z': 0,
                                 'E': 1.4244176984302641})
         self.expect_cmd("""
-        G1 Y10.000000 E0.645378
+        G1 Y10 E0.64538
         """)
         self.assert_output()
 
@@ -195,7 +195,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 40.0, 'y': 40.0, 'A': 50, 'Z': 10, 'z':0.0,
                                 'E': 1.4244176984302641})
         self.expect_cmd("""
-        G1 E0.000000 Z10.000000
+        G1 E0 Z10
         """)
         self.assert_output()
 
@@ -204,7 +204,7 @@ class TestG(TestGFixture):
                             'E': 1.4244176984302641})
         self.expect_cmd("""
         G90 ; absolute
-        G1 E1.424418 Z20.000000
+        G1 E1.42442 Z20
         G91 ; relative
         """)
         self.assert_output()
@@ -214,7 +214,7 @@ class TestG(TestGFixture):
         g.retract(retraction = 5)
         self.assert_position({'x': 0.0, 'y': 0.0, 'z': 0.0, 'E':-5})
         self.expect_cmd("""
-        G1 E-5.000000
+        G1 E-5
         """)
         self.assert_output()
 
@@ -223,7 +223,7 @@ class TestG(TestGFixture):
         self.g.abs_move(10, 10)
         self.expect_cmd("""
         G90 ; absolute
-        G1 X10.000000 Y10.000000
+        G1 X10 Y10
         G91 ; relative
         """)
         self.assert_output()
@@ -232,7 +232,7 @@ class TestG(TestGFixture):
         self.g.abs_move(5, 5, 5)
         self.expect_cmd("""
         G90 ; absolute
-        G1 X5.000000 Y5.000000 Z5.000000
+        G1 X5 Y5 Z5
         G91 ; relative
         """)
         self.assert_output()
@@ -241,7 +241,7 @@ class TestG(TestGFixture):
         self.g.abs_move(15, 0, D=5)
         self.expect_cmd("""
         G90 ; absolute
-        G1 X15.000000 Y0.000000 D5.000000
+        G1 X15 Y0 D5
         G91 ; relative
         """)
         self.assert_output()
@@ -251,7 +251,7 @@ class TestG(TestGFixture):
         self.g.abs_move(19, 18, D=6)
         self.expect_cmd("""
         G90 ; absolute
-        G1 X19.000000 Y18.000000 D6.000000
+        G1 X19 Y18 D6
         """)
         self.assert_output()
         self.assert_position({'x': 19, 'y': 18, 'D': 6, 'z': 5})
@@ -265,16 +265,16 @@ class TestG(TestGFixture):
         self.g.rapid(10, 10, 10)
         self.assert_position({'x': 30.0, 'y': 30.0, 'A': 50, 'z': 10})
         self.expect_cmd("""
-        G0 X10.000000 Y10.000000
-        G0 X10.000000 Y10.000000 A50.000000
-        G0 X10.000000 Y10.000000 Z10.000000
+        G0 X10 Y10
+        G0 X10 Y10 A50
+        G0 X10 Y10 Z10
         """)
         self.assert_output()
 
         self.g.abs_rapid(20, 20, 0)
         self.expect_cmd("""
         G90 ; absolute
-        G0 X20.000000 Y20.000000 Z0.000000
+        G0 X20 Y20 Z0
         G91 ; relative
         """)
         self.assert_output()
@@ -282,7 +282,7 @@ class TestG(TestGFixture):
         self.g.rapid(x=10)
         self.assert_position({'x': 30.0, 'y': 20.0, 'A':50, 'z': 0})
         self.expect_cmd("""
-        G0 X10.000000
+        G0 X10
         """)
         self.assert_output()
 
@@ -291,7 +291,7 @@ class TestG(TestGFixture):
         self.g.abs_rapid(10, 10)
         self.expect_cmd("""
         G90 ; absolute
-        G0 X10.000000 Y10.000000
+        G0 X10 Y10
         G91 ; relative
         """)
         self.assert_output()
@@ -300,7 +300,7 @@ class TestG(TestGFixture):
         self.g.abs_rapid(5, 5, 5)
         self.expect_cmd("""
         G90 ; absolute
-        G0 X5.000000 Y5.000000 Z5.000000
+        G0 X5 Y5 Z5
         G91 ; relative
         """)
         self.assert_output()
@@ -309,7 +309,7 @@ class TestG(TestGFixture):
         self.g.abs_rapid(15, 0, D=5)
         self.expect_cmd("""
         G90 ; absolute
-        G0 X15.000000 Y0.000000 D5.000000
+        G0 X15 Y0 D5
         G91 ; relative
         """)
         self.assert_output()
@@ -319,7 +319,7 @@ class TestG(TestGFixture):
         self.g.abs_rapid(19, 18, D=6)
         self.expect_cmd("""
         G90 ; absolute
-        G0 X19.000000 Y18.000000 D6.000000
+        G0 X19 Y18 D6
         """)
         self.assert_output()
         self.assert_position({'x': 19, 'y': 18, 'D': 6, 'z': 5})
@@ -332,7 +332,7 @@ class TestG(TestGFixture):
         self.g.arc(x=10, y=0, linearize=False)
         self.expect_cmd("""
         G17 ; XY plane
-        G2 X10.000000 Y0.000000 R5.000000
+        G2 X10 Y0 R5
         """)
         self.assert_output()
         self.assert_position({'x': 10, 'y': 0, 'z': 0})
@@ -341,7 +341,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y A ; coordinate axis assignment
         G18 ; XZ plane
-        G3 X5.000000 A0.000000 R5.000000
+        G3 X5 A0 R5
         """)
         self.assert_output()
         self.assert_position({'x': 15, 'y': 0, 'A': 0, 'z': 0})
@@ -350,7 +350,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y D ; coordinate axis assignment
         G17 ; XY plane
-        G2 X0.000000 Y10.000000 R5.000000 G1 D10
+        G2 X0 Y10 R5 G1 D10
         """)
         self.assert_output()
         self.assert_position({'x': 15, 'y': 10, 'A': 0, 'D': 10, 'z': 0})
@@ -359,7 +359,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y D ; coordinate axis assignment
         G17 ; XY plane
-        G2 X0.000000 Y10.000000 R5.000000 G1 D10
+        G2 X0 Y10 R5 G1 D10
         """)
         self.assert_output()
         self.assert_position({'x': 15, 'y': 20, 'A': 0, 'D': 20, 'z': 0})
@@ -373,7 +373,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G90 ; absolute
         G17 ; XY plane
-        G2 X0.000000 Y10.000000 R5.000000
+        G2 X0 Y10 R5
         G91 ; relative
         """)
         self.assert_output()
@@ -383,7 +383,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G90 ; absolute
         G17 ; XY plane
-        G2 X0.000000 Y10.000000 R0.000000
+        G2 X0 Y10 R0
         G91 ; relative
         """)
         self.assert_output()
@@ -394,7 +394,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G90 ; absolute
         G17 ; XY plane
-        G2 X0.000000 Y20.000000 R5.000000
+        G2 X0 Y20 R5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 20, 'z': 0})
@@ -403,80 +403,80 @@ class TestG(TestGFixture):
     def test_rect(self):
         self.g.rect(10, 5)
         self.expect_cmd("""
-        G1 Y5.000000
-        G1 X10.000000
-        G1 Y-5.000000
-        G1 X-10.000000
+        G1 Y5
+        G1 X10
+        G1 Y-5
+        G1 X-10
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='UL')
         self.expect_cmd("""
-        G1 X10.000000
-        G1 Y-5.000000
-        G1 X-10.000000
-        G1 Y5.000000
+        G1 X10
+        G1 Y-5
+        G1 X-10
+        G1 Y5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='UR')
         self.expect_cmd("""
-        G1 Y-5.000000
-        G1 X-10.000000
-        G1 Y5.000000
-        G1 X10.000000
+        G1 Y-5
+        G1 X-10
+        G1 Y5
+        G1 X10
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='LR')
         self.expect_cmd("""
-        G1 X-10.000000
-        G1 Y5.000000
-        G1 X10.000000
-        G1 Y-5.000000
+        G1 X-10
+        G1 Y5
+        G1 X10
+        G1 Y-5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='LL', direction='CCW')
         self.expect_cmd("""
-        G1 X10.000000
-        G1 Y5.000000
-        G1 X-10.000000
-        G1 Y-5.000000
+        G1 X10
+        G1 Y5
+        G1 X-10
+        G1 Y-5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='UL', direction='CCW')
         self.expect_cmd("""
-        G1 Y-5.000000
-        G1 X10.000000
-        G1 Y5.000000
-        G1 X-10.000000
+        G1 Y-5
+        G1 X10
+        G1 Y5
+        G1 X-10
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='UR', direction='CCW')
         self.expect_cmd("""
-        G1 X-10.000000
-        G1 Y-5.000000
-        G1 X10.000000
-        G1 Y5.000000
+        G1 X-10
+        G1 Y-5
+        G1 X10
+        G1 Y5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
         self.g.rect(10, 5, start='LR', direction='CCW')
         self.expect_cmd("""
-        G1 Y5.000000
-        G1 X-10.000000
-        G1 Y-5.000000
-        G1 X10.000000
+        G1 Y5
+        G1 X-10
+        G1 Y-5
+        G1 X10
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 0})
@@ -484,11 +484,11 @@ class TestG(TestGFixture):
     def test_meander(self):
         self.g.meander(2, 2, 1)
         self.expect_cmd("""
-        G1 X2.000000
-        G1 Y1.000000
-        G1 X-2.000000
-        G1 Y1.000000
-        G1 X2.000000
+        G1 X2
+        G1 Y1
+        G1 X-2
+        G1 Y1
+        G1 X2
         """)
         self.assert_output()
         self.assert_position({'x': 2, 'y': 2, 'z': 0})
@@ -496,55 +496,55 @@ class TestG(TestGFixture):
         self.g.meander(2, 2, 1.1)
         self.expect_cmd("""
         ; WARNING! meander spacing updated from 1.1 to 1.0
-        G1 X2.000000
-        G1 Y1.000000
-        G1 X-2.000000
-        G1 Y1.000000
-        G1 X2.000000
+        G1 X2
+        G1 Y1
+        G1 X-2
+        G1 Y1
+        G1 X2
         """)
         self.assert_output()
         self.assert_position({'x': 4, 'y': 4, 'z': 0})
 
         self.g.meander(2, 2, 1, start='UL')
         self.expect_cmd("""
-        G1 X2.000000
-        G1 Y-1.000000
-        G1 X-2.000000
-        G1 Y-1.000000
-        G1 X2.000000
+        G1 X2
+        G1 Y-1
+        G1 X-2
+        G1 Y-1
+        G1 X2
         """)
         self.assert_output()
         self.assert_position({'x': 6, 'y': 2, 'z': 0})
 
         self.g.meander(2, 2, 1, start='UR')
         self.expect_cmd("""
-        G1 X-2.000000
-        G1 Y-1.000000
-        G1 X2.000000
-        G1 Y-1.000000
-        G1 X-2.000000
+        G1 X-2
+        G1 Y-1
+        G1 X2
+        G1 Y-1
+        G1 X-2
         """)
         self.assert_output()
         self.assert_position({'x': 4, 'y': 0, 'z': 0})
 
         self.g.meander(2, 2, 1, start='LR')
         self.expect_cmd("""
-        G1 X-2.000000
-        G1 Y1.000000
-        G1 X2.000000
-        G1 Y1.000000
-        G1 X-2.000000
+        G1 X-2
+        G1 Y1
+        G1 X2
+        G1 Y1
+        G1 X-2
         """)
         self.assert_output()
         self.assert_position({'x': 2, 'y': 2, 'z': 0})
 
         self.g.meander(2, 2, 1, start='LR', orientation='y')
         self.expect_cmd("""
-        G1 Y2.000000
-        G1 X-1.000000
-        G1 Y-2.000000
-        G1 X-1.000000
-        G1 Y2.000000
+        G1 Y2
+        G1 X-1
+        G1 Y-2
+        G1 X-1
+        G1 Y2
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 4, 'z': 0})
@@ -555,13 +555,13 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G90 ; absolute
         G91 ; relative
-        G1 Y2.000000
-        G1 X-1.000000
-        G1 Y-2.000000
-        G1 X-1.000000
-        G1 Y2.000000
-        G1 X-1.000000
-        G1 Y-2.000000
+        G1 Y2
+        G1 X-1
+        G1 Y-2
+        G1 X-1
+        G1 Y2
+        G1 X-1
+        G1 Y-2
         G90 ; absolute
         """)
         self.assert_output()
@@ -572,7 +572,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y Z ; coordinate axis assignment
         G18 ; XZ plane
-        G3 X0.000000 Z4.000000 R2.000000
+        G3 X0 Z4 R2
         """)
         self.assert_output()
         self.assert_position({'y': 0, 'x': 0, 'z': 4})
@@ -581,7 +581,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y A ; coordinate axis assignment
         G19 ; YZ plane
-        G2 Y0.000000 A10.000000 R5.000000
+        G2 Y0 A10 R5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 4, 'A': 10})
@@ -590,7 +590,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y A ; coordinate axis assignment
         G19 ; YZ plane
-        G3 Y0.000000 A-10.000000 R5.000000
+        G3 Y0 A-10 R5
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 4, 'A': 0})
@@ -615,7 +615,7 @@ class TestG(TestGFixture):
         self.g.move(10, 10, 10)
         self.assert_position({'x': 10.0, 'y': 10.0, 'A': 10, 'z': 10})
         self.expect_cmd("""
-        G1 X10.000000 Y10.000000 A10.000000
+        G1 X10 Y10 A10
         """)
         self.assert_output()
 
@@ -623,7 +623,7 @@ class TestG(TestGFixture):
         self.g.move(10, 10, 10)
         self.assert_position({'x': 20.0, 'y': 20.0, 'z': 20, 'A': 10, 'B': 10})
         self.expect_cmd("""
-        G1 X10.000000 Y10.000000 B10.000000
+        G1 X10 Y10 B10
         """)
         self.assert_output()
 
@@ -632,7 +632,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 30.0, 'y': 30.0, 'z': 30, 'A': 10, 'B': 20,
                               'W': 10})
         self.expect_cmd("""
-        G1 W10.000000 Y10.000000 B10.000000
+        G1 W10 Y10 B10
         """)
         self.assert_output()
 
@@ -643,7 +643,7 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G16 X Y B ; coordinate axis assignment
         G18 ; XZ plane
-        G2 X10.000000 B10.000000 R7.071068
+        G2 X10 B10 R7.07107
         """)
         self.assert_output()
 
@@ -654,16 +654,16 @@ class TestG(TestGFixture):
         G90 ; absolute
         G16 X Y B ; coordinate axis assignment
         G18 ; XZ plane
-        G2 X0.000000 B0.000000 R28.284271
+        G2 X0 B0 R28.28427
         G91 ; relative
         """)
         self.assert_output()
 
         self.g.meander(10, 10, 10)
         self.expect_cmd("""
-        G1 X10.000000
-        G1 Y10.000000
-        G1 X-10.000000
+        G1 X10
+        G1 Y10
+        G1 X-10
         """)
         self.assert_output()
 
@@ -677,44 +677,44 @@ class TestG(TestGFixture):
     def test_triangular_wave(self):
         self.g.triangular_wave(2, 2, 1)
         self.expect_cmd("""
-        G1 X2.000000 Y2.000000
-        G1 X2.000000 Y-2.000000
+        G1 X2 Y2
+        G1 X2 Y-2
         """)
         self.assert_output()
         self.assert_position({'x': 4, 'y': 0, 'z': 0})
 
         self.g.triangular_wave(1, 2, 2.5, orientation='y')
         self.expect_cmd("""
-        G1 X1.000000 Y2.000000
-        G1 X-1.000000 Y2.000000
-        G1 X1.000000 Y2.000000
-        G1 X-1.000000 Y2.000000
-        G1 X1.000000 Y2.000000
+        G1 X1 Y2
+        G1 X-1 Y2
+        G1 X1 Y2
+        G1 X-1 Y2
+        G1 X1 Y2
         """)
         self.assert_output()
         self.assert_position({'x': 5, 'y': 10, 'z': 0})
 
         self.g.triangular_wave(2, 2, 1.5, start='UL')
         self.expect_cmd("""
-        G1 X-2.000000 Y2.000000
-        G1 X-2.000000 Y-2.000000
-        G1 X-2.000000 Y2.000000
+        G1 X-2 Y2
+        G1 X-2 Y-2
+        G1 X-2 Y2
         """)
         self.assert_output()
         self.assert_position({'x': -1, 'y': 12, 'z': 0})
 
         self.g.triangular_wave(2, 2, 1, start='LR')
         self.expect_cmd("""
-        G1 X2.000000 Y-2.000000
-        G1 X2.000000 Y2.000000
+        G1 X2 Y-2
+        G1 X2 Y2
         """)
         self.assert_output()
         self.assert_position({'x': 3, 'y': 12, 'z': 0})
 
         self.g.triangular_wave(2, 2, 1, start='LR', orientation='y')
         self.expect_cmd("""
-        G1 X2.000000 Y-2.000000
-        G1 X-2.000000 Y-2.000000
+        G1 X2 Y-2
+        G1 X-2 Y-2
         """)
         self.assert_output()
         self.assert_position({'x': 3, 'y': 8, 'z': 0})
@@ -725,8 +725,8 @@ class TestG(TestGFixture):
         self.expect_cmd("""
         G90 ; absolute
         G91 ; relative
-        G1 X3.000000 Y-2.000000
-        G1 X-3.000000 Y-2.000000
+        G1 X3 Y-2
+        G1 X-3 Y-2
         G90 ; absolute
         """)
         self.assert_output()
@@ -736,19 +736,19 @@ class TestG(TestGFixture):
         self.g.output_digits = 1
         self.g.move(10)
         self.expect_cmd("""
-        G1 X10.0
+        G1 X10
         """)
         self.assert_output()
         self.g.output_digits = 6
         self.g.move(10)
         self.expect_cmd("""
-        G1 X10.000000
+        G1 X10
         """)
         self.assert_output()
 
     def test_open_in_binary(self):
         outfile = TemporaryFile('wb+')
-        g = self.getGClass()(outfile=outfile, print_lines=False)
+        g = self.getGClass()(output=outfile, print_lines=False)
         g.move(10,10)
         outfile.seek(0)
         lines = outfile.readlines()

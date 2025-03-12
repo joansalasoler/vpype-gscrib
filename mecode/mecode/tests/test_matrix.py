@@ -27,11 +27,11 @@ class TestGMatrix(TestGFixture):
         self.g.rapid(z=5)
         self.g.rect(10, 5)
         self.expect_cmd("""
-        G0 Z5.000000
-        G1 X-5.000000 Y0.000000
-        G1 X0.000000 Y10.000000
-        G1 X5.000000 Y-0.000000
-        G1 X-0.000000 Y-10.000000
+        G0 Z5
+        G1 X-5 Y0
+        G1 X0 Y10
+        G1 X5 Y-0
+        G1 X-0 Y-10
         """)
         self.g.pop_matrix()
         self.assert_output()
@@ -41,11 +41,11 @@ class TestGMatrix(TestGFixture):
         self.g.rapid(z=5)
         self.g.rect(10, 5)
         self.expect_cmd("""
-        G0 Z5.000000
-        G1 X0.000000 Y5.000000
-        G1 X10.000000 Y0.000000
-        G1 X0.000000 Y-5.000000
-        G1 X-10.000000 Y0.000000
+        G0 Z5
+        G1 X0 Y5
+        G1 X10 Y0
+        G1 X0 Y-5
+        G1 X-10 Y0
         """)
         self.assert_output()
         self.assert_position({'x': 0, 'y': 0, 'z': 10})
@@ -59,11 +59,11 @@ class TestGMatrix(TestGFixture):
         self.g.rapid(z=5)
         self.g.rect(10, 5)
         self.expect_cmd("""
-        G0 Z5.000000
-        G1 X-5.000000 Y0.000000
-        G1 X0.000000 Y10.000000
-        G1 X5.000000 Y-0.000000
-        G1 X-0.000000 Y-10.000000
+        G0 Z5
+        G1 X-5 Y0
+        G1 X0 Y10
+        G1 X5 Y-0
+        G1 X-0 Y-10
         """)
         self.g.pop_matrix()
         self.assert_output()
@@ -75,11 +75,11 @@ class TestGMatrix(TestGFixture):
         self.g.rapid(z=5)
         self.g.rect(10, 5)
         self.expect_cmd("""
-        G0 Z10.000000
-        G1 X0.000000 Y10.000000
-        G1 X20.000000 Y0.000000
-        G1 X0.000000 Y-10.000000
-        G1 X-20.000000 Y0.000000
+        G0 Z10
+        G1 X0 Y10
+        G1 X20 Y0
+        G1 X0 Y-10
+        G1 X-20 Y0
         """)
         self.g.pop_matrix()
         self.assert_output()
@@ -101,12 +101,12 @@ class TestGMatrix(TestGFixture):
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 2})
 
         self.expect_cmd("""
-        G0 Z5.000000
+        G0 Z5
         G90 ; absolute
-        G1 X-1.000000 Y0.000000 Z5.000000
+        G1 X-1 Y0 Z5
         G91 ; relative
         G90 ; absolute
-        G1 X-1.000000 Y0.000000 Z2.000000
+        G1 X-1 Y0 Z2
         G91 ; relative
         """)
         self.assert_output()
@@ -119,12 +119,12 @@ class TestGMatrix(TestGFixture):
         self.g.abs_move(z=2)
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 2})
         self.expect_cmd("""
-        G0 Z5.000000
+        G0 Z5
         G90 ; absolute
-        G1 X0.000000 Y1.000000 Z5.000000
+        G1 X0 Y1 Z5
         G91 ; relative
         G90 ; absolute
-        G1 X0.000000 Y1.000000 Z2.000000
+        G1 X0 Y1 Z2
         G91 ; relative
         """)
         self.assert_output()
@@ -144,9 +144,9 @@ class TestGMatrix(TestGFixture):
         self.g.rotate(math.pi/2)
         self.g.arc(x=10, y=0, linearize=False)
         self.expect_cmd("""
-        G0 Z5.000000
+        G0 Z5
         G17 ; XY plane
-        G2 X0.000000 Y10.000000 R5.000000
+        G2 X0 Y10 R5
         """)
         self.assert_output()
         self.assert_almost_position({'x': 10, 'y': 0, 'z': 5})
@@ -157,9 +157,9 @@ class TestGMatrix(TestGFixture):
         self.g.arc(x=10,y=0)
         # Without the reflect this would be a G2.
         self.expect_cmd("""
-        G0 Z5.000000
+        G0 Z5
         G17 ; XY plane
-        G3 X10.000000 Y0.000000 R5.000000
+        G3 X10 Y0 R5
         """)
         self.assert_output()
         self.assert_almost_position({'x': 10, 'y': 0, 'z': 5})
@@ -170,9 +170,9 @@ class TestGMatrix(TestGFixture):
         self.g.rotate(math.pi/2)
         self.g.arc(x=10, y=0, linearize=False)
         self.expect_cmd("""
-        G0 Z10.000000
+        G0 Z10
         G17 ; XY plane
-        G2 X0.000000 Y20.000000 R10.000000
+        G2 X0 Y20 R10
         """)
         self.assert_output()
         self.assert_almost_position({'x': 10, 'y': 0, 'z': 5})
@@ -215,11 +215,11 @@ class TestGMatrix(TestGFixture):
         self.g.reflect(math.pi/2)
         self.g.move(10,20)
         self.expect_cmd("""
-        G0 Z5.000000
-        G1 X10.000000 Y20.000000
-        G1 X10.000000 Y-20.000000
-        G1 X-10.000000 Y-20.000000
-        G1 X10.000000 Y20.000000
+        G0 Z5
+        G1 X10 Y20
+        G1 X10 Y-20
+        G1 X-10 Y-20
+        G1 X10 Y20
         """)
         self.g.pop_matrix()
         self.assert_output()
@@ -233,10 +233,10 @@ class TestGMatrix(TestGFixture):
         self.g.reflect(math.pi/2)
         self.g.move(10, 0)
         self.expect_cmd("""
-        G0 Z5.000000
-        G1 X10.000000 Y0.000000
-        G1 X0.000000 Y10.000000
-        G1 X-0.000000 Y-10.000000
+        G0 Z5
+        G1 X10 Y0
+        G1 X0 Y10
+        G1 X-0 Y-10
         """)
         self.g.pop_matrix()
         self.assert_output()
