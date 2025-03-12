@@ -174,7 +174,7 @@ class G(object):
         lineend : str (default: 'os')
             Line ending to use when writing to a file or machine. The special
             value 'os' can be passed to fall back on python's automatic
-            lineending insertion.
+            line-ending insertion.
         comment_char : str (default: ';')
             Character to use when outputting comments.
             Special case handling for parenthesis comments. If "(" is specified
@@ -231,7 +231,8 @@ class G(object):
             self.lineend = '\n'
         else:
             mode = 'wb+'
-            self.lineend = lineend
+            chars = bytes(lineend, 'utf-8')
+            self.lineend = chars.decode('unicode-escape')
 
         if is_str(self.outfile):
             self.out_fd = open(self.outfile, mode)
