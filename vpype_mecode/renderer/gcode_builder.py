@@ -36,16 +36,28 @@ Position = namedtuple('Position', 'x y z')
 class GBuilder(GMatrix):
     """G-code command generator for CNC machines and similar devices.
 
-    This class extends `GMatrix` to provide high-level methods for
-    generating common G-code commands used in CNC machine control. It
-    handles various aspects of machine operations including:
+    A high-level G-code generator that provides methods for common CNC
+    operations. Extends `GMatrix` to handle coordinate transformations
+    and maintains internal state to prevent invalid operations and
+    ensure proper sequencing of commands.
 
-    - Unit and plane selection
-    - Tool operations and changes
-    - Coolant control
-    - Bed control
-    - Program execution control
-    - Movement commands
+    Features:
+
+    - Unit and coordinate system selection
+    - Tool control (spindle, laser, etc.)
+    - Temperature and cooling control
+    - Movement commands (rapid, linear)
+    - Program flow control
+    - Machine state tracking
+
+    Example:
+        >>> g = GBuilder(params)
+        >>> g.set_distance_mode(ABSOLUTE)
+        >>> g.set_feed_mode(UNITS_PER_MINUTE)
+        >>> g.select_units(MILLIMETERS)
+        >>> g.move_absolute(x=0.0, y=0.0)
+        >>> g.move(x=10.0, y=10.0, z=5.0)
+        >>> g.teardown()
     """
 
     def __init__(self, *args, **kwargs) -> None:
