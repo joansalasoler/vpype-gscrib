@@ -63,9 +63,10 @@ vector graphics and automated manufacturing.
 
    Home <self>
    User Guide <user-guide>
+   Machine Modes <machine-modes>
    Development Guide <dev-guide>
    Command Line Interface <cli>
-   Example Configuration <config>
+   Configuration Template <config>
    G-Code Mappings Table <gcode-table>
    Module Index <modindex>
    General Index <genindex>

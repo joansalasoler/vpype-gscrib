@@ -110,6 +110,49 @@ and
 [Cookbook](https://vpype.readthedocs.io/en/latest/cookbook.html)
 helpful for mastering this powerful tool.
 
+## Modes for G-code Generation
+
+Vpype-Mecode allows users to configure their machine's behavior during
+G-code generation by selecting different modes. These modes control
+various aspects of your machine's operation, including how the bed,
+coolant, fan, head and the tools themselves function.
+
+By combining the right modes, you can optimize your workflow and tailor
+the G-code output to match your machine's capabilities and the specific
+requirements of your project.
+
+### What Are Modes?
+
+Modes are configurable components that govern machine behavior. Each mode
+is responsible for a different aspect of the machine's operation:
+
+* **Bed Modes**: Control the behavior of the machine's bed.
+* **Coolant Modes**: Manage the machine's coolant system.
+* **Fan Modes**: Activate or deactivate machine fans.
+* **Head Movement Modes**: Define how the tool head moves.
+* **Rack Modes**: Control how tools are changed during the process.
+* **Tool Modes**: Define how specific tools operate.
+
+### Why Use Modes?
+
+By selecting and combining different modes, you can fine-tune your
+G-code generation to match your machine's capabilities and your specific
+use case. For example, if you're working with a laser cutter on an uneven
+bed surface, you may choose to use an auto-leveling head or an adaptive
+beam tool for optimal results.
+
+Modes give you the flexibility to customize your workflow, whether you're
+doing engraving, milling, 3D printing, or any other CNC-related task.
+
+### Learn More About Modes
+
+To explore the available modes and how to combine them effectively,
+please refer to our [Modes Documentation](machine-modes.md), which
+provides detailed descriptions and examples for each mode. If you're
+interested in extending Vpype-Mecode by implementing new modes, check
+out our [Development Guide](dev-guide.md) for instructions on how to
+create and integrate custom modes into your workflow.
+
 ## Height Maps
 
 One of the most powerful features of this plugin is its ability to use
