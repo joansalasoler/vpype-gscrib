@@ -70,6 +70,9 @@ tool may require different activation and deactivation patterns.
   surface processing, and material adaptation.
 * **blade**: A blade tool, typically used for cutting, which does not
   require power control or activation.
+* **extruder**: This tool mode is used for 3D printing with materials
+  that do not require fusion. It manages the extrusion and retraction of
+  the filament during the printing process
 * **heated-extruder**: Used in 3D printing, this tool controls temperature,
   filament retraction, and extrusion during the printing process.
 * **marker**: A non-activated tool, such as a pen or brush, used for
@@ -114,3 +117,7 @@ When combining modes, ensure that the selected modes are compatible with
 your machine's hardware and capabilities to avoid any issues. For a more
 detailed list of each mode's available options, refer to the full
 [Command-Line Reference](cli).
+
+If you're interested in extending Vpype-Mecode by implementing new modes,
+check out our [Development Guide](dev-guide.md) for instructions on how
+to create and integrate custom modes into your workflow.

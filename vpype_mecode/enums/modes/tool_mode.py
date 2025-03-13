@@ -24,6 +24,7 @@ class ToolMode(BaseEnum):
 
     BEAM = 'beam'
     BLADE = 'blade'
+    EXTRUDER = 'extruder'
     HEATED_EXTRUDER = 'heated-extruder'
     ADAPTIVE_BEAM = 'adaptive-beam'
     MARKER = 'marker'

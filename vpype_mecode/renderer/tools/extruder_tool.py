@@ -19,15 +19,15 @@
 import math
 
 from vpype_mecode.renderer import GContext
-from vpype_mecode.enums import ExtrusionMode, HaltMode, TemperatureUnits
+from vpype_mecode.enums import ExtrusionMode
 from .base_tool import BaseTool
 
 
-class HeatedExtruderTool(BaseTool):
-    """Heated extruder tool implementation for 3D printing.
+class ExtruderTool(BaseTool):
+    """Extruder tool implementation for 3D printing.
 
-    This class handles operations for an extruder tool, including
-    temperature control, filament retraction, and extrusion.
+    This class handles filament retraction and extrusion for an extruder
+    tool that does not require temperature control.
     """
 
     def activate(self, ctx: GContext):
@@ -35,8 +35,6 @@ class HeatedExtruderTool(BaseTool):
 
         Sets up the initial state of the extruder including:
 
-        - Setting the hotend temperature
-        - Waiting for the hotend to reach target temperature
         - Configuring absolute extrusion mode
         - Zeroing the extruder position
 
@@ -44,11 +42,6 @@ class HeatedExtruderTool(BaseTool):
             ctx (GContext): Current rendering context
         """
 
-        units = TemperatureUnits.CELSIUS
-        halt_mode = HaltMode.WAIT_FOR_HOTEND
-
-        ctx.g.set_hotend_temperature(units, ctx.hotend_temperature)
-        ctx.g.halt_program(halt_mode, S=ctx.hotend_temperature)
         ctx.g.set_extrusion_mode(ExtrusionMode.ABSOLUTE)
         ctx.g.set_home(E=0.0)
 
@@ -85,16 +78,7 @@ class HeatedExtruderTool(BaseTool):
         ctx.g.move(E=new_position, F=ctx.retract_speed)
 
     def deactivate(self, ctx: GContext):
-        """Deactivate the extruder tool.
-
-        Turns off the hotend when the tool is no longer needed.
-
-        Args:
-            ctx (GContext): Current rendering context
-        """
-
-        units = TemperatureUnits.CELSIUS
-        ctx.g.set_hotend_temperature(units, 0)
+        pass
 
     def get_trace_params(self, ctx: GContext, x: float, y: float) -> dict:
         """Compute and set extruder parameters for work moves

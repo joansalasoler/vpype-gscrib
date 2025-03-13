@@ -21,6 +21,7 @@ from vpype_mecode.enums import ToolMode
 from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
+from .extruder_tool import ExtruderTool
 from .heated_extruder_tool import HeatedExtruderTool
 from .adaptive_beam_tool import AdaptiveBeamTool
 from .marker_tool import MarkerTool
@@ -53,6 +54,7 @@ class ToolFactory:
         providers = {
             ToolMode.BEAM: BeamTool,
             ToolMode.BLADE: BladeTool,
+            ToolMode.EXTRUDER: ExtruderTool,
             ToolMode.HEATED_EXTRUDER: HeatedExtruderTool,
             ToolMode.ADAPTIVE_BEAM: AdaptiveBeamTool,
             ToolMode.MARKER: MarkerTool,

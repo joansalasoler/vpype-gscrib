@@ -20,10 +20,10 @@ time-units = "s"                # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
 head-mode = "standard"          # standard, auto-leveling
-tool-mode = "marker"            # beam, adaptive-beam, blade, extruder, marker, spindle
+tool-mode = "marker"            # beam, adaptive-beam, blade, extruder, heated-extruder, marker, spindle
 rack-mode = "manual"            # off, manual, automatic
 coolant-mode = "off"            # off, mist, flood
-fan-mode = "off"                # off, on
+fan-mode = "off"                # off, cooling
 bed-mode = "off"                # off, heated
 
 # Tool configuration

@@ -148,10 +148,7 @@ doing engraving, milling, 3D printing, or any other CNC-related task.
 
 To explore the available modes and how to combine them effectively,
 please refer to our [Modes Documentation](machine-modes.md), which
-provides detailed descriptions and examples for each mode. If you're
-interested in extending Vpype-Mecode by implementing new modes, check
-out our [Development Guide](dev-guide.md) for instructions on how to
-create and integrate custom modes into your workflow.
+provides detailed descriptions and examples for each mode.
 
 ## Height Maps
 
