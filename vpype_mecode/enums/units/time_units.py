@@ -16,37 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
-
-from .base_bed import BaseBed
-from .heated_bed import HeatedBed
-from .no_bed import NoBed
+from ..base_enum import BaseEnum
 
 
-class BedFactory:
-    """A factory for creating bed managers.
+class TimeUnits(BaseEnum):
+    """Units of time measurement."""
 
-    This factory creates specialized bed managers that handle the
-    control of machine beds/tables.
-    """
+    SECONDS = 's'
+    MILLISECONDS = 'ms'
 
-    @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
-        """Create a new bed manger instance.
+    def scale(self, value_in_seconds: float) -> float:
+        """Scale a value in `seconds` to this unit"""
 
-        Args:
-            mode (BedMode): Bed mode.
-
-        Returns:
-            BaseBed: Bed manger instance.
-
-        Raises:
-            KeyError: If mode is not valid.
-        """
-
-        providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
-        }
-
-        return providers[mode]()
+        if self == TimeUnits.MILLISECONDS:
+            return value_in_seconds * 1000
+        return value_in_seconds

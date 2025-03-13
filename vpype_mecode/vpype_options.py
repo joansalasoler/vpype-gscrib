@@ -143,7 +143,7 @@ command_options = (
         type=LengthType(),
         help="""
         The speed at which the tool moves between operations, without
-        interacting with the material or work surface, measured in units
+        interacting with the material or work surface. Measured in units
         per minute.
         """,
     ),
@@ -153,23 +153,23 @@ command_options = (
         help="""
         The speed at which the fan rotates during operations. A value
         of 0 turns off the fan, while a value of 255 sets it to its
-        maximum speed.
+        maximum speed. Measured in units per minute.
         """,
     ),
     ConfigOption(
         option_name='hotend-temperature',
         type=IntegerType(),
         help="""
-        The temperature at which the hotend is set during operation,
-        measured in celsius degrees.
+        The temperature at which the hotend is set during operation.
+        Measured in degrees Celsius (°C).
         """,
     ),
     ConfigOption(
         option_name='bed-temperature',
         type=IntegerType(),
         help="""
-        The temperature at which the heated bed is set during operation,
-        measured in celsius degrees.
+        The temperature at which the heated bed is set during operation.
+        Measured in degrees Celsius (°C).
         """,
     ),
     ConfigOption(
@@ -327,7 +327,8 @@ command_options = (
         type=LengthType(),
         help="""
         The speed at which the filament is retracted. Higher speeds help
-        prevent stringing but may cause filament grinding.
+        prevent stringing but may cause filament grinding. Measured in
+        units per minute.
         """,
     ),
 

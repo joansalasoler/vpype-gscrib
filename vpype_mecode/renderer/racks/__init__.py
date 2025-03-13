@@ -10,7 +10,7 @@ necessary G-code for performing tool change operations.
 from .base_rack import BaseRack
 from .automatic_rack import AutomaticRack
 from .manual_rack import ManualRack
-from .off_rack import OffRack
+from .no_rack import NoRack
 from .rack_factory import RackFactory
 
 __all__ = [
@@ -18,5 +18,5 @@ __all__ = [
     'RackFactory',
     'AutomaticRack',
     'ManualRack',
-    'OffRack'
+    'NoRack'
 ]

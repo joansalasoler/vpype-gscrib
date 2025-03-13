@@ -168,7 +168,7 @@ class GBuilder(GMatrix):
             raise ValueError(f'Invalid fan speed `{speed}`.')
 
         params = f'P{fan_number} S{speed}'
-        mode = FanMode.ON if speed > 0 else FanMode.OFF
+        mode = FanMode.COOLING if speed > 0 else FanMode.OFF
         statement = self._get_gcode_from_table(mode, params)
         self.write(statement)
 

@@ -54,7 +54,7 @@ class RenderConfig(BaseModel, BaseConfig):
 
     # Machine components modes
     coolant_mode: CoolantMode = Field(CoolantMode.OFF)
-    head_mode: HeadMode = Field(HeadMode.BASIC)
+    head_mode: HeadMode = Field(HeadMode.STANDARD)
     power_mode: PowerMode = Field(PowerMode.CONSTANT)
     rack_mode: RackMode = Field(RackMode.MANUAL)
     spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)

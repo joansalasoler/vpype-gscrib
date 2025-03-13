@@ -21,7 +21,7 @@ from vpype_mecode.enums import CoolantMode
 from .base_coolant import BaseCoolant
 from .flood_coolant import FloodCoolant
 from .mist_coolant import MistCoolant
-from .off_coolant import OffCoolant
+from .no_coolant import NoCoolant
 
 
 class CoolantFactory:
@@ -48,7 +48,7 @@ class CoolantFactory:
         """
 
         providers = {
-            CoolantMode.OFF: OffCoolant,
+            CoolantMode.OFF: NoCoolant,
             CoolantMode.MIST: MistCoolant,
             CoolantMode.FLOOD: FloodCoolant,
         }

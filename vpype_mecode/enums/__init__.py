@@ -11,28 +11,30 @@ uses this table to create the appropriate G-code statements.
 """
 
 from .base_enum import BaseEnum
-from .coolant_mode import CoolantMode
-from .direct_write_mode import DirectWriteMode
-from .distance_mode import DistanceMode
-from .extrusion_mode import ExtrusionMode
-from .fan_mode import FanMode
-from .feed_mode import FeedMode
-from .halt_mode import HaltMode
-from .head_mode import HeadMode
-from .length_units import LengthUnits
-from .power_mode import PowerMode
-from .plane import Plane
-from .rack_mode import RackMode
-from .spin_mode import SpinMode
-from .bed_temperature import BedTemperature
-from .hotend_temperature import HotendTemperature
-from .temperature_units import TemperatureUnits
-from .bed_mode import BedMode
-from .time_units import TimeUnits
-from .tool_mode import ToolMode
+from .modes import BedMode
+from .modes import CoolantMode
+from .modes import DirectWriteMode
+from .modes import FanMode
+from .modes import HeadMode
+from .modes import RackMode
+from .modes import ToolMode
+from .types import BedTemperature
+from .types import DistanceMode
+from .types import ExtrusionMode
+from .types import FeedMode
+from .types import HaltMode
+from .types import HotendTemperature
+from .types import Plane
+from .types import PowerMode
+from .types import SpinMode
+from .units import LengthUnits
+from .units import TemperatureUnits
+from .units import TimeUnits
 
 __all__ = [
     'BaseEnum',
+    'BedMode',
+    'BedTemperature',
     'CoolantMode',
     'DirectWriteMode',
     'DistanceMode',
@@ -41,15 +43,13 @@ __all__ = [
     'FeedMode',
     'HaltMode',
     'HeadMode',
+    'HotendTemperature',
     'LengthUnits',
-    'PowerMode',
     'Plane',
+    'PowerMode',
     'RackMode',
     'SpinMode',
-    'BedTemperature',
-    'HotendTemperature',
     'TemperatureUnits',
-    'BedMode',
     'TimeUnits',
     'ToolMode',
 ]

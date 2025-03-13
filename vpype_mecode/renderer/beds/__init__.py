@@ -19,11 +19,11 @@ operations. Such motion is handled by the head component.
 from .base_bed import BaseBed
 from .bed_factory import BedFactory
 from .heated_bed import HeatedBed
-from .off_bed import OffBed
+from .no_bed import NoBed
 
 __all__ = [
     'BaseBed',
     'BedFactory',
     'HeatedBed',
-    'OffBed',
+    'NoBed',
 ]

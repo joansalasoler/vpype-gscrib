@@ -16,37 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
-
-from .base_bed import BaseBed
-from .heated_bed import HeatedBed
-from .no_bed import NoBed
+from ..base_enum import BaseEnum
 
 
-class BedFactory:
-    """A factory for creating bed managers.
+class HaltMode(BaseEnum):
+    """Program termination and pause modes."""
 
-    This factory creates specialized bed managers that handle the
-    control of machine beds/tables.
-    """
-
-    @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
-        """Create a new bed manger instance.
-
-        Args:
-            mode (BedMode): Bed mode.
-
-        Returns:
-            BaseBed: Bed manger instance.
-
-        Raises:
-            KeyError: If mode is not valid.
-        """
-
-        providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
-        }
-
-        return providers[mode]()
+    OFF = 'off'
+    PAUSE = 'pause'
+    OPTIONAL_PAUSE = 'optional-pause'
+    END_WITHOUT_RESET = 'end-without-reset'
+    END_WITH_RESET = 'end-with-reset'
+    PALLET_EXCHANGE = 'pallet-exchange'
+    WAIT_FOR_BED = 'wait-for-bed'
+    WAIT_FOR_HOTEND = 'wait-for-hotend'

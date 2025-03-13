@@ -16,37 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
-
-from .base_bed import BaseBed
-from .heated_bed import HeatedBed
-from .no_bed import NoBed
+from vpype_mecode.renderer.gcode_context import GContext
+from .base_fan import BaseFan
 
 
-class BedFactory:
-    """A factory for creating bed managers.
+class CoolingFan(BaseFan):
+    """Provides basic fan control"""
 
-    This factory creates specialized bed managers that handle the
-    control of machine beds/tables.
-    """
+    def turn_on(self, ctx: GContext):
+        ctx.g.set_fan_speed(ctx.fan_speed)
 
-    @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
-        """Create a new bed manger instance.
-
-        Args:
-            mode (BedMode): Bed mode.
-
-        Returns:
-            BaseBed: Bed manger instance.
-
-        Raises:
-            KeyError: If mode is not valid.
-        """
-
-        providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
-        }
-
-        return providers[mode]()
+    def turn_off(self, ctx: GContext):
+        ctx.g.set_fan_speed(0)

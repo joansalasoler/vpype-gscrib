@@ -21,8 +21,8 @@ length-units = "mm"             # mm (millimeters), in (inches)
 time-units = "s"                # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
-head-mode = "basic"             # basic, mapped
-tool-mode = "marker"            # beam, mapped-beam, blade, extruder, marker, spindle
+head-mode = "standard"          # standard, auto-leveling
+tool-mode = "marker"            # beam, adaptive-beam, blade, extruder, marker, spindle
 rack-mode = "manual"            # off, manual, automatic
 coolant-mode = "off"            # off, mist, flood
 fan-mode = "off"                # off, on
@@ -74,7 +74,7 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-0]
 
-# head-mode = "basic"
+# head-mode = "standard"
 # tool-mode = "marker"
 # rack-mode = "manual"
 # coolant-mode = "off"
@@ -107,7 +107,7 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-1]
 
-# head-mode = "basic"
+# head-mode = "standard"
 # tool-mode = "marker"
 # rack-mode = "manual"
 # coolant-mode = "off"
@@ -140,7 +140,7 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-2]
 
-# head-mode = "basic"
+# head-mode = "standard"
 # tool-mode = "marker"
 # rack-mode = "manual"
 # coolant-mode = "off"

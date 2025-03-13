@@ -274,7 +274,7 @@ To register your component, add a corresponding mode to the enum.
 
 ```python
 class HeadMode(BaseEnum):
-    BASIC = 'basic'
+    STANDARD = 'standard'
     CUSTOM = 'custom'  # New mode
 ```
 
@@ -290,7 +290,7 @@ class HeadFactory:
     @classmethod
     def create(cls, mode: HeadMode) -> BaseHead:
         providers = {
-            HeadMode.BASIC: BasicHead,
+            HeadMode.STANDARD: StandardHead,
             HeadMode.CUSTOM: CustomHead,  # Register new component
         }
 

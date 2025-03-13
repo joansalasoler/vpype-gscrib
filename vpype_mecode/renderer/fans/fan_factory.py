@@ -19,8 +19,8 @@
 from vpype_mecode.enums import FanMode
 
 from .base_fan import BaseFan
-from .on_fan import OnFan
-from .off_fan import OffFan
+from .cooling_fan import CoolingFan
+from .no_fan import NoFan
 
 
 class FanFactory:
@@ -41,8 +41,8 @@ class FanFactory:
         """
 
         providers = {
-            FanMode.ON: OnFan,
-            FanMode.OFF: OffFan,
+            FanMode.COOLING: CoolingFan,
+            FanMode.OFF: NoFan,
         }
 
         return providers[mode]()

@@ -70,11 +70,11 @@ gcode_table = GCodeTable((
         'G93', 'Set feed rate mode, inverse time'
     ),
 
-    GCodeEntry(FeedMode.MINUTE,
+    GCodeEntry(FeedMode.UNITS_PER_MINUTE,
         'G94', 'Set feed rate mode, units per minute'
     ),
 
-    GCodeEntry(FeedMode.REVOLUTION,
+    GCodeEntry(FeedMode.UNITS_PER_REVOLUTION,
         'G95', 'Set feed rate mode, units per revolution'
     ),
 
@@ -138,7 +138,7 @@ gcode_table = GCodeTable((
     # Fan Control Modes
     # ------------------------------------------------------------------
 
-    GCodeEntry(FanMode.ON,
+    GCodeEntry(FanMode.COOLING,
         'M106', 'Set fan speed'
     ),
 

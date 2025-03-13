@@ -11,7 +11,7 @@ cooling mechanisms such as mist coolant or flood coolant.
 from .base_coolant import BaseCoolant
 from .flood_coolant import FloodCoolant
 from .mist_coolant import MistCoolant
-from .off_coolant import OffCoolant
+from .no_coolant import NoCoolant
 from .coolant_factory import CoolantFactory
 
 __all__ = [
@@ -19,5 +19,5 @@ __all__ = [
     'CoolantFactory',
     'FloodCoolant',
     'MistCoolant',
-    'OffCoolant',
+    'NoCoolant',
 ]

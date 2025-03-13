@@ -16,37 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
-
-from .base_bed import BaseBed
-from .heated_bed import HeatedBed
-from .no_bed import NoBed
+import vpype
+from ..base_enum import BaseEnum
 
 
-class BedFactory:
-    """A factory for creating bed managers.
+class LengthUnits(BaseEnum):
+    """Units of length measurement."""
 
-    This factory creates specialized bed managers that handle the
-    control of machine beds/tables.
-    """
+    INCHES = 'in'
+    MILLIMETERS = 'mm'
 
-    @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
-        """Create a new bed manger instance.
+    def __init__(self, value):
+        self.scale_factor = 1.0 / vpype.convert_length(value)
 
-        Args:
-            mode (BedMode): Bed mode.
+    def scale(self, value_in_px: float) -> float:
+        """Scale a value in pixels to this unit"""
 
-        Returns:
-            BaseBed: Bed manger instance.
+        return value_in_px * self.scale_factor
 
-        Raises:
-            KeyError: If mode is not valid.
-        """
+    def to_pixels(self, value_in_units: float) -> float:
+        """Scale a value in this unit to pixels"""
 
-        providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
-        }
-
-        return providers[mode]()
+        return value_in_units / self.scale_factor

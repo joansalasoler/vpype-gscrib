@@ -145,7 +145,7 @@ class GRenderer(DocumentRenderer):
         self._write_user_header()
 
         self._g.set_distance_mode(DistanceMode.ABSOLUTE)
-        self._g.set_feed_mode(FeedMode.MINUTE)
+        self._g.set_feed_mode(FeedMode.UNITS_PER_MINUTE)
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 

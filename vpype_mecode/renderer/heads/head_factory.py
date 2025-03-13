@@ -19,8 +19,8 @@
 from vpype_mecode.enums import HeadMode
 
 from .base_head import BaseHead
-from .basic_head import BasicHead
-from .mapped_head import MappedHead
+from .standard_head import StandardHead
+from .auto_leveling_head import AutoLevelingHead
 
 
 class HeadFactory:
@@ -47,8 +47,8 @@ class HeadFactory:
         """
 
         providers = {
-            HeadMode.BASIC: BasicHead,
-            HeadMode.MAPPED: MappedHead,
+            HeadMode.STANDARD: StandardHead,
+            HeadMode.AUTO_LEVELING: AutoLevelingHead,
         }
 
         return providers[mode]()

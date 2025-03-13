@@ -16,37 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
-
-from .base_bed import BaseBed
-from .heated_bed import HeatedBed
-from .no_bed import NoBed
+from ..base_enum import BaseEnum
 
 
-class BedFactory:
-    """A factory for creating bed managers.
+class CoolantMode(BaseEnum):
+    """Coolant modes for the machine."""
 
-    This factory creates specialized bed managers that handle the
-    control of machine beds/tables.
-    """
+    OFF = 'off'
+    MIST = 'mist'
+    FLOOD = 'flood'
 
-    @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
-        """Create a new bed manger instance.
-
-        Args:
-            mode (BedMode): Bed mode.
-
-        Returns:
-            BaseBed: Bed manger instance.
-
-        Raises:
-            KeyError: If mode is not valid.
-        """
-
-        providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
-        }
-
-        return providers[mode]()
+    def __invert__(self):
+        if self == CoolantMode.MIST:
+            return CoolantMode.FLOOD
+        return CoolantMode.MIST

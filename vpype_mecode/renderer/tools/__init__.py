@@ -12,8 +12,8 @@ the corresponding G-code commands for various tool types and behaviors.
 from .base_tool import BaseTool
 from .beam_tool import BeamTool
 from .blade_tool import BladeTool
-from .extruder_tool import ExtruderTool
-from .mapped_beam_tool import MappedBeamTool
+from .heated_extruder_tool import HeatedExtruderTool
+from .adaptive_beam_tool import AdaptiveBeamTool
 from .marker_tool import MarkerTool
 from .spindle_tool import SpindleTool
 from .tool_factory import ToolFactory
@@ -23,8 +23,8 @@ __all__ = [
     'ToolFactory',
     'BeamTool',
     'BladeTool',
-    'ExtruderTool',
-    'MappedBeamTool',
+    'HeatedExtruderTool',
+    'AdaptiveBeamTool',
     'MarkerTool',
     'SpindleTool'
 ]

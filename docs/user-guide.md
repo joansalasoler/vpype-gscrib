@@ -150,18 +150,19 @@ vpype \
   read drawing.svg \
   mecode \
     --length-units=mm \
-    --head-mode=mapped \
+    --head-mode=auto-leveling \
     --height-map-path=heightmap.png \
     --height-map-scale=50.0 \
     --output=output.gcode
 ```
 
-By setting the head mode to `mapped`, the system smoothly interpolates
-between height values, ensuring precise tool movement across the surface.
+By setting the head mode to `auto-leveling`, the system smoothly
+interpolates between height values, ensuring precise tool movement
+across the surface.
 
 **Understanding the Options:**
 
-* **--head-mode=mapped**: Enables Z-axis height map compensation.
+* **--head-mode=auto-leveling**: Enables Z-axis height map compensation.
 * **--height-map-path**: Grayscale image defining height variations.
 * **--height-map-scale**: Scale factor for height adjustments.
 
@@ -188,7 +189,7 @@ vpype \
   read drawing.svg \
   mecode \
     --power-mode=dynamic \
-    --tool-mode=mapped-beam \
+    --tool-mode=adaptive-beam \
     --height-map-path=heightmap.png \
     --height-map-scale=100.0 \
     --output=output.gcode
@@ -197,7 +198,7 @@ vpype \
 **Key Options Explained**:
 
 * **--power-mode=dynamic**: Dynamically adjust laser power.
-* **--tool-mode=mapped-beam**: Enable heightmap to control laser power.
+* **--tool-mode=adaptive-beam**: Enable heightmap to control laser power.
 * **--height-map-scale=100**: Scale factor for power adjustments
 
 By leveraging this technique, you can transform photographs into detailed

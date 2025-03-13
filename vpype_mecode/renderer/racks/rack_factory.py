@@ -21,7 +21,7 @@ from vpype_mecode.enums import RackMode
 from .automatic_rack import AutomaticRack
 from .base_rack import BaseRack
 from .manual_rack import ManualRack
-from .off_rack import OffRack
+from .no_rack import NoRack
 
 
 class RackFactory:
@@ -49,7 +49,7 @@ class RackFactory:
         """
 
         providers = {
-            RackMode.OFF: OffRack,
+            RackMode.OFF: NoRack,
             RackMode.MANUAL: ManualRack,
             RackMode.AUTOMATIC: AutomaticRack,
         }

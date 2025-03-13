@@ -40,7 +40,7 @@ class GState:
         self._current_distance_mode: DistanceMode = DistanceMode.ABSOLUTE
         self._current_extrusion_mode: ExtrusionMode = ExtrusionMode.ABSOLUTE
         self._current_coolant_mode: CoolantMode = CoolantMode.OFF
-        self._current_feed_mode: FeedMode = FeedMode.MINUTE
+        self._current_feed_mode: FeedMode = FeedMode.UNITS_PER_MINUTE
         self._current_rack_mode: RackMode = RackMode.OFF
         self._current_halt_mode: HaltMode = HaltMode.OFF
         self._current_length_units: Optional[LengthUnits] = None

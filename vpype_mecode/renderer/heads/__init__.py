@@ -10,13 +10,13 @@ controlled travel, and parking for service or maintenance.
 """
 
 from .base_head import BaseHead
-from .basic_head import BasicHead
-from .mapped_head import MappedHead
+from .standard_head import StandardHead
+from .auto_leveling_head import AutoLevelingHead
 from .head_factory import HeadFactory
 
 __all__ = [
     'BaseHead',
     'HeadFactory',
-    'BasicHead',
-    'MappedHead',
+    'StandardHead',
+    'AutoLevelingHead',
 ]
