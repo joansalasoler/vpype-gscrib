@@ -228,7 +228,7 @@ class GRenderer(DocumentRenderer):
         # map is available, the segment is traced as is.
 
         ctx = self._context
-        cx, cy, cz = self._g.current_head_position
+        cx, cy, cz = self._g.axis
 
         for x, y, z in ctx.height_map.sample_path([cx, cy, x, y])[1:]:
             tool_params = self._tool.get_trace_params(ctx, x, y)

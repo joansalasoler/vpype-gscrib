@@ -84,8 +84,7 @@ All GCode Methods
 
 All methods have detailed docstrings and examples.
 
-* `set_home()`
-* `reset_home()`
+* `set_axis_position()`
 * `feed()`
 * `dwell()`
 * `home()`

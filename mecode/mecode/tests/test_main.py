@@ -66,51 +66,46 @@ class TestG(TestGFixture):
     def test_init(self):
         self.assertEqual(self.g.is_relative, True)
 
-    def test_set_home(self):
+    def test_set_axis_position(self):
         g = self.g
-        g.set_home()
-        self.expect_cmd('G92 ; set home')
+        g.set_axis_position()
+        self.expect_cmd('G92 ; Set axis position')
         self.assert_output()
-        g.set_home(x=10, y=20, A=5)
-        self.expect_cmd('G92 X10 Y20 A5 ; set home')
+        g.set_axis_position(x=10, y=20, A=5)
+        self.expect_cmd('G92 X10 Y20 A5 ; Set axis position')
         self.assert_output()
         self.assert_position({'A': 5.0, 'x': 10.0, 'y': 20.0, 'z': 0})
-        g.set_home(y=0)
+        g.set_axis_position(y=0)
         self.assert_position({'A': 5.0, 'x': 10.0, 'y': 0.0, 'z': 0})
-
-    def test_reset_home(self):
-        self.g.reset_home()
-        self.expect_cmd('G92.1 ; reset position to machine coordinates without moving')
-        self.assert_output()
 
     def test_relative(self):
         self.assertEqual(self.g.is_relative, True)
-        self.g.absolute()
+        self.g._absolute()
         self.expect_cmd('G90 ; absolute')
-        self.g.relative()
+        self.g._relative()
         self.assertEqual(self.g.is_relative, True)
         self.expect_cmd('G91 ; relative')
         self.assert_output()
-        self.g.relative()
+        self.g._relative()
         self.assertEqual(self.g.is_relative, True)
         self.assert_output()
 
     def test_absolute(self):
-        self.g.absolute()
+        self.g._absolute()
         self.assertEqual(self.g.is_relative, False)
         self.expect_cmd('G90 ; absolute')
         self.assert_output()
-        self.g.absolute()
+        self.g._absolute()
         self.assertEqual(self.g.is_relative, False)
         self.assert_output()
 
     def test_feed(self):
-        self.g.feed(10)
+        self.g._feed(10)
         self.expect_cmd('G1 F10')
         self.assert_output()
 
     def test_dwell(self):
-        self.g.dwell(10)
+        self.g._dwell(10)
         self.expect_cmd('G4 P10')
         self.assert_output()
 
@@ -124,16 +119,6 @@ class TestG(TestGFixture):
         self.expect_cmd(lines)
         self.expect_cmd('G91 ; relative')
         self.assert_output()
-
-    def test_home(self):
-        self.g.home()
-        self.expect_cmd("""
-        G90 ; absolute
-        G1 X0 Y0
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 0, 'y': 0, 'z': 0})
 
     def test_move(self):
         self.g.move(10, 10)
@@ -149,7 +134,7 @@ class TestG(TestGFixture):
         """)
         self.assert_output()
 
-        self.g.abs_move(20, 20, 0)
+        self.g._abs_move(20, 20, 0)
         self.expect_cmd("""
         G90 ; absolute
         G1 X20 Y20 Z0
@@ -163,7 +148,7 @@ class TestG(TestGFixture):
         self.g.extrusion_width = 0.4
         self.g.filament_diameter = 1.75
         self.g.extrusion_multiplier = 1
-        self.g.abs_move(x=30, y=30)
+        self.g._abs_move(x=30, y=30)
         self.assert_position({'x': 30.0, 'y': 30.0, 'z': 0.0, 'A': 50.0,
                                         'E': 0.45635101227893116})
         self.expect_cmd("""
@@ -199,7 +184,7 @@ class TestG(TestGFixture):
         """)
         self.assert_output()
 
-        self.g.abs_move(Z=20)
+        self.g._abs_move(Z=20)
         self.assert_position({'x': 40.0, 'y': 40.0, 'Z': 20, 'A':50, 'z':0.0,
                             'E': 1.4244176984302641})
         self.expect_cmd("""
@@ -209,18 +194,9 @@ class TestG(TestGFixture):
         """)
         self.assert_output()
 
-    def test_retraction(self):
-        g=self.g
-        g.retract(retraction = 5)
-        self.assert_position({'x': 0.0, 'y': 0.0, 'z': 0.0, 'E':-5})
-        self.expect_cmd("""
-        G1 E-5
-        """)
-        self.assert_output()
-
     def test_abs_move(self):
-        self.g.relative()
-        self.g.abs_move(10, 10)
+        self.g._relative()
+        self.g._abs_move(10, 10)
         self.expect_cmd("""
         G90 ; absolute
         G1 X10 Y10
@@ -229,7 +205,7 @@ class TestG(TestGFixture):
         self.assert_output()
         self.assert_position({'x': 10, 'y': 10, 'z': 0})
 
-        self.g.abs_move(5, 5, 5)
+        self.g._abs_move(5, 5, 5)
         self.expect_cmd("""
         G90 ; absolute
         G1 X5 Y5 Z5
@@ -238,7 +214,7 @@ class TestG(TestGFixture):
         self.assert_output()
         self.assert_position({'x': 5, 'y': 5, 'z': 5})
 
-        self.g.abs_move(15, 0, D=5)
+        self.g._abs_move(15, 0, D=5)
         self.expect_cmd("""
         G90 ; absolute
         G1 X15 Y0 D5
@@ -247,15 +223,15 @@ class TestG(TestGFixture):
         self.assert_output()
         self.assert_position({'x': 15, 'y': 0, 'D': 5, 'z': 5})
 
-        self.g.absolute()
-        self.g.abs_move(19, 18, D=6)
+        self.g._absolute()
+        self.g._abs_move(19, 18, D=6)
         self.expect_cmd("""
         G90 ; absolute
         G1 X19 Y18 D6
         """)
         self.assert_output()
         self.assert_position({'x': 19, 'y': 18, 'D': 6, 'z': 5})
-        self.g.relative()
+        self.g._relative()
 
     def test_rapid(self):
         self.g.rapid(10, 10)
@@ -270,60 +246,6 @@ class TestG(TestGFixture):
         G0 X10 Y10 Z10
         """)
         self.assert_output()
-
-        self.g.abs_rapid(20, 20, 0)
-        self.expect_cmd("""
-        G90 ; absolute
-        G0 X20 Y20 Z0
-        G91 ; relative
-        """)
-        self.assert_output()
-
-        self.g.rapid(x=10)
-        self.assert_position({'x': 30.0, 'y': 20.0, 'A':50, 'z': 0})
-        self.expect_cmd("""
-        G0 X10
-        """)
-        self.assert_output()
-
-    def test_abs_rapid(self):
-        self.g.relative()
-        self.g.abs_rapid(10, 10)
-        self.expect_cmd("""
-        G90 ; absolute
-        G0 X10 Y10
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 10, 'y': 10, 'z': 0})
-
-        self.g.abs_rapid(5, 5, 5)
-        self.expect_cmd("""
-        G90 ; absolute
-        G0 X5 Y5 Z5
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 5, 'y': 5, 'z': 5})
-
-        self.g.abs_rapid(15, 0, D=5)
-        self.expect_cmd("""
-        G90 ; absolute
-        G0 X15 Y0 D5
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 15, 'y': 0, 'D': 5, 'z': 5})
-
-        self.g.absolute()
-        self.g.abs_rapid(19, 18, D=6)
-        self.expect_cmd("""
-        G90 ; absolute
-        G0 X19 Y18 D6
-        """)
-        self.assert_output()
-        self.assert_position({'x': 19, 'y': 18, 'D': 6, 'z': 5})
-        self.g.relative()
 
     def test_arc(self):
         with self.assertRaises(RuntimeError):
@@ -366,39 +288,6 @@ class TestG(TestGFixture):
 
         with self.assertRaises(RuntimeError):
             self.g.arc(x=10, y=10, radius=1, linearize=False)
-
-    def test_abs_arc(self):
-        self.g.relative()
-        self.g.abs_arc(x=0, y=10)
-        self.expect_cmd("""
-        G90 ; absolute
-        G17 ; XY plane
-        G2 X0 Y10 R5
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 0, 'y': 10, 'z': 0})
-
-        self.g.abs_arc(x=0, y=10)
-        self.expect_cmd("""
-        G90 ; absolute
-        G17 ; XY plane
-        G2 X0 Y10 R0
-        G91 ; relative
-        """)
-        self.assert_output()
-        self.assert_position({'x': 0, 'y': 10, 'z': 0})
-
-        self.g.absolute()
-        self.g.abs_arc(x=0, y=20)
-        self.expect_cmd("""
-        G90 ; absolute
-        G17 ; XY plane
-        G2 X0 Y20 R5
-        """)
-        self.assert_output()
-        self.assert_position({'x': 0, 'y': 20, 'z': 0})
-        self.g.relative()
 
     def test_rect(self):
         self.g.rect(10, 5)
@@ -550,7 +439,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 0, 'y': 4, 'z': 0})
 
         # test we return to absolute
-        self.g.absolute()
+        self.g._absolute()
         self.g.meander(3, 2, 1, start='LR', orientation='y')
         self.expect_cmd("""
         G90 ; absolute
@@ -647,18 +536,6 @@ class TestG(TestGFixture):
         """)
         self.assert_output()
 
-        self.g.abs_arc(x=0, z=0)
-        self.assert_position({'x': 0.0, 'y': 30.0, 'z': 0, 'A': 10, 'B': 0,
-                              'W': 10})
-        self.expect_cmd("""
-        G90 ; absolute
-        G16 X Y B ; coordinate axis assignment
-        G18 ; XZ plane
-        G2 X0 B0 R28.28427
-        G91 ; relative
-        """)
-        self.assert_output()
-
         self.g.meander(10, 10, 10)
         self.expect_cmd("""
         G1 X10
@@ -720,7 +597,7 @@ class TestG(TestGFixture):
         self.assert_position({'x': 3, 'y': 8, 'z': 0})
 
         # test we return to absolute
-        self.g.absolute()
+        self.g._absolute()
         self.g.triangular_wave(3, 2, 1, start='LR', orientation='y')
         self.expect_cmd("""
         G90 ; absolute

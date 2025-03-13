@@ -25,7 +25,7 @@ class GMatrix(G):
 
     def restore_position(self):
         x, y, z = self.position_savepoints.pop()
-        self.abs_move(x, y, z)
+        self._abs_move(x, y, z)
 
     # Matrix manipulation #####################################################
     def _matrix_setup(self):
@@ -108,19 +108,19 @@ class GMatrix(G):
         transformed = self.transform(length, 0, 0)
         return math.sqrt(sum(coord ** 2 for coord in transformed))
 
-    def abs_move(self, x=None, y=None, z=None, **kwargs):
+    def _abs_move(self, x=None, y=None, z=None, **kwargs):
         """Move to an absolute position."""
         x = x if x is not None else self.current_position['x']
         y = y if y is not None else self.current_position['y']
         z = z if z is not None else self.current_position['z']
-        super(GMatrix, self).abs_move(x, y, z, **kwargs)
+        super(GMatrix, self)._abs_move(x, y, z, **kwargs)
 
-    def move(self, x=None, y=None, z=None, **kwargs):
+    def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
         """Apply the transformation matrix before moving."""
         tx, ty, tz = self.transform(x, y, z)
         tx, ty = (tx, ty) if x is not None or y is not None else (None, None)
         tz = tz if z is not None else None
-        super(GMatrix, self).move(tx, ty, tz, **kwargs)
+        super(GMatrix, self).move(tx, ty, tz, rapid=rapid, **kwargs)
 
     def _arc_direction_transform(self, direction):
         """Determine if arc direction needs to be flipped based on transformation."""

@@ -126,11 +126,11 @@ def test_set_bed_temperature(gbuilder, mock_write):
     gbuilder.set_bed_temperature(TemperatureUnits.CELSIUS, 60)
     assert mock_write.last_statement.startswith('M140 S60')
 
-def test_current_head_position(gbuilder):
+def test_current_axis_position(gbuilder):
     gbuilder.move(x=10, y=20, z=30)
-    assert gbuilder.current_head_position.x == 10
-    assert gbuilder.current_head_position.y == 20
-    assert gbuilder.current_head_position.z == 30
+    assert gbuilder.axis.x == 10
+    assert gbuilder.axis.y == 20
+    assert gbuilder.axis.z == 30
 
 def test_emergency_halt(gbuilder, mock_write):
     gbuilder.emergency_halt('Test emergency')

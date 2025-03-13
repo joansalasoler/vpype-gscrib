@@ -55,11 +55,12 @@ class GBuilder(GMatrix):
     @property
     def state(self) -> GState:
         """Current machine state."""
+
         return self._state
 
     @property
-    def current_head_position(self) -> Position:
-        """Get the current head position."""
+    def axis(self) -> Position:
+        """Get the current XYZ positions of the axis."""
 
         return Position(
             self.current_position['x'],
@@ -73,6 +74,8 @@ class GBuilder(GMatrix):
 
         Args:
             length_units (LengthUnits): The unit system to use
+
+        >>> G20|G21
         """
 
         self._state.set_length_units(length_units)
@@ -85,6 +88,8 @@ class GBuilder(GMatrix):
 
         Args:
             plane (Plane): The plane to use for subsequent operations
+
+        >>> G17|G18|G19
         """
 
         self._state.set_plane(plane)
@@ -97,6 +102,8 @@ class GBuilder(GMatrix):
 
         Args:
             mode (DistanceMode): The distance mode to use
+
+        >>> G90|G91
         """
 
         self._state.set_distance_mode(mode)
@@ -110,6 +117,8 @@ class GBuilder(GMatrix):
 
         Args:
             mode (ExtrusionMode): The extrusion mode to use
+
+        >>> M82|M83
         """
 
         self._state.set_extrusion_mode(mode)
@@ -122,6 +131,8 @@ class GBuilder(GMatrix):
 
         Args:
             mode (FeedMode): The feed rate mode to use
+
+        >>> G93|G94|G95
         """
 
         self._state.set_feed_mode(mode)
@@ -144,6 +155,8 @@ class GBuilder(GMatrix):
 
         Raises:
             ValueError: If power is less than 0.0
+
+        >>> S<power>
         """
 
         self._state.set_tool_power(power)
@@ -159,6 +172,8 @@ class GBuilder(GMatrix):
 
         Raises:
             ValueError: If speed is not in the valid range
+
+        >>> M106 P<fan_number> S<speed>
         """
 
         if fan_number < 0:
@@ -179,6 +194,8 @@ class GBuilder(GMatrix):
         Args:
             units (TemperatureUnits): Temperature units
             temp (float): Target temperature
+
+        >>> M140 S<temp>
         """
 
         bed_units = BedTemperature.from_units(units)
@@ -192,11 +209,32 @@ class GBuilder(GMatrix):
         Args:
             units (TemperatureUnits): Temperature units
             temp (float): Target temperature
+
+        >>> M104 S<temp>
         """
 
         hotend_units = HotendTemperature.from_units(units)
         statement = self._get_gcode_from_table(hotend_units, f'S{temp}')
         self.write(statement)
+
+    def set_axis_position(self, x=None, y=None, z=None, **kwargs):
+        """Set the current position without moving the head.
+
+        This command changes the machine's coordinate system by setting
+        the current position to the specified values without any physical
+        movement. It's commonly used to set a new reference point or to
+        reset axis positions.
+
+        Args:
+            x (float, optional): New X-axis position value
+            y (float, optional): New Y-axis position value
+            z (float, optional): New Z-axis position value
+            **kwargs: Additional axis positions
+
+        >>> G92 [X<x>] [Y<y>] [Z<z>] [<axis><value> ...]
+        """
+
+        super(GMatrix, self).set_axis_position(x, y, z, **kwargs)
 
     @typechecked
     def sleep(self, units: TimeUnits, seconds: float) -> None:
@@ -208,6 +246,8 @@ class GBuilder(GMatrix):
 
         Raises:
             ValueError: If seconds is less than 1ms
+
+        >>> G4 P<seconds|milliseconds>
         """
 
         if seconds < 0.001:
@@ -234,6 +274,8 @@ class GBuilder(GMatrix):
             ValueError: If speed is less than 0.0
             ValueError: If mode is OFF or was already active
             ToolStateError: If attempting invalid mode transition
+
+        >>> S<speed> M3|M4
         """
 
         if mode == SpinMode.OFF:
@@ -245,7 +287,10 @@ class GBuilder(GMatrix):
         self.write(statement, resp_needed=True)
 
     def tool_off(self) -> None:
-        """Deactivate the current tool."""
+        """Deactivate the current tool.
+
+        >>> M5
+        """
 
         self._state.set_spin_mode(SpinMode.OFF)
         statement = self._get_gcode_from_table(SpinMode.OFF)
@@ -269,6 +314,8 @@ class GBuilder(GMatrix):
             ValueError: If power is less than 0.0
             ValueError: If mode is OFF or was already active
             ToolStateError: If attempting invalid mode transition
+
+        >>> S<power> M3|M4
         """
 
         if mode == PowerMode.OFF:
@@ -280,7 +327,10 @@ class GBuilder(GMatrix):
         self.write(statement, resp_needed=True)
 
     def power_off(self) -> None:
-        """Power off the current tool."""
+        """Power off the current tool.
+
+        >>> M5
+        """
 
         self._state.set_power_mode(PowerMode.OFF)
         statement = self._get_gcode_from_table(PowerMode.OFF)
@@ -301,6 +351,8 @@ class GBuilder(GMatrix):
             ValueError: If tool number is invalid or mode is OFF
             ToolStateError: If tool is currently active
             CoolantStateError: If coolant is currently active
+
+        >>> T<tool_number> M6
         """
 
         if mode == RackMode.OFF:
@@ -321,6 +373,8 @@ class GBuilder(GMatrix):
 
         Raises:
             ValueError: If mode is OFF or was already active
+
+        >>> M7|M8
         """
 
         if mode == CoolantMode.OFF:
@@ -331,7 +385,10 @@ class GBuilder(GMatrix):
         self.write(statement, resp_needed=True)
 
     def coolant_off(self) -> None:
-        """Deactivate coolant system."""
+        """Deactivate coolant system.
+
+        >>> M9
+        """
 
         self._state.set_coolant_mode(CoolantMode.OFF)
         statement = self._get_gcode_from_table(CoolantMode.OFF)
@@ -348,6 +405,8 @@ class GBuilder(GMatrix):
         Raises:
             ToolStateError: If attempting to halt with tool active
             CoolantStateError: If attempting to halt with coolant active
+
+        >>> M0|M1|M2|M30|M60|M109|M190 [<param><value> ...]
         """
 
         if mode == HaltMode.OFF:
@@ -371,6 +430,11 @@ class GBuilder(GMatrix):
 
         Args:
             message (str): Description of the emergency condition
+
+        >>> M05
+        >>> M09
+        >>> ; Emergency halt: <message>
+        >>> M00
         """
 
         self.tool_off()
@@ -378,20 +442,87 @@ class GBuilder(GMatrix):
         self.comment(f'Emergency halt: {message}')
         self.halt_program(HaltMode.PAUSE)
 
-    def rapid_absolute(self, **kwargs):
-        """Rapid move to absolute coordinates without transforms."""
+    def rapid(self, x=None, y=None, z=None, **kwargs):
+        """Execute a rapid move to the specified location.
+
+        Performs a maximum-speed, uncoordinated move where each axis
+        moves independently at its maximum rate to reach the target
+        position. This is typically used for non-cutting movements like
+        positioning or tool changes.
+
+        Args:
+            x (float, optional): Target X-axis position
+            y (float, optional): Target Y-axis position
+            z (float, optional): Target Z-axis position
+            **kwargs: Additional parameters
+
+        >>> G0 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
+        """
+
+        super(GMatrix, self).rapid(x, y, z, **kwargs)
+
+    def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
+        """Execute a controlled linear move to the specified location.
+
+        Performs a coordinated linear movement at the current feed rate.
+        All axes will arrive at their target positions simultaneously,
+        following a straight line path.
+
+        Args:
+            x (float, optional): Target X-axis position
+            y (float, optional): Target Y-axis position
+            z (float, optional): Target Z-axis position
+            **kwargs: Additional parameters
+
+
+        >>> G1 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
+        """
+
+        super(GMatrix, self).move(x, y, z, rapid=rapid, **kwargs)
+
+    def rapid_absolute(self, x=None, y=None, z=None, **kwargs) -> None:
+        """Execute a rapid positioning move to absolute coordinates.
+
+        Performs a maximum-speed move to the specified absolute
+        coordinates, bypassing any active coordinate system
+        transformations. This method temporarily switches to absolute
+        positioning mode if relative mode is active.
+
+        Args:
+            x (float, optional): Target X-axis position
+            y (float, optional): Target Y-axis position
+            z (float, optional): Target Z-axis position
+            **kwargs: Additional parameters
+
+        >>> G0 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
+        """
 
         kwargs['rapid'] = True
-        self.move_absolute(**kwargs)
+        self.move_absolute(x, y, z, **kwargs)
 
-    def move_absolute(self, **kwargs):
-        """Move to absolute coordinates without transforms."""
+    def move_absolute(self, x=None, y=None, z=None, **kwargs) -> None:
+        """Execute a controlled move to absolute coordinates.
 
-        mode_was_relative = self.is_relative
+        Performs a coordinated linear move to the specified absolute
+        coordinates, bypassing any active coordinate system
+        transformations. This method temporarily switches to absolute
+        positioning mode if relative mode is active.
 
-        if mode_was_relative: self.absolute()
-        super(GMatrix, self).move(**kwargs)
-        if mode_was_relative: self.relative()
+        Args:
+            x (float, optional): Target X-axis position
+            y (float, optional): Target Y-axis position
+            z (float, optional): Target Z-axis position
+            **kwargs: Additional parameters
+
+        >>> G1 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
+        """
+
+        if self.is_relative == False:
+            super(GMatrix, self).move(x, y, z, **kwargs)
+        else:
+            self.set_distance_mode(DistanceMode.ABSOLUTE)
+            super(GMatrix, self).move(x, y, z, **kwargs)
+            self.set_distance_mode(DistanceMode.RELATIVE)
 
     def write(self, statement_in: str, resp_needed = False):
         """Write a G-code statement to the G-code output.
@@ -410,6 +541,8 @@ class GBuilder(GMatrix):
 
         Args:
             message (str): Text of the comment
+
+        >>> ; <message>
         """
 
         comment = self.format_comment(message)

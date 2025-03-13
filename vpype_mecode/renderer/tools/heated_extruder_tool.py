@@ -50,7 +50,7 @@ class HeatedExtruderTool(BaseTool):
         ctx.g.set_hotend_temperature(units, ctx.hotend_temperature)
         ctx.g.halt_program(halt_mode, S=ctx.hotend_temperature)
         ctx.g.set_extrusion_mode(ExtrusionMode.ABSOLUTE)
-        ctx.g.set_home(E=0.0)
+        ctx.g.set_axis_position(E=0.0)
 
     def power_on(self, ctx: GContext):
         """Recover filament before tracing a path.
@@ -133,7 +133,7 @@ class HeatedExtruderTool(BaseTool):
             float: The required filament length in work units
         """
 
-        cx, cy, cz = ctx.g.current_head_position
+        cx, cy, cz = ctx.g.axis
 
         radius = ctx.filament_diameter / 2.0
         cross_section = math.pi * radius * radius

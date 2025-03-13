@@ -86,7 +86,7 @@ class TestGMatrix(TestGFixture):
 
     def test_abs_move_and_rotate(self):
         self.g.rapid(z=5)
-        self.g.abs_move(x=5.0)
+        self.g._abs_move(x=5.0)
         self.assert_almost_position({'x' : 5.0, 'y':0, 'z':5})
         self.g.rapid(z=5)
         self.g.rotate(math.pi)
@@ -95,9 +95,9 @@ class TestGMatrix(TestGFixture):
     def test_abs_zmove_with_flip(self):
         self.g.rapid(z=5)
         self.g.rotate(math.pi)
-        self.g.abs_move(x=1)
+        self.g._abs_move(x=1)
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 5})
-        self.g.abs_move(z=2)
+        self.g._abs_move(z=2)
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 2})
 
         self.expect_cmd("""
@@ -114,9 +114,9 @@ class TestGMatrix(TestGFixture):
     def test_abs_zmove_with_rotate(self):
         self.g.rapid(z=5)
         self.g.rotate(math.pi/2.0)
-        self.g.abs_move(x=1)
+        self.g._abs_move(x=1)
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 5})
-        self.g.abs_move(z=2)
+        self.g._abs_move(z=2)
         self.assert_almost_position({'x': 1.0, 'y': 0, 'z': 2})
         self.expect_cmd("""
         G0 Z5
@@ -131,12 +131,12 @@ class TestGMatrix(TestGFixture):
 
     def test_scale_and_abs_move(self):
         self.g.rapid(z=5)
-        self.g.abs_move(x=1)
+        self.g._abs_move(x=1)
         self.g.scale(2.0)
         self.assert_almost_position({'x': .5, 'y': 0, 'z': 2.5})
-        self.g.abs_move()
+        self.g._abs_move()
         self.assert_almost_position({'x': .5, 'y': 0, 'z': 2.5})
-        self.g.abs_move(z=3)
+        self.g._abs_move(z=3)
         self.assert_almost_position({'x': .5, 'y': 0, 'z': 3})
 
     def test_arc(self):

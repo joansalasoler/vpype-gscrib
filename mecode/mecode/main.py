@@ -19,8 +19,6 @@ desired tool path. ::
     g.move(10, 10)  # move 10mm in x and 10mm in y
     g.arc(x=10, y=5, radius=20, direction='CCW')  # counterclockwise arc with a radius of 20
     g.meander(5, 10, spacing=1)  # trace a rectangle meander with 1mm spacing between the passes
-    g.abs_move(x=1, y=1)  # move the tool head to position (1, 1)
-    g.home()  # move the tool head to the origin (0, 0)
 
 By default `mecode` simply prints the generated GCode to stdout. If instead you
 want to generate a file, you can pass a filename. ::
@@ -242,7 +240,7 @@ class G(object):
             self.out_fd = None
 
         if setup:
-            self.setup()
+            self._setup()
 
 
     @property
@@ -304,11 +302,6 @@ class G(object):
 
         return f'{open_symbols} {text}'
 
-    def write_comment(self, comment):
-        """ Insert a comment into the gcode output file
-        """
-        self.write(self.format_comment(comment))
-
     def move_other_axis(self, a, rapid=False):
         """ Move an auxilliary axis (currently "A")
 
@@ -321,30 +314,22 @@ class G(object):
 
     # GCode Aliases  ########################################################
 
-    def set_home(self, x=None, y=None, z=None, **kwargs):
-        """ Set the current position to the given position without moving.
+    def set_axis_position(self, x=None, y=None, z=None, **kwargs):
+        """Set the current position to the values specified without moving.
 
         Example
         -------
         >>> # set the current position to X=0, Y=0
-        >>> g.set_home(0, 0)
+        >>> g.set_axis_position(0, 0)
 
         """
         args = self._format_args(x, y, z, **kwargs)
         space = ' ' if len(args) > 0 else ''
-        self.write('G92' + space + args + " " +self.format_comment('set home'))
+        self.write('G92' + space + args + " " +self.format_comment('Set axis position'))
 
         self._update_current_position(mode='absolute', x=x, y=y, z=z, **kwargs)
 
-    def reset_home(self):
-        """ Reset the position back to machine coordinates without moving.
-        """
-        # FIXME This does not work with internal current_position
-        # FIXME You must call an abs_move after this to re-sync
-        # current_position
-        self.write('G92.1 {}'.format(self.format_comment("reset position to machine coordinates without moving")))
-
-    def relative(self):
+    def _relative(self):
         """ Enter relative movement mode, in general this method should not be
         used, most methods handle it automatically.
 
@@ -353,7 +338,7 @@ class G(object):
             self.write('G91 {}'.format(self.format_comment("relative")))
             self.is_relative = True
 
-    def absolute(self):
+    def _absolute(self):
         """ Enter absolute movement mode, in general this method should not be
         used, most methods handle it automatically.
 
@@ -362,7 +347,7 @@ class G(object):
             self.write('G90 {}'.format(self.format_comment("absolute")))
             self.is_relative = False
 
-    def feed(self, rate):
+    def _feed(self, rate):
         """ Set the feed rate (tool head speed) in (typically) mm/minute
 
         Parameters
@@ -374,7 +359,7 @@ class G(object):
         self.write('G1 F{}'.format(rate))
         self.speed = rate
 
-    def dwell(self, time, comment=None):
+    def _dwell(self, time, comment=None):
         """ Pause code executions for the given amount of time.
 
         Parameters
@@ -391,7 +376,7 @@ class G(object):
 
     # Composed Functions  #####################################################
 
-    def setup(self):
+    def _setup(self):
         """ Set the environment into a consistent state to start off. This
         method must be called before any other commands.
 
@@ -427,12 +412,7 @@ class G(object):
         if self._p is not None:
             self._p.disconnect(wait)
 
-    def home(self):
-        """ Move the tool head to the home position (X=0, Y=0).
-        """
-        self.abs_move(x=0, y=0)
-
-    def move(self, x=None, y=None, z=None, rapid=False, color=(0,0,0,0.5), **kwargs):
+    def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
         """ Move the tool head to the given position. This method operates in
         relative mode unless a manual call to `absolute` was given previously.
         If an absolute movement is desired, the `abs_move` method is
@@ -456,6 +436,13 @@ class G(object):
         >>> g.move(A=20)
 
         """
+
+        color = (0, 0, 0, 0.5)
+
+        if 'color' in kwargs.keys():
+            color = kwargs['color']
+            del kwargs['color']
+
         if self.extrude is True and 'E' not in kwargs.keys():
             if self.is_relative is not True:
                 x_move = self.current_position['x'] if x is None else x
@@ -479,13 +466,13 @@ class G(object):
         cmd = 'G0 ' if rapid else 'G1 '
         self.write(cmd + args)
 
-    def abs_move(self, x=None, y=None, z=None, rapid=False, **kwargs):
+    def _abs_move(self, x=None, y=None, z=None, rapid=False, **kwargs):
         """ Same as `move` method, but positions are interpreted as absolute.
         """
         if self.is_relative:
-            self.absolute()
+            self._absolute()
             self.move(x=x, y=y, z=z, rapid=rapid, **kwargs)
-            self.relative()
+            self._relative()
         else:
             self.move(x=x, y=y, z=z, rapid=rapid, **kwargs)
 
@@ -493,19 +480,6 @@ class G(object):
         """ Executes an uncoordinated move to the specified location.
         """
         self.move(x, y, z, rapid=True, **kwargs)
-
-    def abs_rapid(self, x=None, y=None, z=None, **kwargs):
-        """ Executes an uncoordinated abs move to the specified location.
-        """
-        self.abs_move(x, y, z, rapid=True, **kwargs)
-
-    def retract(self, retraction):
-        if self.extrude is False:
-            self.move(E = -retraction)
-        else:
-            self.extrude = False
-            self.move(E = -retraction)
-            self.extrude = True
 
     def circle(self, radius, center=None,  direction='CW', linearize=False, **kwargs):
         """ Generates a circle starting from the current position if center is None,
@@ -788,16 +762,6 @@ class G(object):
 
         self._update_current_position(**dims)
 
-    def abs_arc(self, direction='CW', radius='auto', **kwargs):
-        """ Same as `arc` method, but positions are interpreted as absolute.
-        """
-        if self.is_relative:
-            self.absolute()
-            self.arc(direction=direction, radius=radius, **kwargs)
-            self.relative()
-        else:
-            self.arc(direction=direction, radius=radius, **kwargs)
-
     def rect(self, x, y, direction='CW', start='LL'):
         """ Trace a rectangle with the given width and height.
 
@@ -1036,7 +1000,7 @@ class G(object):
 
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1046,16 +1010,16 @@ class G(object):
         for _ in range(int(self._meander_passes(minor, spacing))):
             self.move(**{major_name: (sign * major), 'color': color})
             if minor_feed != major_feed:
-                self.feed(minor_feed)
+                self._feed(minor_feed)
             self.move(**{minor_name: spacing, 'color': color})
             if minor_feed != major_feed:
-                self.feed(major_feed)
+                self._feed(major_feed)
             sign = -1 * sign
         if tail is False:
             self.move(**{major_name: (sign * major), 'color': color})
 
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
     def clip(self, axis='z', direction='+x', height=4, linearize=False):
         """ Move the given axis up to the given height while arcing in the
@@ -1145,7 +1109,7 @@ class G(object):
 
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1154,7 +1118,7 @@ class G(object):
             sign = -1 * sign
 
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
     def spiral(self, end_diameter, spacing, feedrate, start='center', direction='CW',
                 step_angle = 0.1, start_diameter = 0, center_position=None):
@@ -1205,7 +1169,7 @@ class G(object):
         #Keep track of whether currently in relative or absolute mode
         was_relative = True
         if self.is_relative:
-            self.absolute()
+            self._absolute()
         else:
             was_relative = False
 
@@ -1233,7 +1197,7 @@ class G(object):
         self.move(x_move, y_move)
 
         #Start writing moves
-        self.feed(feedrate)
+        self._feed(feedrate)
 
         for step in t[1:]:
             if (direction == 'CW' and start == 'center') or (direction == 'CCW' and start == 'edge'):
@@ -1247,7 +1211,7 @@ class G(object):
 
         #Set back to relative mode if it was previsously before command was called
         if was_relative:
-                self.relative()
+                self._relative()
 
     def gradient_spiral(self, end_diameter, spacing, gradient, feedrate, flowrate,
                 start='center', direction='CW', step_angle = 0.1, start_diameter = 0,
@@ -1453,7 +1417,7 @@ class G(object):
         #Keep track of whether currently in relative or absolute mode
         was_relative = True
         if self.is_relative:
-            self.absolute()
+            self._absolute()
         else:
             was_relative = False
 
@@ -1481,7 +1445,7 @@ class G(object):
         self.move(x_move, y_move)
 
         #Start writing moves
-        self.feed(feedrate)
+        self._feed(feedrate)
         syringe_extrusion = np.array([0.0,0.0])
 
         #Zero a & b axis before printing, we do this so it can easily do multiple layers without quickly jumping back to 0
@@ -1505,7 +1469,7 @@ class G(object):
 
         #Set back to relative mode if it was previsously before command was called
         if was_relative:
-                self.relative()
+                self._relative()
 
     def purge_meander(self, x, y, spacing, volume_fraction, flowrate, start='LL', orientation='x',
             tail=False, minor_feed=None):
@@ -1771,7 +1735,7 @@ class G(object):
         # Switch to relative if in absolute, but keep track of state
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1794,19 +1758,19 @@ class G(object):
 
             #Move to push into substrate
             self.move(z=-print_height)
-            self.feed(travel_feed)
+            self._feed(travel_feed)
             self.move(z=print_height+5)
 
             if f != freq[-1]:
                 self.move(x=-len(switch_points)*dist,y=padding)
                 self.move(z=-5)
-                self.feed(print_feed)
+                self._feed(print_feed)
 
         # Switch back to velocity off
         self.write("VELOCITY OFF")
         # Switch back to absolute if it was in absolute
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
         return [length,padding*(len(freq)-1)]
 
@@ -1821,7 +1785,7 @@ class G(object):
         # Switch to relative if in absolute, but keep track of state
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1841,16 +1805,16 @@ class G(object):
                 #self.toggle_pressure(com_port)
                 direction *= -1
             self.toggle_pressure(com_port)
-            self.feed(travel_feed)
+            self._feed(travel_feed)
             self.move(z=5)
             if pressure != pressures[-1]:
                 self.move(x=-np.sum(spacing),y=width+padding)
                 self.move(z=-5)
-                self.feed(print_feed)
+                self._feed(print_feed)
 
         # Switch back to absolute if it was in absolute
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
         return [np.sum(spacing)*2-spacing[-1],len(pressures)*width + (len(pressures)-1)*padding]
 
@@ -1865,7 +1829,7 @@ class G(object):
         # Switch to relative if in absolute, but keep track of state
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1874,23 +1838,23 @@ class G(object):
 
         for dist in distances:
             self.toggle_pressure(com_port)
-            self.dwell(dwell)
-            self.feed(print_feed*dist/distances[0])
+            self._dwell(dwell)
+            self._feed(print_feed*dist/distances[0])
             self.move(y=dist)
-            self.dwell(dwell)
+            self._dwell(dwell)
             self.toggle_pressure(com_port)
 
             self.move(z=-print_height)
-            self.feed(travel_feed)
+            self._feed(travel_feed)
             self.move(z=print_height+5)
             if dist != distances[-1]:
                 self.move(x=padding,y=-dist)
                 self.move(z=-5)
-                self.feed(print_feed)
+                self._feed(print_feed)
 
         # Switch back to absolute if it was in absolute
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
         return [padding*(len(distances)-1),np.max(distances)]
 
@@ -1906,7 +1870,7 @@ class G(object):
         # Switch to relative if in absolute, but keep track of state
         was_absolute = True
         if not self.is_relative:
-            self.relative()
+            self._relative()
         else:
             was_absolute = False
 
@@ -1914,31 +1878,31 @@ class G(object):
 
         self.set_pressure(com_port,pressure)
         self.toggle_pressure(com_port)
-        self.dwell(dwell)
+        self._dwell(dwell)
         self.move(x=length)
-        self.dwell(dwell)
+        self._dwell(dwell)
         self.toggle_pressure(com_port)
         self.move(z=-print_height)
-        self.feed(travel_feed)
+        self._feed(travel_feed)
         self.move(z=print_height+5)
 
         spacing = length/(len(feeds)+1)
         self.move(x=-spacing,y=8)
         for feed in feeds:
             self.move(z=-(print_height+5))
-            self.feed(feed)
+            self._feed(feed)
             self.move(y=-16)
             if feed != feeds[-1]:
-                self.feed(travel_feed)
+                self._feed(travel_feed)
                 self.move(z=print_height+5)
                 self.move(x=-spacing,y=16)
 
-        self.feed(travel_feed)
+        self._feed(travel_feed)
         self.move(z=print_height+5)
 
         # Switch back to absolute if it was in absolute
         if was_absolute:
-            self.absolute()
+            self._absolute()
 
         return length
 
