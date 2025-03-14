@@ -22,8 +22,8 @@ from .heated_bed import HeatedBed
 from .no_bed import NoBed
 
 __all__ = [
-    'BaseBed',
-    'BedFactory',
-    'HeatedBed',
-    'NoBed',
+    "BaseBed",
+    "BedFactory",
+    "HeatedBed",
+    "NoBed",
 ]

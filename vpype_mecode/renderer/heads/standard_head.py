@@ -93,7 +93,7 @@ class StandardHead(BaseHead):
             tool_params (dict): Tool-specific parameters
         """
 
-        params = { 'F' : ctx.work_speed, **tool_params }
+        params = { "F": ctx.work_speed, **tool_params }
         ctx.g.move(x=x, y=y, **params)
 
     def park_for_service(self, ctx: GContext):

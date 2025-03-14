@@ -25,7 +25,7 @@ from vpype_mecode.utils import BaseHeightMap, FlatHeightMap, RasterHeightMap
 from vpype_mecode.enums import *
 
 
-class GContext():
+class GContext:
     """Context of the G-code generation.
 
     This class encapsulates all the configuration parameters needed
@@ -51,10 +51,10 @@ class GContext():
     """
 
     _scale_properties = (
-        'work_speed',
-        'plunge_speed',
-        'travel_speed',
-        'retract_speed',
+        "work_speed",
+        "plunge_speed",
+        "travel_speed",
+        "retract_speed",
     )
 
     @typechecked
@@ -126,7 +126,7 @@ class GContext():
     def __setattr__(self, name, value):
         """Ensure all the properties of this class are read only"""
 
-        if hasattr(self, '_frozen') and self._frozen:
+        if hasattr(self, "_frozen") and self._frozen:
             raise FrozenInstanceError(
                 f"Cannot assign to field '{name}'.")
 

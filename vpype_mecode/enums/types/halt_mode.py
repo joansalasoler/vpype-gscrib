@@ -22,11 +22,11 @@ from ..base_enum import BaseEnum
 class HaltMode(BaseEnum):
     """Program termination and pause modes."""
 
-    OFF = 'off'
-    PAUSE = 'pause'
-    OPTIONAL_PAUSE = 'optional-pause'
-    END_WITHOUT_RESET = 'end-without-reset'
-    END_WITH_RESET = 'end-with-reset'
-    PALLET_EXCHANGE = 'pallet-exchange'
-    WAIT_FOR_BED = 'wait-for-bed'
-    WAIT_FOR_HOTEND = 'wait-for-hotend'
+    OFF = "off"
+    PAUSE = "pause"
+    OPTIONAL_PAUSE = "optional-pause"
+    END_WITHOUT_RESET = "end-without-reset"
+    END_WITH_RESET = "end-with-reset"
+    PALLET_EXCHANGE = "pallet-exchange"
+    WAIT_FOR_BED = "wait-for-bed"
+    WAIT_FOR_HOTEND = "wait-for-hotend"

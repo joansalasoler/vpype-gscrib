@@ -61,7 +61,7 @@ class FlatHeightMap(BaseHeightMap):
         line_array = numpy.asarray(line, dtype=float)
 
         if line_array.shape != (4,):
-            raise ValueError('Line must contain exactly 4 elements')
+            raise ValueError("Line must contain exactly 4 elements")
 
         return numpy.array([
             [line_array[0], line_array[1], 0.0],

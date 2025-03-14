@@ -14,9 +14,9 @@ from .no_rack import NoRack
 from .rack_factory import RackFactory
 
 __all__ = [
-    'BaseRack',
-    'RackFactory',
-    'AutomaticRack',
-    'ManualRack',
-    'NoRack'
+    "BaseRack",
+    "RackFactory",
+    "AutomaticRack",
+    "ManualRack",
+    "NoRack"
 ]

@@ -195,9 +195,9 @@ class GState:
         """
 
         if mode != CoolantMode.OFF:
-            self._ensure_coolant_is_inactive('Coolant already active.')
+            self._ensure_coolant_is_inactive("Coolant already active.")
 
-        self._is_coolant_active = (mode != CoolantMode.OFF)
+        self._is_coolant_active = mode != CoolantMode.OFF
         self._current_coolant_mode = mode
 
     @typechecked
@@ -215,7 +215,7 @@ class GState:
         """
 
         if mode != SpinMode.OFF:
-            self._ensure_tool_is_inactive('Spindle already active.')
+            self._ensure_tool_is_inactive("Spindle already active.")
 
         self.set_tool_power(speed)
         self._is_tool_active = (mode != SpinMode.OFF)
@@ -236,7 +236,7 @@ class GState:
         """
 
         if mode != PowerMode.OFF:
-            self._ensure_tool_is_inactive('Power already active.')
+            self._ensure_tool_is_inactive("Power already active.")
 
         self.set_tool_power(power)
         self._is_tool_active = (mode != PowerMode.OFF)
@@ -259,8 +259,8 @@ class GState:
         """
 
         self._validate_tool_number(tool_number)
-        self._ensure_tool_is_inactive('Tool change with tool on.')
-        self._ensure_coolant_is_inactive('Tool change with coolant on.')
+        self._ensure_tool_is_inactive("Tool change with tool on.")
+        self._ensure_coolant_is_inactive("Tool change with coolant on.")
         self._current_tool_number = tool_number
         self._current_rack_mode = mode
 
@@ -277,8 +277,8 @@ class GState:
         """
 
         if mode != HaltMode.OFF:
-            self._ensure_tool_is_inactive('Halt with tool on.')
-            self._ensure_coolant_is_inactive('Halt with coolant on.')
+            self._ensure_tool_is_inactive("Halt with tool on.")
+            self._ensure_coolant_is_inactive("Halt with coolant on.")
 
         self._current_halt_mode = mode
 
@@ -298,12 +298,12 @@ class GState:
         """Validate tool number is within acceptable range."""
 
         if not isinstance(number, int) or number < 1:
-            message = f'Invalid tool number `{number}`.'
+            message = f"Invalid tool number '{number}'."
             raise ValueError(message)
 
     def _validate_tool_power(self, power: float) -> None:
         """Validate tool power level is within acceptable range."""
 
         if not isinstance(power, int | float) or power < 0.0:
-            message = f'Invalid tool power `{power}`.'
+            message = f"Invalid tool power '{power}'."
             raise ValueError(message)

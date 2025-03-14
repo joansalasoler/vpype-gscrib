@@ -22,5 +22,5 @@ from ..base_enum import BaseEnum
 class TemperatureUnits(BaseEnum):
     """Units of temperature."""
 
-    CELSIUS = 'celsius'
-    KELVIN = 'kelvin'
+    CELSIUS = "celsius"
+    KELVIN = "kelvin"

@@ -22,6 +22,6 @@ from ..base_enum import BaseEnum
 class FeedMode(BaseEnum):
     """Feed rate mode for machine movement."""
 
-    UNITS_PER_MINUTE = 'units/min'
-    UNITS_PER_REVOLUTION = 'units/rev'
-    INVERSE_TIME = '1/time'
+    UNITS_PER_MINUTE = "units/min"
+    UNITS_PER_REVOLUTION = "units/rev"
+    INVERSE_TIME = "1/time"

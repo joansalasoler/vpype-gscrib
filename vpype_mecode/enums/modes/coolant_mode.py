@@ -22,9 +22,9 @@ from ..base_enum import BaseEnum
 class CoolantMode(BaseEnum):
     """Coolant modes for the machine."""
 
-    OFF = 'off'
-    MIST = 'mist'
-    FLOOD = 'flood'
+    OFF = "off"
+    MIST = "mist"
+    FLOOD = "flood"
 
     def __invert__(self):
         if self == CoolantMode.MIST:

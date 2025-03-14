@@ -78,37 +78,42 @@ except NameError:
         return isinstance(s, str)
 
     def encode2To3(s):
-        return bytes(s, 'UTF-8')
+        return bytes(s, "UTF-8")
 
     def decode2To3(s):
-        return s.decode('UTF-8')
+        return s.decode("UTF-8")
 
 
 class G(object):
-
-    def __init__(self, output=None, print_lines='auto', header=None, footer=None,
-                 aerotech_include=False,
-                 decimal_places=5,
-                 direct_write_mode='off',
-                 host='localhost',
-                 port=8000,
-                 baudrate=250000,
-                 wait_for_response=True,
-                 x_axis='X',
-                 y_axis='Y',
-                 z_axis='Z',
-                 i_axis='I',
-                 j_axis='J',
-                 k_axis='K',
-                 extrude=False,
-                 filament_diameter=1.75,
-                 layer_height=0.19,
-                 extrusion_width=0.35,
-                 extrusion_multiplier=1,
-                 setup=True,
-                 line_endings='os',
-                 comment_symbols=';',
-                 absolute=False):
+    def __init__(
+        self,
+        output=None,
+        print_lines="auto",
+        header=None,
+        footer=None,
+        aerotech_include=False,
+        decimal_places=5,
+        direct_write_mode="off",
+        host="localhost",
+        port=8000,
+        baudrate=250000,
+        wait_for_response=True,
+        x_axis="X",
+        y_axis="Y",
+        z_axis="Z",
+        i_axis="I",
+        j_axis="J",
+        k_axis="K",
+        extrude=False,
+        filament_diameter=1.75,
+        layer_height=0.19,
+        extrusion_width=0.35,
+        extrusion_multiplier=1,
+        setup=True,
+        line_endings="os",
+        comment_symbols=";",
+        absolute=False,
+    ):
         """
         Parameters
         ----------
@@ -188,7 +193,7 @@ class G(object):
         self.footer = footer
         self.aerotech_include = aerotech_include
         self.output_digits = decimal_places
-        self.direct_write = direct_write_mode != 'off'
+        self.direct_write = direct_write_mode != "off"
         self.direct_write_mode = direct_write_mode
         self.host = host
         self.port = port
@@ -215,7 +220,7 @@ class G(object):
         self.color_history = [(0, 0, 0)]
         self.speed = 0
         self.speed_history = []
-        self.extruding = [None,False]
+        self.extruding = [None, False]
         self.extruding_history = []
 
         self._socket = None
@@ -224,13 +229,13 @@ class G(object):
         # If the user passes in a line ending then we need to open the output
         # file in binary mode, otherwise python will try to be smart and
         # convert line endings in a platform dependent way.
-        if line_endings == 'os':
-            mode = 'w+'
-            self.line_endings = '\n'
+        if line_endings == "os":
+            mode = "w+"
+            self.line_endings = "\n"
         else:
-            mode = 'wb+'
-            chars = bytes(line_endings, 'utf-8')
-            self.line_endings = chars.decode('unicode-escape')
+            mode = "wb+"
+            chars = bytes(line_endings, "utf-8")
+            self.line_endings = chars.decode("unicode-escape")
 
         if is_str(self.outfile):
             self.out_fd = open(self.outfile, mode)
@@ -241,7 +246,6 @@ class G(object):
 
         if setup:
             self._setup()
-
 
     @property
     def current_position(self):
@@ -290,27 +294,26 @@ class G(object):
             - enclose_comment("hello", "/*") -> "/* hello */"
         """
 
-        OPENING_CHARS = ('(', '[', '{', '<', '"', '\'', '/*')
-        CLOSING_CHARS = (')', ']', '}', '>', '"', '\'', '*/')
+        OPENING_CHARS = ("(", "[", "{", "<", '"', "'", "/*")
+        CLOSING_CHARS = (")", "]", "}", ">", '"', "'", "*/")
 
         if open_symbols in OPENING_CHARS:
             index = OPENING_CHARS.index(open_symbols)
             close_symbols = CLOSING_CHARS[index]
-            message = text.replace(open_symbols, '')
-            message = text.replace(close_symbols, '')
-            return f'{open_symbols} {message} {close_symbols}'
+            message = text.replace(open_symbols, "")
+            message = text.replace(close_symbols, "")
+            return f"{open_symbols} {message} {close_symbols}"
 
-        return f'{open_symbols} {text}'
+        return f"{open_symbols} {text}"
 
     def move_other_axis(self, a, rapid=False):
-        """ Move an auxilliary axis (currently "A")
+        """Move an auxilliary axis (currently "A")
 
         Primarily, this is useful for a rotational indexer (if present)
         """
 
-        cmd = 'G0 ' if rapid else 'G1 '
-        self.write(f'{cmd}A{self._format_float(a)}')
-
+        cmd = "G0 " if rapid else "G1 "
+        self.write(f"{cmd}A{self._format_float(a)}")
 
     # GCode Aliases  ########################################################
 
@@ -324,31 +327,33 @@ class G(object):
 
         """
         args = self._format_args(x, y, z, **kwargs)
-        space = ' ' if len(args) > 0 else ''
-        self.write('G92' + space + args + " " +self.format_comment('Set axis position'))
+        space = " " if len(args) > 0 else ""
+        self.write(
+            "G92" + space + args + " " + self.format_comment("Set axis position")
+        )
 
-        self._update_current_position(mode='absolute', x=x, y=y, z=z, **kwargs)
+        self._update_current_position(mode="absolute", x=x, y=y, z=z, **kwargs)
 
     def _relative(self):
-        """ Enter relative movement mode, in general this method should not be
+        """Enter relative movement mode, in general this method should not be
         used, most methods handle it automatically.
 
         """
         if not self.is_relative:
-            self.write('G91 {}'.format(self.format_comment("relative")))
+            self.write("G91 {}".format(self.format_comment("relative")))
             self.is_relative = True
 
     def _absolute(self):
-        """ Enter absolute movement mode, in general this method should not be
+        """Enter absolute movement mode, in general this method should not be
         used, most methods handle it automatically.
 
         """
         if self.is_relative:
-            self.write('G90 {}'.format(self.format_comment("absolute")))
+            self.write("G90 {}".format(self.format_comment("absolute")))
             self.is_relative = False
 
     def _feed(self, rate):
-        """ Set the feed rate (tool head speed) in (typically) mm/minute
+        """Set the feed rate (tool head speed) in (typically) mm/minute
 
         Parameters
         ----------
@@ -356,11 +361,11 @@ class G(object):
             The speed to move the tool head in (typically) mm/minute.
 
         """
-        self.write('G1 F{}'.format(rate))
+        self.write("G1 F{}".format(rate))
         self.speed = rate
 
     def _dwell(self, time, comment=None):
-        """ Pause code executions for the given amount of time.
+        """Pause code executions for the given amount of time.
 
         Parameters
         ----------
@@ -370,25 +375,25 @@ class G(object):
         """
 
         if comment:
-            self.write('G4 P{} {}'.format(time, self.format_comment(comment)))
+            self.write("G4 P{} {}".format(time, self.format_comment(comment)))
         else:
-            self.write('G4 P{}'.format(time))
+            self.write("G4 P{}".format(time))
 
     # Composed Functions  #####################################################
 
     def _setup(self):
-        """ Set the environment into a consistent state to start off. This
+        """Set the environment into a consistent state to start off. This
         method must be called before any other commands.
 
         """
         self._write_header()
         if self.is_relative:
-            self.write('G91 {}'.format(self.format_comment("relative")))
+            self.write("G91 {}".format(self.format_comment("relative")))
         else:
-            self.write('G90 {}'.format(self.format_comment("absolute")))
+            self.write("G90 {}".format(self.format_comment("absolute")))
 
     def teardown(self, wait=True):
-        """ Close the outfile file after writing the footer if opened. This
+        """Close the outfile file after writing the footer if opened. This
         method must be called once after all commands.
 
         Parameters
@@ -400,7 +405,7 @@ class G(object):
         """
         if self.out_fd is not None:
             if self.aerotech_include is True:
-                with open(os.path.join(HERE, 'footer.txt')) as fd:
+                with open(os.path.join(HERE, "footer.txt")) as fd:
                     self._write_out(lines=fd.readlines())
             if self.footer is not None:
                 with open(self.footer) as fd:
@@ -413,7 +418,7 @@ class G(object):
             self._p.disconnect(wait)
 
     def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
-        """ Move the tool head to the given position. This method operates in
+        """Move the tool head to the given position. This method operates in
         relative mode unless a manual call to `absolute` was given previously.
         If an absolute movement is desired, the `abs_move` method is
         recommended instead.
@@ -439,36 +444,39 @@ class G(object):
 
         color = (0, 0, 0, 0.5)
 
-        if 'color' in kwargs.keys():
-            color = kwargs['color']
-            del kwargs['color']
+        if "color" in kwargs.keys():
+            color = kwargs["color"]
+            del kwargs["color"]
 
-        if self.extrude is True and 'E' not in kwargs.keys():
+        if self.extrude is True and "E" not in kwargs.keys():
             if self.is_relative is not True:
-                x_move = self.current_position['x'] if x is None else x
-                y_move = self.current_position['y'] if y is None else y
-                x_distance = abs(x_move - self.current_position['x'])
-                y_distance = abs(y_move - self.current_position['y'])
-                current_extruder_position = self.current_position['E']
+                x_move = self.current_position["x"] if x is None else x
+                y_move = self.current_position["y"] if y is None else y
+                x_distance = abs(x_move - self.current_position["x"])
+                y_distance = abs(y_move - self.current_position["y"])
+                current_extruder_position = self.current_position["E"]
             else:
                 x_distance = 0 if x is None else x
                 y_distance = 0 if y is None else y
                 current_extruder_position = 0
             line_length = math.sqrt(x_distance**2 + y_distance**2)
-            area = self.layer_height*(self.extrusion_width-self.layer_height) + \
-                3.14159*(self.layer_height/2)**2
-            volume = line_length*area
-            filament_length = ((4*volume)/(3.14149*self.filament_diameter**2))*self.extrusion_multiplier
-            kwargs['E'] = filament_length + current_extruder_position
+            area = (
+                self.layer_height * (self.extrusion_width - self.layer_height)
+                + 3.14159 * (self.layer_height / 2) ** 2
+            )
+            volume = line_length * area
+            filament_length = (
+                (4 * volume) / (3.14149 * self.filament_diameter**2)
+            ) * self.extrusion_multiplier
+            kwargs["E"] = filament_length + current_extruder_position
 
         self._update_current_position(x=x, y=y, z=z, color=color, **kwargs)
         args = self._format_args(x, y, z, **kwargs)
-        cmd = 'G0 ' if rapid else 'G1 '
+        cmd = "G0 " if rapid else "G1 "
         self.write(cmd + args)
 
     def _abs_move(self, x=None, y=None, z=None, rapid=False, **kwargs):
-        """ Same as `move` method, but positions are interpreted as absolute.
-        """
+        """Same as `move` method, but positions are interpreted as absolute."""
         if self.is_relative:
             self._absolute()
             self.move(x=x, y=y, z=z, rapid=rapid, **kwargs)
@@ -477,12 +485,11 @@ class G(object):
             self.move(x=x, y=y, z=z, rapid=rapid, **kwargs)
 
     def rapid(self, x=None, y=None, z=None, **kwargs):
-        """ Executes an uncoordinated move to the specified location.
-        """
+        """Executes an uncoordinated move to the specified location."""
         self.move(x, y, z, rapid=True, **kwargs)
 
-    def circle(self, radius, center=None,  direction='CW', linearize=False, **kwargs):
-        """ Generates a circle starting from the current position if center is None,
+    def circle(self, radius, center=None, direction="CW", linearize=False, **kwargs):
+        """Generates a circle starting from the current position if center is None,
         otherwise from center.
 
         Parameters
@@ -509,20 +516,31 @@ class G(object):
         >>> g.arc(x=10, y=10, radius=50, helix_dim='A', helix_len=5)
 
         """
-        if direction == 'CW':
-            self.arc(x=radius, y=radius, radius=radius, direction='CW', **kwargs)
-            self.arc(x=radius, y=-radius, radius=radius, direction='CW', **kwargs)
-            self.arc(x=-radius, y=-radius, radius=radius, direction='CW', **kwargs)
-            self.arc(x=-radius, y=radius, radius=radius, direction='CW', **kwargs)
-        elif direction == 'CCW':
-            self.arc(x=-radius, y=radius, radius=radius, direction='CCW', **kwargs)
-            self.arc(x=-radius, y=-radius, radius=radius, direction='CCW', **kwargs)
-            self.arc(x=radius, y=-radius, radius=radius, direction='CCW', **kwargs)
-            self.arc(x=radius, y=radius, radius=radius, direction='CCW', **kwargs)
+        if direction == "CW":
+            self.arc(x=radius, y=radius, radius=radius, direction="CW", **kwargs)
+            self.arc(x=radius, y=-radius, radius=radius, direction="CW", **kwargs)
+            self.arc(x=-radius, y=-radius, radius=radius, direction="CW", **kwargs)
+            self.arc(x=-radius, y=radius, radius=radius, direction="CW", **kwargs)
+        elif direction == "CCW":
+            self.arc(x=-radius, y=radius, radius=radius, direction="CCW", **kwargs)
+            self.arc(x=-radius, y=-radius, radius=radius, direction="CCW", **kwargs)
+            self.arc(x=radius, y=-radius, radius=radius, direction="CCW", **kwargs)
+            self.arc(x=radius, y=radius, radius=radius, direction="CCW", **kwargs)
 
-    def arc(self, x=None, y=None, z=None, direction='CW', radius='auto',
-            helix_dim=None, helix_len=0, linearize=False, color=(0,1,0,0.5), **kwargs):
-        """ Arc to the given point with the given radius and in the given
+    def arc(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        direction="CW",
+        radius="auto",
+        helix_dim=None,
+        helix_len=0,
+        linearize=False,
+        color=(0, 1, 0, 0.5),
+        **kwargs,
+    ):
+        """Arc to the given point with the given radius and in the given
         direction. If helix_dim and helix_len are specified then the tool head
         will also perform a linear movement through the given dimension while
         completing the arc. Note: Helix and flow calculation do not currently
@@ -559,35 +577,41 @@ class G(object):
         """
         dims = dict(kwargs)
         if x is not None:
-            dims['x'] = x
+            dims["x"] = x
         if y is not None:
-            dims['y'] = y
+            dims["y"] = y
         if z is not None:
-            dims['z'] = z
-        msg = 'Must specify two of x, y, or z.'
+            dims["z"] = z
+        msg = "Must specify two of x, y, or z."
         if len(dims) != 2:
             raise RuntimeError(msg)
         dimensions = [k.lower() for k in dims.keys()]
-        if 'x' in dimensions and 'y' in dimensions:
-            plane_selector = 'G17 {}'.format(self.format_comment('XY plane'))  # XY plane
+        if "x" in dimensions and "y" in dimensions:
+            plane_selector = "G17 {}".format(
+                self.format_comment("XY plane")
+            )  # XY plane
             axis = helix_dim
-        elif 'x' in dimensions:
-            plane_selector = 'G18 {}'.format(self.format_comment('XZ plane'))  # XZ plane
-            dimensions.remove('x')
+        elif "x" in dimensions:
+            plane_selector = "G18 {}".format(
+                self.format_comment("XZ plane")
+            )  # XZ plane
+            dimensions.remove("x")
             axis = dimensions[0].upper()
-        elif 'y' in dimensions:
-            plane_selector = 'G19 {}'.format(self.format_comment('YZ plane'))  # YZ plane
-            dimensions.remove('y')
+        elif "y" in dimensions:
+            plane_selector = "G19 {}".format(
+                self.format_comment("YZ plane")
+            )  # YZ plane
+            dimensions.remove("y")
             axis = dimensions[0].upper()
         else:
             raise RuntimeError(msg)
-        if self.z_axis != 'Z':
+        if self.z_axis != "Z":
             axis = self.z_axis
 
-        if direction == 'CW':
-            command = 'G2'
-        elif direction == 'CCW':
-            command = 'G3'
+        if direction == "CW":
+            command = "G2"
+        elif direction == "CCW":
+            command = "G3"
 
         if self.is_relative:
             values = [v for v in dims.values()]
@@ -596,101 +620,123 @@ class G(object):
             values = [cp[k] - v for k, v in dims.items()]
 
         dist = math.sqrt(values[0] ** 2 + values[1] ** 2)
-        if radius == 'auto':
+        if radius == "auto":
             radius = dist / 2.0
         elif abs(radius) < dist / 2.0:
-            msg = 'Radius {} to small for distance {}'.format(radius, dist)
+            msg = "Radius {} to small for distance {}".format(radius, dist)
             raise RuntimeError(msg)
 
-        #extrude feature implementation
+        # extrude feature implementation
         # only designed for flow calculations in x-y plane
         if self.extrude is True:
-            area = self.layer_height*(self.extrusion_width-self.layer_height) + 3.14159*(self.layer_height/2)**2
+            area = (
+                self.layer_height * (self.extrusion_width - self.layer_height)
+                + 3.14159 * (self.layer_height / 2) ** 2
+            )
             if self.is_relative is not True:
-                current_extruder_position = self.current_position['E']
+                current_extruder_position = self.current_position["E"]
             else:
                 current_extruder_position = 0
 
-            circle_circumference = 2*3.14159*abs(radius)
+            circle_circumference = 2 * 3.14159 * abs(radius)
 
-            arc_angle = ((2*math.asin(dist/(2*abs(radius))))/(2*3.14159))*360
-            shortest_arc_length = (arc_angle/180)*3.14159*abs(radius)
+            arc_angle = (
+                (2 * math.asin(dist / (2 * abs(radius)))) / (2 * 3.14159)
+            ) * 360
+            shortest_arc_length = (arc_angle / 180) * 3.14159 * abs(radius)
             if radius > 0:
                 arc_length = shortest_arc_length
             else:
                 arc_length = circle_circumference - shortest_arc_length
-            volume = arc_length*area
-            filament_length = ((4*volume)/(3.14149*self.filament_diameter**2))*self.extrusion_multiplier
-            dims['E'] = filament_length + current_extruder_position
+            volume = arc_length * area
+            filament_length = (
+                (4 * volume) / (3.14149 * self.filament_diameter**2)
+            ) * self.extrusion_multiplier
+            dims["E"] = filament_length + current_extruder_position
 
         if linearize:
-            #Curved formed from straight lines
+            # Curved formed from straight lines
             if dist > 0:
-                vect_dir= [values[0]/dist,values[1]/dist]
-                if direction == 'CW':
-                    arc_rotation_matrix = np.matrix([[0, -1],[1, 0]])
-                elif direction =='CCW':
-                    arc_rotation_matrix = np.matrix([[0, 1],[-1, 0]])
-                perp_vect_dir = np.array(vect_dir)*arc_rotation_matrix
-                a_vect= np.array([values[0]/2,values[1]/2])
-                b_length = math.sqrt(radius**2-(dist/2)**2)
-                b_vect = b_length*perp_vect_dir
-                c_vect = a_vect+b_vect
+                vect_dir = [values[0] / dist, values[1] / dist]
+                if direction == "CW":
+                    arc_rotation_matrix = np.matrix([[0, -1], [1, 0]])
+                elif direction == "CCW":
+                    arc_rotation_matrix = np.matrix([[0, 1], [-1, 0]])
+                perp_vect_dir = np.array(vect_dir) * arc_rotation_matrix
+                a_vect = np.array([values[0] / 2, values[1] / 2])
+                b_length = math.sqrt(radius**2 - (dist / 2) ** 2)
+                b_vect = b_length * perp_vect_dir
+                c_vect = a_vect + b_vect
                 center_coords = c_vect
-                final_pos = a_vect*2-c_vect
+                final_pos = a_vect * 2 - c_vect
                 initial_pos = -c_vect
 
                 final_pos = np.array(final_pos.tolist()).flatten()
                 initial_pos = np.array(initial_pos.tolist()).flatten()
-                final_angle = np.arctan2(final_pos[1],final_pos[0])
-                initial_angle = np.arctan2(initial_pos[1],initial_pos[0])
+                final_angle = np.arctan2(final_pos[1], final_pos[0])
+                initial_angle = np.arctan2(initial_pos[1], initial_pos[0])
 
-                if direction == 'CW':
-                    angle_difference = 2*np.pi-(final_angle-initial_angle)%(2*np.pi)
-                elif direction == 'CCW':
-                    angle_difference = (initial_angle-final_angle)%(-2*np.pi)
+                if direction == "CW":
+                    angle_difference = 2 * np.pi - (final_angle - initial_angle) % (
+                        2 * np.pi
+                    )
+                elif direction == "CCW":
+                    angle_difference = (initial_angle - final_angle) % (-2 * np.pi)
             else:
                 angle_difference = 0
 
             step_range = [0, angle_difference]
-            step_size = np.pi/16
-            angle_step = np.arange(step_range[0],step_range[1]+np.sign(angle_difference)*step_size,np.sign(angle_difference)*step_size)
+            step_size = np.pi / 16
+            angle_step = np.arange(
+                step_range[0],
+                step_range[1] + np.sign(angle_difference) * step_size,
+                np.sign(angle_difference) * step_size,
+            )
 
             segments = []
             for angle in angle_step:
                 radius_vect = -c_vect
-                radius_rotation_matrix = np.matrix([[math.cos(angle), -math.sin(angle)],
-                                 [math.sin(angle), math.cos(angle)]])
-                int_point = radius_vect*radius_rotation_matrix
+                radius_rotation_matrix = np.matrix(
+                    [
+                        [math.cos(angle), -math.sin(angle)],
+                        [math.sin(angle), math.cos(angle)],
+                    ]
+                )
+                int_point = radius_vect * radius_rotation_matrix
                 segments.append(int_point)
 
-            for i in range(len(segments)-1):
-                move_line = segments[i+1]-segments[i]
+            for i in range(len(segments) - 1):
+                move_line = segments[i + 1] - segments[i]
                 self.move(*move_line.tolist()[0], color=color)
         else:
-            #Standard output
+            # Standard output
             if axis is not None:
-                self.write('G16 X Y {} {}'.format(axis, self.format_comment("coordinate axis assignment")))  # coordinate axis assignment
+                self.write(
+                    "G16 X Y {} {}".format(
+                        axis, self.format_comment("coordinate axis assignment")
+                    )
+                )  # coordinate axis assignment
             self.write(plane_selector)
             args = self._format_args(**dims)
             if helix_dim is None:
-                self.write(f'{command} {args} R{self._format_float(radius)}')
+                self.write(f"{command} {args} R{self._format_float(radius)}")
             else:
-                self.write('{0} {1} R{2} G1 {3}{4}'.format(
-                    command,
-                    args,
-                    self._format_float(radius),
-                    helix_dim.upper(),
-                    helix_len
-                ))
+                self.write(
+                    "{0} {1} R{2} G1 {3}{4}".format(
+                        command,
+                        args,
+                        self._format_float(radius),
+                        helix_dim.upper(),
+                        helix_len,
+                    )
+                )
 
                 dims[helix_dim] = helix_len
 
             self._update_current_position(**dims)
 
-
-    def arc_ijk(self, target, center, plane, direction='CW', helix_len=None):
-        """ Arc to the given point with the given radius and in the given
+    def arc_ijk(self, target, center, plane, direction="CW", helix_len=None):
+        """Arc to the given point with the given radius and in the given
         direction. If helix_dim and helix_len are specified then the tool head
         will also perform a linear movement along the axis orthogonal to the
         arc plane while completing the arc.
@@ -713,57 +759,62 @@ class G(object):
         """
 
         if len(target) != 2:
-            raise RuntimeError("'target' must be a 2-tuple of numbers (passed %s)" % target)
+            raise RuntimeError(
+                "'target' must be a 2-tuple of numbers (passed %s)" % target
+            )
         if len(center) != 2:
-            raise RuntimeError("'center' must be a 2-tuple of numbers (passed %s)" % center)
+            raise RuntimeError(
+                "'center' must be a 2-tuple of numbers (passed %s)" % center
+            )
 
-        if plane == 'xy':
-            self.write('G17 {}'.format(self.format_comment('XY plane')))  # XY plane
+        if plane == "xy":
+            self.write("G17 {}".format(self.format_comment("XY plane")))  # XY plane
             dims = {
-                'x' : target[0],
-                'y' : target[1],
-                'i' : center[0],
-                'j' : center[1],
+                "x": target[0],
+                "y": target[1],
+                "i": center[0],
+                "j": center[1],
             }
             if helix_len:
-                dims['z'] = helix_len
-        elif plane == 'yz':
-            self.write('G19 {}'.format(self.format_comment('YZ plane')))  # YZ plane
+                dims["z"] = helix_len
+        elif plane == "yz":
+            self.write("G19 {}".format(self.format_comment("YZ plane")))  # YZ plane
             dims = {
-                'y' : target[0],
-                'z' : target[1],
-                'j' : center[0],
-                'k' : center[1],
+                "y": target[0],
+                "z": target[1],
+                "j": center[0],
+                "k": center[1],
             }
             if helix_len:
-                dims['x'] = helix_len
-        elif plane == 'xz':
-            self.write('G18 {}'.format(self.format_comment('XZ plane')))  # XZ plane
+                dims["x"] = helix_len
+        elif plane == "xz":
+            self.write("G18 {}".format(self.format_comment("XZ plane")))  # XZ plane
             dims = {
-                'x' : target[0],
-                'z' : target[1],
-                'i' : center[0],
-                'k' : center[1],
+                "x": target[0],
+                "z": target[1],
+                "i": center[0],
+                "k": center[1],
             }
             if helix_len:
-                dims['y'] = helix_len
+                dims["y"] = helix_len
         else:
-            raise RuntimeError("Selected plane ('%s') is not one of ('xy', 'yz', 'xz')!" % plane)
+            raise RuntimeError(
+                "Selected plane ('%s') is not one of ('xy', 'yz', 'xz')!" % plane
+            )
 
-        if direction == 'CW':
-            command = 'G2'
-        elif direction == 'CCW':
-            command = 'G3'
-
+        if direction == "CW":
+            command = "G2"
+        elif direction == "CCW":
+            command = "G3"
 
         args = self._format_args(**dims)
 
-        self.write('{} {}'.format(command, args))
+        self.write("{} {}".format(command, args))
 
         self._update_current_position(**dims)
 
-    def rect(self, x, y, direction='CW', start='LL'):
-        """ Trace a rectangle with the given width and height.
+    def rect(self, x, y, direction="CW", start="LL"):
+        """Trace a rectangle with the given width and height.
 
         Parameters
         ----------
@@ -786,51 +837,51 @@ class G(object):
         >>> g.rect(1, 5, direction='CCW', start='UR')
 
         """
-        if direction == 'CW':
-            if start.upper() == 'LL':
+        if direction == "CW":
+            if start.upper() == "LL":
                 self.move(y=y)
                 self.move(x=x)
                 self.move(y=-y)
                 self.move(x=-x)
-            elif start.upper() == 'UL':
+            elif start.upper() == "UL":
                 self.move(x=x)
                 self.move(y=-y)
                 self.move(x=-x)
                 self.move(y=y)
-            elif start.upper() == 'UR':
+            elif start.upper() == "UR":
                 self.move(y=-y)
                 self.move(x=-x)
                 self.move(y=y)
                 self.move(x=x)
-            elif start.upper() == 'LR':
+            elif start.upper() == "LR":
                 self.move(x=-x)
                 self.move(y=y)
                 self.move(x=x)
                 self.move(y=-y)
-        elif direction == 'CCW':
-            if start.upper() == 'LL':
+        elif direction == "CCW":
+            if start.upper() == "LL":
                 self.move(x=x)
                 self.move(y=y)
                 self.move(x=-x)
                 self.move(y=-y)
-            elif start.upper() == 'UL':
+            elif start.upper() == "UL":
                 self.move(y=-y)
                 self.move(x=x)
                 self.move(y=y)
                 self.move(x=-x)
-            elif start.upper() == 'UR':
+            elif start.upper() == "UR":
                 self.move(x=-x)
                 self.move(y=-y)
                 self.move(x=x)
                 self.move(y=y)
-            elif start.upper() == 'LR':
+            elif start.upper() == "LR":
                 self.move(y=y)
                 self.move(x=-x)
                 self.move(y=-y)
                 self.move(x=x)
 
-    def round_rect(self, x, y, direction='CW', start='LL', radius=0, linearize=False):
-        """ Trace a rectangle with the given width and height with rounded corners,
+    def round_rect(self, x, y, direction="CW", start="LL", radius=0, linearize=False):
+        """Trace a rectangle with the given width and height with rounded corners,
             note that starting point is not actually in corner of rectangle.
 
         Parameters
@@ -864,84 +915,285 @@ class G(object):
                                    -______________-
 
         """
-        if direction == 'CW':
-            if start.upper() == 'LL':
-                self.move(y=y-2*radius)
-                self.arc(x=radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-            elif start.upper() == 'UL':
-                self.arc(x=radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-            elif start.upper() == 'UR':
-                self.move(y=-(y-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-                self.arc(x=radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-            elif start.upper() == 'LR':
-                self.arc(x=-radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-                self.arc(x=radius,y=radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=-radius,direction='CW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-        elif direction == 'CCW':
-            if start.upper() == 'LL':
-                self.arc(x=radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-                self.arc(x=-radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-            elif start.upper() == 'UL':
-                self.move(y=-(y-2*radius))
-                self.arc(x=radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-                self.arc(x=-radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-            elif start.upper() == 'UR':
-                self.arc(x=-radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-                self.arc(x=radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=y-2*radius)
-            elif start.upper() == 'LR':
-                self.move(y=y-2*radius)
-                self.arc(x=-radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=-(x-2*radius))
-                self.arc(x=-radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(y=-(y-2*radius))
-                self.arc(x=radius,y=-radius,direction='CCW',radius=radius, linearize=linearize)
-                self.move(x=x-2*radius)
-                self.arc(x=radius,y=radius,direction='CCW',radius=radius, linearize=linearize)
+        if direction == "CW":
+            if start.upper() == "LL":
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+            elif start.upper() == "UL":
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+            elif start.upper() == "UR":
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+            elif start.upper() == "LR":
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+        elif direction == "CCW":
+            if start.upper() == "LL":
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+            elif start.upper() == "UL":
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+            elif start.upper() == "UR":
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=y - 2 * radius)
+            elif start.upper() == "LR":
+                self.move(y=y - 2 * radius)
+                self.arc(
+                    x=-radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=-(x - 2 * radius))
+                self.arc(
+                    x=-radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(y=-(y - 2 * radius))
+                self.arc(
+                    x=radius,
+                    y=-radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
+                self.move(x=x - 2 * radius)
+                self.arc(
+                    x=radius,
+                    y=radius,
+                    direction="CCW",
+                    radius=radius,
+                    linearize=linearize,
+                )
 
-    def meander(self, x, y, spacing, start='LL', orientation='x', tail=False,
-                minor_feed=None, color=(0,0,0,0.5)):
-        """ Infill a rectangle with a square wave meandering pattern. If the
+    def meander(
+        self,
+        x,
+        y,
+        spacing,
+        start="LL",
+        orientation="x",
+        tail=False,
+        minor_feed=None,
+        color=(0, 0, 0, 0.5),
+    ):
+        """Infill a rectangle with a square wave meandering pattern. If the
         relevant dimension is not a multiple of the spacing, the spacing will
         be tweaked to ensure the dimensions work out.
 
@@ -977,24 +1229,30 @@ class G(object):
         >>> g.meander(10, 5, 2, start='UR')
 
         """
-        if start.upper() == 'UL':
+        if start.upper() == "UL":
             x, y = x, -y
-        elif start.upper() == 'UR':
+        elif start.upper() == "UR":
             x, y = -x, -y
-        elif start.upper() == 'LR':
+        elif start.upper() == "LR":
             x, y = -x, y
 
         # Major axis is the parallel lines, minor axis is the jog.
-        if orientation == 'x':
-            major, major_name = x, 'x'
-            minor, minor_name = y, 'y'
+        if orientation == "x":
+            major, major_name = x, "x"
+            minor, minor_name = y, "y"
         else:
-            major, major_name = y, 'y'
-            minor, minor_name = x, 'x'
+            major, major_name = y, "y"
+            minor, minor_name = x, "x"
 
         actual_spacing = self._meander_spacing(minor, spacing)
         if abs(actual_spacing) != spacing:
-            self.write(self.format_comment("WARNING! meander spacing updated from {} to {}".format(spacing, actual_spacing)))
+            self.write(
+                self.format_comment(
+                    "WARNING! meander spacing updated from {} to {}".format(
+                        spacing, actual_spacing
+                    )
+                )
+            )
         spacing = actual_spacing
         sign = 1
 
@@ -1008,21 +1266,21 @@ class G(object):
         if not minor_feed:
             minor_feed = self.speed
         for _ in range(int(self._meander_passes(minor, spacing))):
-            self.move(**{major_name: (sign * major), 'color': color})
+            self.move(**{major_name: (sign * major), "color": color})
             if minor_feed != major_feed:
                 self._feed(minor_feed)
-            self.move(**{minor_name: spacing, 'color': color})
+            self.move(**{minor_name: spacing, "color": color})
             if minor_feed != major_feed:
                 self._feed(major_feed)
             sign = -1 * sign
         if tail is False:
-            self.move(**{major_name: (sign * major), 'color': color})
+            self.move(**{major_name: (sign * major), "color": color})
 
         if was_absolute:
             self._absolute()
 
-    def clip(self, axis='z', direction='+x', height=4, linearize=False):
-        """ Move the given axis up to the given height while arcing in the
+    def clip(self, axis="z", direction="+x", height=4, linearize=False):
+        """Move the given axis up to the given height while arcing in the
         given direction.
 
         Parameters
@@ -1045,21 +1303,21 @@ class G(object):
         """
         secondary_axis = direction[1]
         if height > 0:
-            orientation = 'CW' if direction[0] == '-' else 'CCW'
+            orientation = "CW" if direction[0] == "-" else "CCW"
         else:
-            orientation = 'CCW' if direction[0] == '-' else 'CW'
+            orientation = "CCW" if direction[0] == "-" else "CW"
         radius = abs(height / 2.0)
         kwargs = {
             secondary_axis: 0,
             axis: height,
-            'direction': orientation,
-            'radius': radius,
-            'linearize': linearize
+            "direction": orientation,
+            "radius": radius,
+            "linearize": linearize,
         }
         self.arc(**kwargs)
 
-    def triangular_wave(self, x, y, cycles, start='UR', orientation='x'):
-        """ Perform a triangular wave.
+    def triangular_wave(self, x, y, cycles, start="UR", orientation="x"):
+        """Perform a triangular wave.
 
         Parameters
         ----------
@@ -1090,20 +1348,20 @@ class G(object):
         >>> g.zigzag(10, 5, 2, start='LL')
 
         """
-        if start.upper() == 'UL':
+        if start.upper() == "UL":
             x, y = -x, y
-        elif start.upper() == 'LL':
+        elif start.upper() == "LL":
             x, y = -x, -y
-        elif start.upper() == 'LR':
+        elif start.upper() == "LR":
             x, y = x, -y
 
         # Major axis is the parallel lines, minor axis is the jog.
-        if orientation == 'x':
-            major, major_name = x, 'x'
-            minor, minor_name = y, 'y'
+        if orientation == "x":
+            major, major_name = x, "x"
+            minor, minor_name = y, "y"
         else:
-            major, major_name = y, 'y'
-            minor, minor_name = x, 'x'
+            major, major_name = y, "y"
+            minor, minor_name = x, "x"
 
         sign = 1
 
@@ -1113,16 +1371,25 @@ class G(object):
         else:
             was_absolute = False
 
-        for _ in range(int(cycles*2)):
+        for _ in range(int(cycles * 2)):
             self.move(**{minor_name: (sign * minor), major_name: major})
             sign = -1 * sign
 
         if was_absolute:
             self._absolute()
 
-    def spiral(self, end_diameter, spacing, feedrate, start='center', direction='CW',
-                step_angle = 0.1, start_diameter = 0, center_position=None):
-        """ Performs an Archimedean spiral. Start by moving to the center of the spiral location
+    def spiral(
+        self,
+        end_diameter,
+        spacing,
+        feedrate,
+        start="center",
+        direction="CW",
+        step_angle=0.1,
+        start_diameter=0,
+        center_position=None,
+    ):
+        """Performs an Archimedean spiral. Start by moving to the center of the spiral location
         then use the 'start' argument to specify a starting location (either center or edge).
 
         Parameters
@@ -1159,14 +1426,14 @@ class G(object):
         >>> g.spiral(20,1,8,direction='CCW',center_position=[0,50])
 
         """
-        start_spiral_turns = (start_diameter/2.0)/spacing
-        end_spiral_turns = (end_diameter/2.0)/spacing
+        start_spiral_turns = (start_diameter / 2.0) / spacing
+        end_spiral_turns = (end_diameter / 2.0) / spacing
 
-        #Use current position as center position if none is specified
+        # Use current position as center position if none is specified
         if center_position is None:
-            center_position = [self._current_position['x'],self._current_position['y']]
+            center_position = [self._current_position["x"], self._current_position["y"]]
 
-        #Keep track of whether currently in relative or absolute mode
+        # Keep track of whether currently in relative or absolute mode
         was_relative = True
         if self.is_relative:
             self._absolute()
@@ -1174,49 +1441,74 @@ class G(object):
             was_relative = False
 
         # SEE: https://www.comsol.com/blogs/how-to-build-a-parameterized-archimedean-spiral-geometry/
-        b = spacing/(2*math.pi)
-        t = np.arange(start_spiral_turns*2*math.pi, end_spiral_turns*2*math.pi, step_angle)
+        b = spacing / (2 * math.pi)
+        t = np.arange(
+            start_spiral_turns * 2 * math.pi, end_spiral_turns * 2 * math.pi, step_angle
+        )
 
-        #Add last final point to ensure correct outer diameter
-        t = np.append(t,end_spiral_turns*2*math.pi)
-        if start == 'center':
+        # Add last final point to ensure correct outer diameter
+        t = np.append(t, end_spiral_turns * 2 * math.pi)
+        if start == "center":
             pass
-        elif start == 'edge':
+        elif start == "edge":
             t = t[::-1]
         else:
-            raise Exception("Must either choose 'center' or 'edge' for starting position.")
+            raise Exception(
+                "Must either choose 'center' or 'edge' for starting position."
+            )
 
-        #Move to starting positon
-        if (direction == 'CW' and start == 'center') or (direction == 'CCW' and start == 'edge'):
-            x_move = -t[0]*b*math.cos(t[0])+center_position[0]
-        elif (direction == 'CCW' and start == 'center') or (direction == 'CW' and start == 'edge'):
-            x_move = t[0]*b*math.cos(t[0])+center_position[0]
+        # Move to starting positon
+        if (direction == "CW" and start == "center") or (
+            direction == "CCW" and start == "edge"
+        ):
+            x_move = -t[0] * b * math.cos(t[0]) + center_position[0]
+        elif (direction == "CCW" and start == "center") or (
+            direction == "CW" and start == "edge"
+        ):
+            x_move = t[0] * b * math.cos(t[0]) + center_position[0]
         else:
             raise Exception("Must either choose 'CW' or 'CCW' for spiral direction.")
-        y_move = t[0]*b*math.sin(t[0])+center_position[1]
+        y_move = t[0] * b * math.sin(t[0]) + center_position[1]
         self.move(x_move, y_move)
 
-        #Start writing moves
+        # Start writing moves
         self._feed(feedrate)
 
         for step in t[1:]:
-            if (direction == 'CW' and start == 'center') or (direction == 'CCW' and start == 'edge'):
-                x_move = -step*b*math.cos(step)+center_position[0]
-            elif (direction == 'CCW' and start == 'center') or (direction == 'CW' and start == 'edge'):
-                x_move = step*b*math.cos(step)+center_position[0]
+            if (direction == "CW" and start == "center") or (
+                direction == "CCW" and start == "edge"
+            ):
+                x_move = -step * b * math.cos(step) + center_position[0]
+            elif (direction == "CCW" and start == "center") or (
+                direction == "CW" and start == "edge"
+            ):
+                x_move = step * b * math.cos(step) + center_position[0]
             else:
-                raise Exception("Must either choose 'CW' or 'CCW' for spiral direction.")
-            y_move = step*b*math.sin(step)+center_position[1]
+                raise Exception(
+                    "Must either choose 'CW' or 'CCW' for spiral direction."
+                )
+            y_move = step * b * math.sin(step) + center_position[1]
             self.move(x_move, y_move)
 
-        #Set back to relative mode if it was previsously before command was called
+        # Set back to relative mode if it was previsously before command was called
         if was_relative:
-                self._relative()
+            self._relative()
 
-    def gradient_spiral(self, end_diameter, spacing, gradient, feedrate, flowrate,
-                start='center', direction='CW', step_angle = 0.1, start_diameter = 0,
-                center_position=None, dead_delay=0):
-        """ Identical motion to the regular spiral function, but with the control of two syringe pumps to enable control over
+    def gradient_spiral(
+        self,
+        end_diameter,
+        spacing,
+        gradient,
+        feedrate,
+        flowrate,
+        start="center",
+        direction="CW",
+        step_angle=0.1,
+        start_diameter=0,
+        center_position=None,
+        dead_delay=0,
+    ):
+        """Identical motion to the regular spiral function, but with the control of two syringe pumps to enable control over
             dielectric properties over the course of the spiral. Starting with simply hitting certain dielectric constants at
             different values along the radius of the spiral.
 
@@ -1260,11 +1552,21 @@ class G(object):
 
         import sympy as sy
 
-        def calculate_extrusion_values(radius, length, feed = feedrate, flow = flowrate, formula = gradient, delay = dead_delay, spacing = spacing, start = start, outer_radius = end_diameter/2.0, inner_radius=start_diameter/2.0):
-            """Calculates the extrusion values for syringe pumps A & B during a move along the print path.
-            """
+        def calculate_extrusion_values(
+            radius,
+            length,
+            feed=feedrate,
+            flow=flowrate,
+            formula=gradient,
+            delay=dead_delay,
+            spacing=spacing,
+            start=start,
+            outer_radius=end_diameter / 2.0,
+            inner_radius=start_diameter / 2.0,
+        ):
+            """Calculates the extrusion values for syringe pumps A & B during a move along the print path."""
 
-            def exact_length(r0,r1,h):
+            def exact_length(r0, r1, h):
                 """Calculates the exact length of an archimedean given the spacing, inner and outer radii.
                 SEE: http://www.giangrandi.ch/soft/spiral/spiral.shtml
 
@@ -1277,13 +1579,21 @@ class G(object):
                 h  : float
                     The spacing of the spiral.
                 """
-                #t0 & t1 are the respective diameters in terms of radians along the spiral.
-                t0 = 2*math.pi*r0/h
-                t1 = 2*math.pi*r1/h
-                return h/(2.0*math.pi)*(t1/2.0*math.sqrt(t1**2+1)+1/2.0*math.log(t1+math.sqrt(t1**2+1))-t0/2.0*math.sqrt(t0**2+1)-1/2.0*math.log(t0+math.sqrt(t0**2+1)))
+                # t0 & t1 are the respective diameters in terms of radians along the spiral.
+                t0 = 2 * math.pi * r0 / h
+                t1 = 2 * math.pi * r1 / h
+                return (
+                    h
+                    / (2.0 * math.pi)
+                    * (
+                        t1 / 2.0 * math.sqrt(t1**2 + 1)
+                        + 1 / 2.0 * math.log(t1 + math.sqrt(t1**2 + 1))
+                        - t0 / 2.0 * math.sqrt(t0**2 + 1)
+                        - 1 / 2.0 * math.log(t0 + math.sqrt(t0**2 + 1))
+                    )
+                )
 
-
-            def exact_radius(r_0,h,L):
+            def exact_radius(r_0, h, L):
                 """Calculates the exact outer radius of an archimedean given the spacing, inner radius and the length.
                 SEE: http://www.giangrandi.ch/soft/spiral/spiral.shtml
 
@@ -1296,11 +1606,11 @@ class G(object):
                 L  : float
                     The length of the spiral.
                 """
-                d_0 = r_0*2
+                d_0 = r_0 * 2
                 if d_0 == 0:
                     d_0 = 1e-10
 
-                def exact_length(d0,d1,h):
+                def exact_length(d0, d1, h):
                     """Calculates the exact length of an archimedean given the spacing, inner and outer diameters.
                     SEE: http://www.giangrandi.ch/soft/spiral/spiral.shtml
 
@@ -1313,12 +1623,21 @@ class G(object):
                     h  : float
                         The spacing of the spiral.
                     """
-                    #t0 & t1 are the respective diameters in terms of radians along the spiral.
-                    t0 = math.pi*d0/h
-                    t1 = math.pi*d1/h
-                    return h/(2.0*math.pi)*(t1/2.0*math.sqrt(t1**2+1)+1/2.0*math.log(t1+math.sqrt(t1**2+1))-t0/2.0*math.sqrt(t0**2+1)-1/2.0*math.log(t0+math.sqrt(t0**2+1)))
+                    # t0 & t1 are the respective diameters in terms of radians along the spiral.
+                    t0 = math.pi * d0 / h
+                    t1 = math.pi * d1 / h
+                    return (
+                        h
+                        / (2.0 * math.pi)
+                        * (
+                            t1 / 2.0 * math.sqrt(t1**2 + 1)
+                            + 1 / 2.0 * math.log(t1 + math.sqrt(t1**2 + 1))
+                            - t0 / 2.0 * math.sqrt(t0**2 + 1)
+                            - 1 / 2.0 * math.log(t0 + math.sqrt(t0**2 + 1))
+                        )
+                    )
 
-                def exact_length_derivative(d,h):
+                def exact_length_derivative(d, h):
                     """Calculates the derivative of the exact length of an archimedean at a given diameter and spacing.
                     SEE: http://www.giangrandi.ch/soft/spiral/spiral.shtml
 
@@ -1329,42 +1648,60 @@ class G(object):
                     h  : float
                         The spacing of the spiral.
                     """
-                    #t is diameter of interest in terms of radians along the spiral.
-                    t = math.pi*d/h
-                    dl_dt = h/(2.0*math.pi)*((2*t**2+1)/(2*math.sqrt(t**2+1))+(t+math.sqrt(t**2+1))/(2*t*math.sqrt(t**2+1)+2*t**2+2))
-                    dl_dd = h*dl_dt/math.pi
+                    # t is diameter of interest in terms of radians along the spiral.
+                    t = math.pi * d / h
+                    dl_dt = (
+                        h
+                        / (2.0 * math.pi)
+                        * (
+                            (2 * t**2 + 1) / (2 * math.sqrt(t**2 + 1))
+                            + (t + math.sqrt(t**2 + 1))
+                            / (2 * t * math.sqrt(t**2 + 1) + 2 * t**2 + 2)
+                        )
+                    )
+                    dl_dd = h * dl_dt / math.pi
                     return dl_dd
 
-                #Approximate radius (for first guess)
-                N = (h-d_0+math.sqrt((d_0-h)**2+4*h*L/math.pi))/(2*h)
-                D_1 = 2*N*h + d_0
+                # Approximate radius (for first guess)
+                N = (h - d_0 + math.sqrt((d_0 - h) ** 2 + 4 * h * L / math.pi)) / (
+                    2 * h
+                )
+                D_1 = 2 * N * h + d_0
                 tol = 1e-10
 
-                #Use Newton's Method to iterate until within tolerance
+                # Use Newton's Method to iterate until within tolerance
                 while True:
-                    f_df_dt = (exact_length(d_0,D_1,h)-L)/1000/exact_length_derivative(D_1,h)
+                    f_df_dt = (
+                        (exact_length(d_0, D_1, h) - L)
+                        / 1000
+                        / exact_length_derivative(D_1, h)
+                    )
                     if f_df_dt < tol:
                         break
                     D_1 -= f_df_dt
-                return D_1/2
+                return D_1 / 2
 
-            def rollover(val,limit,mode):
+            def rollover(val, limit, mode):
                 if val < limit:
-                    if mode == 'max':
+                    if mode == "max":
                         return val
-                    elif mode == 'min':
-                        return limit+(limit-val)
+                    elif mode == "min":
+                        return limit + (limit - val)
                     else:
-                        raise ValueError("'{}' is an incorrect selection for the mode".format(mode))
+                        raise ValueError(
+                            "'{}' is an incorrect selection for the mode".format(mode)
+                        )
                 else:
-                    if mode == 'max':
-                        return limit-(val-limit)
-                    elif mode == 'min':
+                    if mode == "max":
+                        return limit - (val - limit)
+                    elif mode == "min":
                         return val
                     else:
-                        raise ValueError("'{}' is an incorrect selection for the mode".format(mode))
+                        raise ValueError(
+                            "'{}' is an incorrect selection for the mode".format(mode)
+                        )
 
-            def minor_fraction_calc(e,e_a=300,e_b=2.3,n=0.102,sr=0.6):
+            def minor_fraction_calc(e, e_a=300, e_b=2.3, n=0.102, sr=0.6):
                 """Calculates the minor fraction (fraction of part b) required to achieve the
                 specified dielectric value
 
@@ -1381,7 +1718,9 @@ class G(object):
                 sr : float
                     Fraction of SrTi03 in part a
                 """
-                return 1 - ((e-e_b)*((n-1)*e_b-n*e_a))/(sr*(e_b-e_a)*(n*(e-e_b)+e_b))
+                return 1 - ((e - e_b) * ((n - 1) * e_b - n * e_a)) / (
+                    sr * (e_b - e_a) * (n * (e - e_b) + e_b)
+                )
 
             """
             This is a key line of the extrusion values calculations.
@@ -1394,103 +1733,167 @@ class G(object):
             the spiral is moving inwards, it must subtract it.
 
             """
-            if start == 'center':
-                offset_radius = exact_radius(0,spacing,rollover(exact_length(0,radius,spacing)+delay,exact_length(0,outer_radius,spacing),'max'))
+            if start == "center":
+                offset_radius = exact_radius(
+                    0,
+                    spacing,
+                    rollover(
+                        exact_length(0, radius, spacing) + delay,
+                        exact_length(0, outer_radius, spacing),
+                        "max",
+                    ),
+                )
             else:
-                offset_radius = exact_radius(0,spacing,rollover(exact_length(0,radius,spacing)-delay,exact_length(0,inner_radius,spacing),'min'))
+                offset_radius = exact_radius(
+                    0,
+                    spacing,
+                    rollover(
+                        exact_length(0, radius, spacing) - delay,
+                        exact_length(0, inner_radius, spacing),
+                        "min",
+                    ),
+                )
 
             expr = sy.sympify(formula)
-            r = sy.symbols('r')
-            minor_fraction = np.clip(minor_fraction_calc(float(expr.subs(r,offset_radius))),0,1)
-            line_flow = length/float(feed)*flow
-            return [minor_fraction*line_flow,(1-minor_fraction)*line_flow,minor_fraction]
+            r = sy.symbols("r")
+            minor_fraction = np.clip(
+                minor_fraction_calc(float(expr.subs(r, offset_radius))), 0, 1
+            )
+            line_flow = length / float(feed) * flow
+            return [
+                minor_fraction * line_flow,
+                (1 - minor_fraction) * line_flow,
+                minor_fraction,
+            ]
 
-        #End of calculate_extrusion_values() function
+        # End of calculate_extrusion_values() function
 
-        start_spiral_turns = (start_diameter/2.0)/spacing
-        end_spiral_turns = (end_diameter/2.0)/spacing
+        start_spiral_turns = (start_diameter / 2.0) / spacing
+        end_spiral_turns = (end_diameter / 2.0) / spacing
 
-        #Use current position as center position if none is specified
+        # Use current position as center position if none is specified
         if center_position is None:
-            center_position = [self._current_position['x'],self._current_position['y']]
+            center_position = [self._current_position["x"], self._current_position["y"]]
 
-        #Keep track of whether currently in relative or absolute mode
+        # Keep track of whether currently in relative or absolute mode
         was_relative = True
         if self.is_relative:
             self._absolute()
         else:
             was_relative = False
 
-        #SEE: https://www.comsol.com/blogs/how-to-build-a-parameterized-archimedean-spiral-geometry/
-        b = spacing/(2*math.pi)
-        t = np.arange(start_spiral_turns*2*math.pi, end_spiral_turns*2*math.pi, step_angle)
+        # SEE: https://www.comsol.com/blogs/how-to-build-a-parameterized-archimedean-spiral-geometry/
+        b = spacing / (2 * math.pi)
+        t = np.arange(
+            start_spiral_turns * 2 * math.pi, end_spiral_turns * 2 * math.pi, step_angle
+        )
 
-        #Add last final point to ensure correct outer diameter
-        t = np.append(t,end_spiral_turns*2*math.pi)
-        if start == 'center':
+        # Add last final point to ensure correct outer diameter
+        t = np.append(t, end_spiral_turns * 2 * math.pi)
+        if start == "center":
             pass
-        elif start == 'edge':
+        elif start == "edge":
             t = t[::-1]
         else:
-            raise Exception("Must either choose 'center' or 'edge' for starting position.")
+            raise Exception(
+                "Must either choose 'center' or 'edge' for starting position."
+            )
 
-        #Move to starting positon
-        if (direction == 'CW' and start == 'center') or (direction == 'CCW' and start == 'edge'):
-            x_move = -t[0]*b*math.cos(t[0])+center_position[0]
-        elif (direction == 'CCW' and start == 'center') or (direction == 'CW' and start == 'edge'):
-            x_move = t[0]*b*math.cos(t[0])+center_position[0]
+        # Move to starting positon
+        if (direction == "CW" and start == "center") or (
+            direction == "CCW" and start == "edge"
+        ):
+            x_move = -t[0] * b * math.cos(t[0]) + center_position[0]
+        elif (direction == "CCW" and start == "center") or (
+            direction == "CW" and start == "edge"
+        ):
+            x_move = t[0] * b * math.cos(t[0]) + center_position[0]
         else:
             raise Exception("Must either choose 'CW' or 'CCW' for spiral direction.")
-        y_move = t[0]*b*math.sin(t[0])+center_position[1]
+        y_move = t[0] * b * math.sin(t[0]) + center_position[1]
         self.move(x_move, y_move)
 
-        #Start writing moves
+        # Start writing moves
         self._feed(feedrate)
-        syringe_extrusion = np.array([0.0,0.0])
+        syringe_extrusion = np.array([0.0, 0.0])
 
-        #Zero a & b axis before printing, we do this so it can easily do multiple layers without quickly jumping back to 0
-        #Would likely be useful to change this to relative coordinates at some point
-        self.write('G92 a0 b0')
+        # Zero a & b axis before printing, we do this so it can easily do multiple layers without quickly jumping back to 0
+        # Would likely be useful to change this to relative coordinates at some point
+        self.write("G92 a0 b0")
 
         for step in t[1:]:
-            if (direction == 'CW' and start == 'center') or (direction == 'CCW' and start == 'edge'):
-                x_move = -step*b*math.cos(step)+center_position[0]
-            elif (direction == 'CCW' and start == 'center') or (direction == 'CW' and start == 'edge'):
-                x_move = step*b*math.cos(step)+center_position[0]
+            if (direction == "CW" and start == "center") or (
+                direction == "CCW" and start == "edge"
+            ):
+                x_move = -step * b * math.cos(step) + center_position[0]
+            elif (direction == "CCW" and start == "center") or (
+                direction == "CW" and start == "edge"
+            ):
+                x_move = step * b * math.cos(step) + center_position[0]
             else:
-                raise Exception("Must either choose 'CW' or 'CCW' for spiral direction.")
-            y_move = step*b*math.sin(step)+center_position[1]
+                raise Exception(
+                    "Must either choose 'CW' or 'CCW' for spiral direction."
+                )
+            y_move = step * b * math.sin(step) + center_position[1]
 
-            radius_pos = np.sqrt((self._current_position['x']-center_position[0])**2 + (self._current_position['y']-center_position[1])**2)
-            line_length = np.sqrt((x_move-self._current_position['x'])**2 + (y_move-self._current_position['y'])**2)
-            extrusion_values = calculate_extrusion_values(radius_pos,line_length)
+            radius_pos = np.sqrt(
+                (self._current_position["x"] - center_position[0]) ** 2
+                + (self._current_position["y"] - center_position[1]) ** 2
+            )
+            line_length = np.sqrt(
+                (x_move - self._current_position["x"]) ** 2
+                + (y_move - self._current_position["y"]) ** 2
+            )
+            extrusion_values = calculate_extrusion_values(radius_pos, line_length)
             syringe_extrusion += extrusion_values[:2]
-            self.move(x_move, y_move, a=syringe_extrusion[0],b=syringe_extrusion[1],color=extrusion_values[2])
+            self.move(
+                x_move,
+                y_move,
+                a=syringe_extrusion[0],
+                b=syringe_extrusion[1],
+                color=extrusion_values[2],
+            )
 
-        #Set back to relative mode if it was previsously before command was called
+        # Set back to relative mode if it was previsously before command was called
         if was_relative:
-                self._relative()
+            self._relative()
 
-    def purge_meander(self, x, y, spacing, volume_fraction, flowrate, start='LL', orientation='x',
-            tail=False, minor_feed=None):
-        self.write('FREERUN a {}'.format(flowrate*volume_fraction))
-        self.write('FREERUN b {}'.format(flowrate*(1-volume_fraction)))
-        self.meander(x, y, spacing, start=start, orientation=orientation,
-            tail=tail, minor_feed=minor_feed)
-        self.write('FREERUN a 0')
-        self.write('FREERUN b 0')
+    def purge_meander(
+        self,
+        x,
+        y,
+        spacing,
+        volume_fraction,
+        flowrate,
+        start="LL",
+        orientation="x",
+        tail=False,
+        minor_feed=None,
+    ):
+        self.write("FREERUN a {}".format(flowrate * volume_fraction))
+        self.write("FREERUN b {}".format(flowrate * (1 - volume_fraction)))
+        self.meander(
+            x,
+            y,
+            spacing,
+            start=start,
+            orientation=orientation,
+            tail=tail,
+            minor_feed=minor_feed,
+        )
+        self.write("FREERUN a 0")
+        self.write("FREERUN b 0")
 
     # AeroTech Specific Functions  ############################################
 
     def get_axis_pos(self, axis):
-        """ Gets the current position of the specified `axis`.
-        """
-        cmd = 'AXISSTATUS({}, DATAITEM_PositionFeedback)'.format(axis.upper())
+        """Gets the current position of the specified `axis`."""
+        cmd = "AXISSTATUS({}, DATAITEM_PositionFeedback)".format(axis.upper())
         pos = self.write(cmd)
         return float(pos)
 
     def set_cal_file(self, path):
-        """ Dynamically applies the specified calibration file at runtime.
+        """Dynamically applies the specified calibration file at runtime.
 
         Parameters
         ----------
@@ -1501,7 +1904,7 @@ class G(object):
         self.write(r'LOADCALFILE "{}", 2D_CAL'.format(path))
 
     def toggle_pressure(self, com_port):
-        """ Toggles (On/Off) Nordson Ultimus V Pressure Controllers.
+        """Toggles (On/Off) Nordson Ultimus V Pressure Controllers.
 
         Parameters
         ----------
@@ -1514,14 +1917,14 @@ class G(object):
         >>> g.toggle_pressure(3)
 
         """
-        self.write('Call togglePress P{}'.format(com_port))
+        self.write("Call togglePress P{}".format(com_port))
         if self.extruding[0] == com_port:
             self.extruding = [com_port, not self.extruding[1]]
         else:
-            self.extruding = [com_port,True]
+            self.extruding = [com_port, True]
 
     def set_pressure(self, com_port, value):
-        """ Sets pressure on Nordson Ultimus V Pressure Controllers.
+        """Sets pressure on Nordson Ultimus V Pressure Controllers.
 
         Parameters
         ----------
@@ -1535,15 +1938,14 @@ class G(object):
         >>> g.set_pressure(com_port=3, value=50)
 
         """
-        self.write('Call setPress P{} Q{}'.format(com_port, value))
+        self.write("Call setPress P{} Q{}".format(com_port, value))
 
     def set_vac(self, com_port, value):
-        """ Same as `set_pressure` method, but for vacuum.
-        """
-        self.write('Call setVac P{} Q{}'.format(com_port, value))
+        """Same as `set_pressure` method, but for vacuum."""
+        self.write("Call setVac P{} Q{}".format(com_port, value))
 
     def set_valve(self, num, value):
-        """ Sets a digital output state (typically for valve).
+        """Sets a digital output state (typically for valve).
 
         Parameters
         ----------
@@ -1557,10 +1959,10 @@ class G(object):
         >>> g.set_valve(num=2, value=1)
 
         """
-        self.write('$DO{}.0={}'.format(num, value))
+        self.write("$DO{}.0={}".format(num, value))
 
     def omni_on(self, com_port):
-        """ Opens the iris for the omnicure.
+        """Opens the iris for the omnicure.
 
         Parameters
         ----------
@@ -1573,15 +1975,14 @@ class G(object):
         >>> g.omni_on(3)
 
         """
-        self.write('Call omniOn P{}'.format(com_port))
+        self.write("Call omniOn P{}".format(com_port))
 
     def omni_off(self, com_port):
-        """ Opposite to omni_on.
-        """
-        self.write('Call omniOff P{}'.format(com_port))
+        """Opposite to omni_on."""
+        self.write("Call omniOff P{}".format(com_port))
 
     def omni_intensity(self, com_port, value, cal=False):
-        """ Sets the intensity of the omnicure.
+        """Sets the intensity of the omnicure.
 
         Parameters
         ----------
@@ -1599,35 +2000,41 @@ class G(object):
         """
 
         if cal:
-            command = 'SIR{:.2f}'.format(value)
+            command = "SIR{:.2f}".format(value)
             data = self.calc_CRC8(command)
             self.write('$strtask4="{}"'.format(data))
         else:
-            command = 'SIL{:.0f}'.format(value)
+            command = "SIL{:.0f}".format(value)
             data = self.calc_CRC8(command)
             self.write('$strtask4="{}"'.format(data))
-        self.write('Call omniSetInt P{}'.format(com_port))
+        self.write("Call omniSetInt P{}".format(com_port))
 
-    def set_alicat_pressure(self,com_port,value):
-        """ Same as `set_pressure` method, but for Alicat controller.
-        """
-        self.write('Call setAlicatPress P{} Q{}'.format(com_port, value))
+    def set_alicat_pressure(self, com_port, value):
+        """Same as `set_pressure` method, but for Alicat controller."""
+        self.write("Call setAlicatPress P{} Q{}".format(com_port, value))
 
-    def calc_CRC8(self,data):
+    def calc_CRC8(self, data):
         CRC8 = 0
-        for letter in list(bytearray(data, encoding='utf-8')):
+        for letter in list(bytearray(data, encoding="utf-8")):
             for i in range(8):
-                if (letter^CRC8)&0x01:
+                if (letter ^ CRC8) & 0x01:
                     CRC8 ^= 0x18
                     CRC8 >>= 1
                     CRC8 |= 0x80
                 else:
                     CRC8 >>= 1
                 letter >>= 1
-        return data +'{:02X}'.format(CRC8)
+        return data + "{:02X}".format(CRC8)
 
-    def gen_geometry(self,outfile,filament_diameter=0.8,cut_point=None,preview=False,color_incl=None):
-        """ Creates an openscad file to create a CAD model from the print path.
+    def gen_geometry(
+        self,
+        outfile,
+        filament_diameter=0.8,
+        cut_point=None,
+        preview=False,
+        color_incl=None,
+    ):
+        """Creates an openscad file to create a CAD model from the print path.
 
         Parameters
         ----------
@@ -1657,47 +2064,72 @@ class G(object):
         import matplotlib.cm as cm
         from mpl_toolkits.mplot3d import Axes3D
         import matplotlib.pyplot as plt
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
 
-        def circle(radius,num_points=10):
+        fig = plt.figure()
+        ax = fig.gca(projection="3d")
+
+        def circle(radius, num_points=10):
             circle_pts = []
             for i in range(2 * num_points):
                 angle = math.radians(360 / (2 * num_points) * i)
-                circle_pts.append(sldutils.Point3(radius * math.cos(angle), radius * math.sin(angle), 0))
+                circle_pts.append(
+                    sldutils.Point3(
+                        radius * math.cos(angle), radius * math.sin(angle), 0
+                    )
+                )
             return circle_pts
 
         # SolidPython setup for geometry creation
         extruded = 0
-        filament_cross = circle(radius=filament_diameter/2)
+        filament_cross = circle(radius=filament_diameter / 2)
 
         extruding_hist = dict(self.extruding_history)
         position_hist = np.array(self.position_history)
 
-        #Stepping through all moves after initial position
+        # Stepping through all moves after initial position
         extruding_state = False
-        for index, (pos, color) in enumerate(zip(self.position_history[1:cut_point],self.color_history[1:cut_point]),1):
-            sys.stdout.write('\r')
-            sys.stdout.write("Exporting model: {:.0f}%".format(index/len(self.position_history[1:])*100))
+        for index, (pos, color) in enumerate(
+            zip(self.position_history[1:cut_point], self.color_history[1:cut_point]), 1
+        ):
+            sys.stdout.write("\r")
+            sys.stdout.write(
+                "Exporting model: {:.0f}%".format(
+                    index / len(self.position_history[1:]) * 100
+                )
+            )
             sys.stdout.flush()
-            #print("{}/{}".format(index,len(self.position_history[1:])))
+            # print("{}/{}".format(index,len(self.position_history[1:])))
             if index in extruding_hist:
-                extruding_state =  extruding_hist[index][1]
+                extruding_state = extruding_hist[index][1]
 
             if extruding_state and ((color == color_incl) or (color_incl is None)):
-                X, Y, Z = position_hist[index-1:index+1, 0], position_hist[index-1:index+1, 1], position_hist[index-1:index+1, 2]
+                X, Y, Z = (
+                    position_hist[index - 1 : index + 1, 0],
+                    position_hist[index - 1 : index + 1, 1],
+                    position_hist[index - 1 : index + 1, 2],
+                )
                 # Plot to matplotlb
                 if color_incl is not None:
-                    ax.plot(X, Y, Z,color_incl)
+                    ax.plot(X, Y, Z, color_incl)
                 else:
-                    ax.plot(X, Y, Z,'b')
+                    ax.plot(X, Y, Z, "b")
                 # Add geometry to part
-                extruded += sldutils.extrude_along_path(shape_pts=filament_cross, path_pts=[sldutils.Point3(*position_hist[index-1]),sldutils.Point3(*position_hist[index])])
-                extruded += sld.translate(position_hist[index-1])(sld.sphere(r=filament_diameter/2,segments=20))
-                extruded += sld.translate(position_hist[index])(sld.sphere(r=filament_diameter/2,segments=20))
+                extruded += sldutils.extrude_along_path(
+                    shape_pts=filament_cross,
+                    path_pts=[
+                        sldutils.Point3(*position_hist[index - 1]),
+                        sldutils.Point3(*position_hist[index]),
+                    ],
+                )
+                extruded += sld.translate(position_hist[index - 1])(
+                    sld.sphere(r=filament_diameter / 2, segments=20)
+                )
+                extruded += sld.translate(position_hist[index])(
+                    sld.sphere(r=filament_diameter / 2, segments=20)
+                )
 
         # Export geometry to file
-        file_out = os.path.join(os.curdir, '{}.scad'.format(outfile))
+        file_out = os.path.join(os.curdir, "{}.scad".format(outfile))
         print("\nSCAD file written to: \n%(file_out)s" % vars())
         sld.scad_render_to_file(extruded, file_out, include_orig_code=False)
 
@@ -1707,9 +2139,12 @@ class G(object):
 
             # Hack to keep 3D plot's aspect ratio square. See SO answer:
             # http://stackoverflow.com/questions/13685386
-            max_range = np.array([X.max()-X.min(),
-                                  Y.max()-Y.min(),
-                                  Z.max()-Z.min()]).max() / 2.0
+            max_range = (
+                np.array(
+                    [X.max() - X.min(), Y.max() - Y.min(), Z.max() - Z.min()]
+                ).max()
+                / 2.0
+            )
 
             mean_x = X.mean()
             mean_y = Y.mean()
@@ -1717,14 +2152,16 @@ class G(object):
             ax.set_xlim(mean_x - max_range, mean_x + max_range)
             ax.set_ylim(mean_y - max_range, mean_y + max_range)
             ax.set_zlim(mean_z - max_range, mean_z + max_range)
-            scaling = np.array([getattr(ax, 'get_{}lim'.format(dim))() for dim in 'xyz']); ax.auto_scale_xyz(*[[np.min(scaling), np.max(scaling)]]*3)
+            scaling = np.array(
+                [getattr(ax, "get_{}lim".format(dim))() for dim in "xyz"]
+            )
+            ax.auto_scale_xyz(*[[np.min(scaling), np.max(scaling)]] * 3)
             plt.show()
 
     # ROS3DA Functions  #######################################################
 
-
-    def line_frequency(self,freq,padding,length,com_port,pressure,travel_feed):
-        """ Prints a line with varying on/off frequency.
+    def line_frequency(self, freq, padding, length, com_port, pressure, travel_feed):
+        """Prints a line with varying on/off frequency.
 
         Parameters
         ----------
@@ -1742,27 +2179,27 @@ class G(object):
         # Use velocity on, required for switching like this
         self.write("VELOCITY ON")
 
-        print_height = np.copy(self._current_position['z'])
+        print_height = np.copy(self._current_position["z"])
         print_feed = np.copy(self.speed)
 
-        self.set_pressure(com_port,pressure)
+        self.set_pressure(com_port, pressure)
         for f in freq:
             # freq is in hz, ie 1/s. Thus dist = (m/s)/(1/s) = m
-            dist = print_feed/f
-            switch_points = np.arange(length+dist,step=dist)
-            if len(switch_points)%2:
+            dist = print_feed / f
+            switch_points = np.arange(length + dist, step=dist)
+            if len(switch_points) % 2:
                 switch_points = switch_points[:-1]
             for point in switch_points:
                 self.toggle_pressure(com_port)
                 self.move(x=dist)
 
-            #Move to push into substrate
+            # Move to push into substrate
             self.move(z=-print_height)
             self._feed(travel_feed)
-            self.move(z=print_height+5)
+            self.move(z=print_height + 5)
 
             if f != freq[-1]:
-                self.move(x=-len(switch_points)*dist,y=padding)
+                self.move(x=-len(switch_points) * dist, y=padding)
                 self.move(z=-5)
                 self._feed(print_feed)
 
@@ -1772,10 +2209,10 @@ class G(object):
         if was_absolute:
             self._absolute()
 
-        return [length,padding*(len(freq)-1)]
+        return [length, padding * (len(freq) - 1)]
 
-    def line_width(self,padding,width,com_port,pressures,spacing,travel_feed):
-        """ Prints meanders of varying spacing with different pressures.
+    def line_width(self, padding, width, com_port, pressures, spacing, travel_feed):
+        """Prints meanders of varying spacing with different pressures.
 
         Parameters
         ----------
@@ -1789,26 +2226,26 @@ class G(object):
         else:
             was_absolute = False
 
-        print_height = np.copy(self._current_position['z'])
+        print_height = np.copy(self._current_position["z"])
         print_feed = np.copy(self.speed)
 
         for pressure in pressures:
             direction = 1
-            self.set_pressure(com_port,pressure)
+            self.set_pressure(com_port, pressure)
             self.toggle_pressure(com_port)
             for space in spacing:
-                #self.toggle_pressure(com_port)
-                self.move(y=direction*width)
+                # self.toggle_pressure(com_port)
+                self.move(y=direction * width)
                 self.move(space)
                 if space == spacing[-1]:
-                    self.move(y=-direction*width)
-                #self.toggle_pressure(com_port)
+                    self.move(y=-direction * width)
+                # self.toggle_pressure(com_port)
                 direction *= -1
             self.toggle_pressure(com_port)
             self._feed(travel_feed)
             self.move(z=5)
             if pressure != pressures[-1]:
-                self.move(x=-np.sum(spacing),y=width+padding)
+                self.move(x=-np.sum(spacing), y=width + padding)
                 self.move(z=-5)
                 self._feed(print_feed)
 
@@ -1816,10 +2253,13 @@ class G(object):
         if was_absolute:
             self._absolute()
 
-        return [np.sum(spacing)*2-spacing[-1],len(pressures)*width + (len(pressures)-1)*padding]
+        return [
+            np.sum(spacing) * 2 - spacing[-1],
+            len(pressures) * width + (len(pressures) - 1) * padding,
+        ]
 
-    def line_span(self,padding,dwell,distances,com_port,pressure,travel_feed):
-        """ Prints meanders of varying spacing with different pressures.
+    def line_span(self, padding, dwell, distances, com_port, pressure, travel_feed):
+        """Prints meanders of varying spacing with different pressures.
 
         Parameters
         ----------
@@ -1833,22 +2273,22 @@ class G(object):
         else:
             was_absolute = False
 
-        print_height = np.copy(self._current_position['z'])
+        print_height = np.copy(self._current_position["z"])
         print_feed = np.copy(self.speed)
 
         for dist in distances:
             self.toggle_pressure(com_port)
             self._dwell(dwell)
-            self._feed(print_feed*dist/distances[0])
+            self._feed(print_feed * dist / distances[0])
             self.move(y=dist)
             self._dwell(dwell)
             self.toggle_pressure(com_port)
 
             self.move(z=-print_height)
             self._feed(travel_feed)
-            self.move(z=print_height+5)
+            self.move(z=print_height + 5)
             if dist != distances[-1]:
-                self.move(x=padding,y=-dist)
+                self.move(x=padding, y=-dist)
                 self.move(z=-5)
                 self._feed(print_feed)
 
@@ -1856,11 +2296,10 @@ class G(object):
         if was_absolute:
             self._absolute()
 
-        return [padding*(len(distances)-1),np.max(distances)]
+        return [padding * (len(distances) - 1), np.max(distances)]
 
-
-    def line_crossing(self,dwell,feeds,length,com_port,pressure,travel_feed):
-        """ Prints meanders of varying spacing with different pressures.
+    def line_crossing(self, dwell, feeds, length, com_port, pressure, travel_feed):
+        """Prints meanders of varying spacing with different pressures.
 
         Parameters
         ----------
@@ -1874,9 +2313,9 @@ class G(object):
         else:
             was_absolute = False
 
-        print_height = np.copy(self._current_position['z'])
+        print_height = np.copy(self._current_position["z"])
 
-        self.set_pressure(com_port,pressure)
+        self.set_pressure(com_port, pressure)
         self.toggle_pressure(com_port)
         self._dwell(dwell)
         self.move(x=length)
@@ -1884,21 +2323,21 @@ class G(object):
         self.toggle_pressure(com_port)
         self.move(z=-print_height)
         self._feed(travel_feed)
-        self.move(z=print_height+5)
+        self.move(z=print_height + 5)
 
-        spacing = length/(len(feeds)+1)
-        self.move(x=-spacing,y=8)
+        spacing = length / (len(feeds) + 1)
+        self.move(x=-spacing, y=8)
         for feed in feeds:
-            self.move(z=-(print_height+5))
+            self.move(z=-(print_height + 5))
             self._feed(feed)
             self.move(y=-16)
             if feed != feeds[-1]:
                 self._feed(travel_feed)
-                self.move(z=print_height+5)
-                self.move(x=-spacing,y=16)
+                self.move(z=print_height + 5)
+                self.move(x=-spacing, y=16)
 
         self._feed(travel_feed)
-        self.move(z=print_height+5)
+        self.move(z=print_height + 5)
 
         # Switch back to absolute if it was in absolute
         if was_absolute:
@@ -1907,7 +2346,7 @@ class G(object):
         return length
 
     def export_APE(self):
-        """ Exports a list of dictionaries describing extrusion moves in a
+        """Exports a list of dictionaries describing extrusion moves in a
         format compatible with APE.
 
         Examples
@@ -1918,22 +2357,32 @@ class G(object):
         """
         extruding_hist = dict(self.extruding_history)
         position_hist = self.position_history
-        cut_ranges=list(extruding_hist)[1:]
+        cut_ranges = list(extruding_hist)[1:]
         final_coords = []
-        for i in range(0,len(cut_ranges),2):
-            final_coords.append(position_hist[cut_ranges[i]-1:cut_ranges[i+1]])
+        for i in range(0, len(cut_ranges), 2):
+            final_coords.append(position_hist[cut_ranges[i] - 1 : cut_ranges[i + 1]])
         final_coords_dict = []
         for i in final_coords:
-            keys = ['X','Y','Z']
-            final_coords_dict.append([dict(zip(keys, l)) for l in i ])
+            keys = ["X", "Y", "Z"]
+            final_coords_dict.append([dict(zip(keys, l)) for l in i])
         return final_coords_dict
 
     # Public Interface  #######################################################
 
-    def view(self, backend='matplotlib', outfile=None, hide_travel=False,color_on=True, nozzle_cam=False,
-             fast_forward = 3, framerate = 60, nozzle_dims=[1.0,20.0],
-             substrate_dims=[0.0,0.0,-1.0,300,1,300], scene_dims = [720,720]):
-        """ View the generated Gcode.
+    def view(
+        self,
+        backend="matplotlib",
+        outfile=None,
+        hide_travel=False,
+        color_on=True,
+        nozzle_cam=False,
+        fast_forward=3,
+        framerate=60,
+        nozzle_dims=[1.0, 20.0],
+        substrate_dims=[0.0, 0.0, -1.0, 300, 1, 300],
+        scene_dims=[720, 720],
+    ):
+        """View the generated Gcode.
 
         Parameters
         ----------
@@ -1976,38 +2425,48 @@ class G(object):
         import matplotlib.cm as cm
         from mpl_toolkits.mplot3d import Axes3D
         import matplotlib.pyplot as plt
+
         history = np.array(self.position_history)
 
-        if backend == 'matplotlib':
+        if backend == "matplotlib":
             fig = plt.figure()
-            ax = fig.add_subplot(projection='3d')
+            ax = fig.add_subplot(projection="3d")
 
             extruding_hist = dict(self.extruding_history)
-            #Stepping through all moves after initial position
+            # Stepping through all moves after initial position
             extruding_state = False
-            for index, (pos, color) in enumerate(zip(history[1:],self.color_history[1:]),1):
+            for index, (pos, color) in enumerate(
+                zip(history[1:], self.color_history[1:]), 1
+            ):
                 if index in extruding_hist:
-                    extruding_state =  extruding_hist[index][1]
+                    extruding_state = extruding_hist[index][1]
 
-                X, Y, Z = history[index-1:index+1, 0], history[index-1:index+1, 1], history[index-1:index+1, 2]
+                X, Y, Z = (
+                    history[index - 1 : index + 1, 0],
+                    history[index - 1 : index + 1, 1],
+                    history[index - 1 : index + 1, 2],
+                )
 
                 if extruding_state:
                     if color_on:
                         # ax.plot(X, Y, Z,color = cm.gray(self.color_history[index])[:-1])
-                        ax.plot(X, Y, Z,color = self.color_history[index])
+                        ax.plot(X, Y, Z, color=self.color_history[index])
                     else:
-                        ax.plot(X, Y, Z,'b')
+                        ax.plot(X, Y, Z, "b")
                 else:
                     if not hide_travel:
-                        ax.plot(X,Y,Z,'k--',linewidth=0.5)
+                        ax.plot(X, Y, Z, "k--", linewidth=0.5)
 
             X, Y, Z = history[:, 0], history[:, 1], history[:, 2]
 
             # Hack to keep 3D plot's aspect ratio square. See SO answer:
             # http://stackoverflow.com/questions/13685386
-            max_range = np.array([X.max()-X.min(),
-                                  Y.max()-Y.min(),
-                                  Z.max()-Z.min()]).max() / 2.0
+            max_range = (
+                np.array(
+                    [X.max() - X.min(), Y.max() - Y.min(), Z.max() - Z.min()]
+                ).max()
+                / 2.0
+            )
 
             mean_x = X.mean()
             mean_y = Y.mean()
@@ -2022,204 +2481,333 @@ class G(object):
             if outfile == None:
                 plt.show()
             else:
-                plt.savefig(outfile,dpi=500)
+                plt.savefig(outfile, dpi=500)
 
-        elif backend == 'mayavi':
+        elif backend == "mayavi":
             from mayavi import mlab
+
             mlab.plot3d(history[:, 0], history[:, 1], history[:, 2])
 
-        elif backend == 'vpython':
+        elif backend == "vpython":
             import vpython as vp
             import copy
 
-            #Scene setup
+            # Scene setup
             vp.scene.width = scene_dims[0]
             vp.scene.height = scene_dims[1]
-            vp.scene.center = vp.vec(0,0,0)
-            vp.scene.forward = vp.vec(-1,-1,-1)
-            vp.scene.background = vp.vec(1,1,1)
+            vp.scene.center = vp.vec(0, 0, 0)
+            vp.scene.forward = vp.vec(-1, -1, -1)
+            vp.scene.background = vp.vec(1, 1, 1)
 
             position_hist = history
             speed_hist = dict(self.speed_history)
             extruding_hist = dict(self.extruding_history)
             extruding_state = False
             printheads = np.unique([i[1][0] for i in self.extruding_history][1:])
-            vpython_colors = [vp.color.red,vp.color.blue,vp.color.green,vp.color.cyan,vp.color.yellow,vp.color.magenta,vp.color.orange]
-            filament_color = dict(zip(printheads,vpython_colors[:len(printheads)]))
+            vpython_colors = [
+                vp.color.red,
+                vp.color.blue,
+                vp.color.green,
+                vp.color.cyan,
+                vp.color.yellow,
+                vp.color.magenta,
+                vp.color.orange,
+            ]
+            filament_color = dict(zip(printheads, vpython_colors[: len(printheads)]))
 
-            #Swap Y & Z axis for new coordinate system
-            position_hist[:,[1,2]] = position_hist[:,[2,1]]
-            #Swap Z direction
-            position_hist[:,2] *= -1
+            # Swap Y & Z axis for new coordinate system
+            position_hist[:, [1, 2]] = position_hist[:, [2, 1]]
+            # Swap Z direction
+            position_hist[:, 2] *= -1
 
-            #Check all values are available for animation
+            # Check all values are available for animation
             if 0 in speed_hist.values():
-                raise ValueError('Cannot specify 0 for feedrate')
+                raise ValueError("Cannot specify 0 for feedrate")
 
             class Printhead(object):
-                def __init__(self, nozzle_diameter, nozzle_length, start_location=vp.vec(0,0,0), start_orientation=vp.vec(0,1,0)):
-                    #Record initialized position as current position
+                def __init__(
+                    self,
+                    nozzle_diameter,
+                    nozzle_length,
+                    start_location=vp.vec(0, 0, 0),
+                    start_orientation=vp.vec(0, 1, 0),
+                ):
+                    # Record initialized position as current position
                     self.current_position = start_location
                     self.nozzle_length = nozzle_length
                     self.nozzle_diameter = nozzle_diameter
 
-                    #Create a cylinder to act as the nozzle
-                    self.head = vp.cylinder(pos=start_location,
-                                        axis=nozzle_length*start_orientation,
-                                        radius=nozzle_diameter/2,
-                                        texture=vp.textures.metal)
+                    # Create a cylinder to act as the nozzle
+                    self.head = vp.cylinder(
+                        pos=start_location,
+                        axis=nozzle_length * start_orientation,
+                        radius=nozzle_diameter / 2,
+                        texture=vp.textures.metal,
+                    )
 
-                    #Create trail for filament
+                    # Create trail for filament
                     self.tail = []
                     self.previous_head_position = copy.copy(self.head.pos)
                     self.make_trail = False
 
-                    #Create Luer lock fitting
-                    cyl_outline = np.array([[0.2,0],
-                                   [1.2,1.4],
-                                   [1.2,5.15],
-                                   [2.4,8.7],
-                                   [2.6,15.6],
-                                   [2.4,15.6],
-                                   [2.2,8.7],
-                                   [1.0,5.15],
-                                   [1.0,1.4],
-                                   [0,0],
-                                   [0.2,0]])
-                    fins_outline_r = np.array([[1.2,2.9],
-                                   [3.0,3.7],
-                                   [3.25,15.6],
-                                   [2.6,15.6],
-                                   [2.4,8.7],
-                                   [1.2,5.15],
-                                   [1.2,2.9]])
-                    fins_outline_l = np.array([[-1.2,2.9],
-                                   [-3.0,3.7],
-                                   [-3.25,15.6],
-                                   [-2.6,15.6],
-                                   [-2.4,8.7],
-                                   [-1.2,5.15],
-                                   [-1.2,2.9]])
-                    cyl_outline[:,1] += nozzle_length
-                    fins_outline_r[:,1] += nozzle_length
-                    fins_outline_l[:,1] += nozzle_length
-                    cylpath = vp.paths.circle(radius=0.72/2)
-                    left_fin = vp.extrusion(path=[vp.vec(0,0,-0.1),vp.vec(0,0,0.1)],shape=fins_outline_r.tolist(),color=vp.color.blue,opacity=0.7,shininess=0.1)
-                    right_fin =vp.extrusion(path=[vp.vec(0,0,-0.1),vp.vec(0,0,0.1)],shape=fins_outline_l.tolist(),color=vp.color.blue,opacity=0.7,shininess=0.1)
-                    luer_body = vp.extrusion(path=cylpath, shape=cyl_outline.tolist(), color=vp.color.blue,opacity=0.7,shininess=0.1)
+                    # Create Luer lock fitting
+                    cyl_outline = np.array(
+                        [
+                            [0.2, 0],
+                            [1.2, 1.4],
+                            [1.2, 5.15],
+                            [2.4, 8.7],
+                            [2.6, 15.6],
+                            [2.4, 15.6],
+                            [2.2, 8.7],
+                            [1.0, 5.15],
+                            [1.0, 1.4],
+                            [0, 0],
+                            [0.2, 0],
+                        ]
+                    )
+                    fins_outline_r = np.array(
+                        [
+                            [1.2, 2.9],
+                            [3.0, 3.7],
+                            [3.25, 15.6],
+                            [2.6, 15.6],
+                            [2.4, 8.7],
+                            [1.2, 5.15],
+                            [1.2, 2.9],
+                        ]
+                    )
+                    fins_outline_l = np.array(
+                        [
+                            [-1.2, 2.9],
+                            [-3.0, 3.7],
+                            [-3.25, 15.6],
+                            [-2.6, 15.6],
+                            [-2.4, 8.7],
+                            [-1.2, 5.15],
+                            [-1.2, 2.9],
+                        ]
+                    )
+                    cyl_outline[:, 1] += nozzle_length
+                    fins_outline_r[:, 1] += nozzle_length
+                    fins_outline_l[:, 1] += nozzle_length
+                    cylpath = vp.paths.circle(radius=0.72 / 2)
+                    left_fin = vp.extrusion(
+                        path=[vp.vec(0, 0, -0.1), vp.vec(0, 0, 0.1)],
+                        shape=fins_outline_r.tolist(),
+                        color=vp.color.blue,
+                        opacity=0.7,
+                        shininess=0.1,
+                    )
+                    right_fin = vp.extrusion(
+                        path=[vp.vec(0, 0, -0.1), vp.vec(0, 0, 0.1)],
+                        shape=fins_outline_l.tolist(),
+                        color=vp.color.blue,
+                        opacity=0.7,
+                        shininess=0.1,
+                    )
+                    luer_body = vp.extrusion(
+                        path=cylpath,
+                        shape=cyl_outline.tolist(),
+                        color=vp.color.blue,
+                        opacity=0.7,
+                        shininess=0.1,
+                    )
                     luer_fitting = vp.compound([luer_body, right_fin, left_fin])
 
-                    #Create Nordson Barrel
-                    #Barrel_outline exterior
-                    first_part = [[5.25,0]]
-                    barrel_curve = np.array([[ 0.        , 0.        ],
-                                    [ 0.01538957,  0.19554308],
-                                    [ 0.06117935,  0.38627124],
-                                    [ 0.13624184,  0.56748812],
-                                    [ 0.23872876,  0.73473157],
-                                    [ 0.36611652,  0.88388348],
-                                    [ 0.9775778 ,  1.82249027],
-                                    [ 1.46951498,  2.73798544],
-                                    [ 1.82981493,  3.60782647],
-                                    [ 2.04960588,  4.41059499],
-                                    [ 2.12347584,  5.12652416]])
+                    # Create Nordson Barrel
+                    # Barrel_outline exterior
+                    first_part = [[5.25, 0]]
+                    barrel_curve = np.array(
+                        [
+                            [0.0, 0.0],
+                            [0.01538957, 0.19554308],
+                            [0.06117935, 0.38627124],
+                            [0.13624184, 0.56748812],
+                            [0.23872876, 0.73473157],
+                            [0.36611652, 0.88388348],
+                            [0.9775778, 1.82249027],
+                            [1.46951498, 2.73798544],
+                            [1.82981493, 3.60782647],
+                            [2.04960588, 4.41059499],
+                            [2.12347584, 5.12652416],
+                        ]
+                    )
                     barrel_curve *= 1.5
-                    barrel_curve[:,0] += 5.25
-                    barrel_curve[:,1] += 8.25
-                    last_part = [[9.2,17.0],
-                                 [9.2,80]]
+                    barrel_curve[:, 0] += 5.25
+                    barrel_curve[:, 1] += 8.25
+                    last_part = [[9.2, 17.0], [9.2, 80]]
 
-                    barrel_outline = np.append(first_part,barrel_curve,axis=0)
-                    barrel_outline = np.append(barrel_outline,last_part,axis=0)
-                    barrel_outline[:,0] -= 1
+                    barrel_outline = np.append(first_part, barrel_curve, axis=0)
+                    barrel_outline = np.append(barrel_outline, last_part, axis=0)
+                    barrel_outline[:, 0] -= 1
 
-                   #Create interior surface
-                    barrel_outline_inter = np.copy(np.flip(barrel_outline,axis=0))
-                    barrel_outline_inter[:,0] -= 2.5
-                    barrel_outline = np.append(barrel_outline,barrel_outline_inter,axis=0)
-                    barrel_outline = np.append(barrel_outline,[[4.25,0]],axis=0)
-                    barrel_outline[:,1] += 13 + nozzle_length
+                    # Create interior surface
+                    barrel_outline_inter = np.copy(np.flip(barrel_outline, axis=0))
+                    barrel_outline_inter[:, 0] -= 2.5
+                    barrel_outline = np.append(
+                        barrel_outline, barrel_outline_inter, axis=0
+                    )
+                    barrel_outline = np.append(barrel_outline, [[4.25, 0]], axis=0)
+                    barrel_outline[:, 1] += 13 + nozzle_length
 
-                    barrelpath = vp.paths.circle(radius=2.0/2)
-                    barrel = vp.extrusion(path=barrelpath, shape=barrel_outline.tolist(), color=vp.color.gray(0.8),opacity=1.0,shininess=0.1)
+                    barrelpath = vp.paths.circle(radius=2.0 / 2)
+                    barrel = vp.extrusion(
+                        path=barrelpath,
+                        shape=barrel_outline.tolist(),
+                        color=vp.color.gray(0.8),
+                        opacity=1.0,
+                        shininess=0.1,
+                    )
 
-                    #Combine into single head
-                    self.body = vp.compound([barrel,luer_fitting],pos=start_location+vp.vec(0,nozzle_length+46.5,0))
+                    # Combine into single head
+                    self.body = vp.compound(
+                        [barrel, luer_fitting],
+                        pos=start_location + vp.vec(0, nozzle_length + 46.5, 0),
+                    )
 
-                def abs_move(self, endpoint, feed=2.0,print_line=True,tail_color = None):
+                def abs_move(
+                    self, endpoint, feed=2.0, print_line=True, tail_color=None
+                ):
                     move_length = (endpoint - self.current_position).mag
-                    time_to_move = move_length/(feed*fast_forward)
-                    total_frames = round(time_to_move*framerate)
+                    time_to_move = move_length / (feed * fast_forward)
+                    total_frames = round(time_to_move * framerate)
 
-                    #Create linspace of points between beginning and end
-                    inter_points = np.array([np.linspace(i,j,total_frames) for i,j in zip([self.current_position.x,self.current_position.y,self.current_position.z],[endpoint.x,endpoint.y,endpoint.z])])
+                    # Create linspace of points between beginning and end
+                    inter_points = np.array(
+                        [
+                            np.linspace(i, j, total_frames)
+                            for i, j in zip(
+                                [
+                                    self.current_position.x,
+                                    self.current_position.y,
+                                    self.current_position.z,
+                                ],
+                                [endpoint.x, endpoint.y, endpoint.z],
+                            )
+                        ]
+                    )
 
                     for inter_move in np.transpose(inter_points):
                         vp.rate(framerate)
                         self.head.pos.x = self.body.pos.x = inter_move[0]
                         self.head.pos.z = self.body.pos.z = inter_move[2]
                         self.head.pos.y = inter_move[1]
-                        self.body.pos.y = inter_move[1]+self.nozzle_length+46.5
+                        self.body.pos.y = inter_move[1] + self.nozzle_length + 46.5
 
-                        if self.make_trail and print_line :
-                            if (self.previous_head_position.x != self.head.pos.x) or (self.previous_head_position.y != self.head.pos.y) or (self.previous_head_position.z != self.head.pos.z):
-                                self.tail[-1].append(pos=vp.vec(self.head.pos.x,self.head.pos.y-self.nozzle_diameter/2,self.head.pos.z))
+                        if self.make_trail and print_line:
+                            if (
+                                (self.previous_head_position.x != self.head.pos.x)
+                                or (self.previous_head_position.y != self.head.pos.y)
+                                or (self.previous_head_position.z != self.head.pos.z)
+                            ):
+                                self.tail[-1].append(
+                                    pos=vp.vec(
+                                        self.head.pos.x,
+                                        self.head.pos.y - self.nozzle_diameter / 2,
+                                        self.head.pos.z,
+                                    )
+                                )
                         elif not self.make_trail and print_line:
-                            vp.sphere(pos=vp.vec(self.head.pos.x,self.head.pos.y-self.nozzle_diameter/2,self.head.pos.z),color=tail_color,radius=self.nozzle_diameter/2)
-                            self.tail.append(vp.curve(pos=vp.vec(self.head.pos.x,self.head.pos.y-self.nozzle_diameter/2,self.head.pos.z),color=tail_color,radius=self.nozzle_diameter/2))
+                            vp.sphere(
+                                pos=vp.vec(
+                                    self.head.pos.x,
+                                    self.head.pos.y - self.nozzle_diameter / 2,
+                                    self.head.pos.z,
+                                ),
+                                color=tail_color,
+                                radius=self.nozzle_diameter / 2,
+                            )
+                            self.tail.append(
+                                vp.curve(
+                                    pos=vp.vec(
+                                        self.head.pos.x,
+                                        self.head.pos.y - self.nozzle_diameter / 2,
+                                        self.head.pos.z,
+                                    ),
+                                    color=tail_color,
+                                    radius=self.nozzle_diameter / 2,
+                                )
+                            )
                         self.make_trail = print_line
 
                         self.previous_head_position = copy.copy(self.head.pos)
 
-                        #Track tip of nozzle with camera if nozzle_cam mode is on
+                        # Track tip of nozzle with camera if nozzle_cam mode is on
                         if nozzle_cam:
                             vp.scene.center = self.head.pos
 
-                    #Set endpoint as current position
+                    # Set endpoint as current position
                     self.current_position = endpoint
 
             def run():
-                #Stepping through all moves after initial position
+                # Stepping through all moves after initial position
                 extruding_state = False
-                for count, (pos, color) in enumerate(zip(position_hist[1:],self.color_history[1:]),1):
+                for count, (pos, color) in enumerate(
+                    zip(position_hist[1:], self.color_history[1:]), 1
+                ):
                     X, Y, Z = pos
                     if count in speed_hist:
                         t_speed = speed_hist[count]
                     if count in extruding_hist:
-                        extruding_state =  extruding_hist[count][1]
-                        t_color = filament_color[extruding_hist[count][0]] if extruding_hist[count][0] != None else vp.color.black
-                    self.head.abs_move(vp.vec(*pos),feed=t_speed,print_line=extruding_state,tail_color=t_color)
+                        extruding_state = extruding_hist[count][1]
+                        t_color = (
+                            filament_color[extruding_hist[count][0]]
+                            if extruding_hist[count][0] != None
+                            else vp.color.black
+                        )
+                    self.head.abs_move(
+                        vp.vec(*pos),
+                        feed=t_speed,
+                        print_line=extruding_state,
+                        tail_color=t_color,
+                    )
 
-            self.head = Printhead(nozzle_diameter=nozzle_dims[0],nozzle_length=nozzle_dims[1], start_location=vp.vec(*position_hist[0]))
-            vp.box(pos=vp.vec(substrate_dims[0],substrate_dims[2],substrate_dims[1]),length=substrate_dims[3], height=substrate_dims[4], width=substrate_dims[5],color=vp.color.gray(0.8))
-            vp.scene.waitfor('click')
+            self.head = Printhead(
+                nozzle_diameter=nozzle_dims[0],
+                nozzle_length=nozzle_dims[1],
+                start_location=vp.vec(*position_hist[0]),
+            )
+            vp.box(
+                pos=vp.vec(substrate_dims[0], substrate_dims[2], substrate_dims[1]),
+                length=substrate_dims[3],
+                height=substrate_dims[4],
+                width=substrate_dims[5],
+                color=vp.color.gray(0.8),
+            )
+            vp.scene.waitfor("click")
             run()
 
         else:
-            raise Exception("Invalid plotting backend! Choose one of mayavi or matplotlib or matplotlib2d or vpython.")
+            raise Exception(
+                "Invalid plotting backend! Choose one of mayavi or matplotlib or matplotlib2d or vpython."
+            )
 
     def write(self, statement_in, resp_needed=False):
-        if self.print_lines is True or (self.print_lines == 'auto' and self.outfile is None):
+        if self.print_lines is True or (
+            self.print_lines == "auto" and self.outfile is None
+        ):
             print(statement_in)
         self._write_out(statement_in)
         statement = encode2To3(statement_in + self.line_endings)
         if self.direct_write is True:
-            if self.direct_write_mode == 'socket':
+            if self.direct_write_mode == "socket":
                 if self._socket is None:
                     import socket
-                    self._socket = socket.socket(socket.AF_INET,
-                                                socket.SOCK_STREAM)
+
+                    self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self._socket.connect((self.host, self.port))
                 self._socket.send(statement)
                 if self.wait_for_response is True:
                     response = self._socket.recv(8192)
                     response = decode2To3(response)
-                    if response[0] != '%':
+                    if response[0] != "%":
                         raise RuntimeError(response)
                     return response[1:-1]
-            elif self.direct_write_mode == 'serial':
+            elif self.direct_write_mode == "serial":
                 if self._p is None:
                     from .printer import Printer
+
                     self._p = Printer(self.port, self.baudrate)
                     self._p.connect()
                     self._p.start()
@@ -2229,7 +2817,7 @@ class G(object):
                     self._p.sendline(statement_in)
 
     def rename_axis(self, x=None, y=None, z=None):
-        """ Replaces the x, y, or z axis with the given name.
+        """Replaces the x, y, or z axis with the given name.
 
         Examples
         --------
@@ -2243,12 +2831,14 @@ class G(object):
         elif z is not None:
             self.z_axis = z
         else:
-            msg = 'Must specify new name for x, y, or z only'
+            msg = "Must specify new name for x, y, or z only"
             raise RuntimeError(msg)
 
     # Private Interface  ######################################################
 
-    def _write_out(self, line: str | None = None, lines: list[str] | None = None) -> None:
+    def _write_out(
+        self, line: str | None = None, lines: list[str] | None = None
+    ) -> None:
         """Writes the given line(s) to the output file.
 
         Args:
@@ -2302,7 +2892,7 @@ class G(object):
             True if the file is in binary mode, False otherwise
         """
 
-        return hasattr(self.out_fd, 'mode') and 'b' in self.out_fd.mode
+        return hasattr(self.out_fd, "mode") and "b" in self.out_fd.mode
 
     def _format_float(self, number: float) -> str:
         """Formats a number to the specified number of decimal places.
@@ -2315,9 +2905,7 @@ class G(object):
         """
 
         return np.format_float_positional(
-            number,
-            precision=self.output_digits,
-            trim='-'
+            number, precision=self.output_digits, trim="-"
         )
 
     def _meander_passes(self, minor, spacing):
@@ -2332,7 +2920,7 @@ class G(object):
 
     def _write_header(self):
         if self.aerotech_include is True:
-            with open(os.path.join(HERE, 'header.txt')) as fd:
+            with open(os.path.join(HERE, "header.txt")) as fd:
                 self._write_out(lines=fd.readlines())
         if self.header is not None:
             with open(self.header) as fd:
@@ -2342,64 +2930,66 @@ class G(object):
         args = []
 
         if x is not None:
-            args.append(f'{self.x_axis}{self._format_float(x)}')
+            args.append(f"{self.x_axis}{self._format_float(x)}")
         if y is not None:
-            args.append(f'{self.y_axis}{self._format_float(y)}')
+            args.append(f"{self.y_axis}{self._format_float(y)}")
         if z is not None:
-            args.append(f'{self.z_axis}{self._format_float(z)}')
+            args.append(f"{self.z_axis}{self._format_float(z)}")
         if i is not None:
-            args.append(f'{self.i_axis}{self._format_float(i)}')
+            args.append(f"{self.i_axis}{self._format_float(i)}")
         if j is not None:
-            args.append(f'{self.j_axis}{self._format_float(j)}')
+            args.append(f"{self.j_axis}{self._format_float(j)}")
         if k is not None:
-            args.append(f'{self.k_axis}{self._format_float(k)}')
+            args.append(f"{self.k_axis}{self._format_float(k)}")
 
-        args += [f'{k}{self._format_float(kwargs[k])}' for k in sorted(kwargs)]
-        args = ' '.join(args)
+        args += [f"{k}{self._format_float(kwargs[k])}" for k in sorted(kwargs)]
+        args = " ".join(args)
         return args
 
-    def _update_current_position(self, mode='auto', x=None, y=None, z=None, color = None,
-                                 **kwargs):
-        if mode == 'auto':
-            mode = 'relative' if self.is_relative else 'absolute'
+    def _update_current_position(
+        self, mode="auto", x=None, y=None, z=None, color=None, **kwargs
+    ):
+        if mode == "auto":
+            mode = "relative" if self.is_relative else "absolute"
 
-        if self.x_axis != 'X' and x is not None:
+        if self.x_axis != "X" and x is not None:
             kwargs[self.x_axis] = x
-        if self.y_axis != 'Y' and y is not None:
+        if self.y_axis != "Y" and y is not None:
             kwargs[self.y_axis] = y
-        if self.z_axis != 'Z' and z is not None:
+        if self.z_axis != "Z" and z is not None:
             kwargs[self.z_axis] = z
 
-        if mode == 'relative':
+        if mode == "relative":
             if x is not None:
-                self._current_position['x'] += x
+                self._current_position["x"] += x
             if y is not None:
-                self._current_position['y'] += y
+                self._current_position["y"] += y
             if z is not None:
-                self._current_position['z'] += z
+                self._current_position["z"] += z
             for dimention, delta in kwargs.items():
                 self._current_position[dimention] += delta
         else:
             if x is not None:
-                self._current_position['x'] = x
+                self._current_position["x"] = x
             if y is not None:
-                self._current_position['y'] = y
+                self._current_position["y"] = y
             if z is not None:
-                self._current_position['z'] = z
+                self._current_position["z"] = z
             for dimention, delta in kwargs.items():
                 self._current_position[dimention] = delta
 
-        x = self._current_position['x']
-        y = self._current_position['y']
-        z = self._current_position['z']
+        x = self._current_position["x"]
+        y = self._current_position["y"]
+        z = self._current_position["z"]
 
         self.position_history.append((x, y, z))
         self.color_history.append(color)
 
         len_history = len(self.position_history)
-        if (len(self.speed_history) == 0
-            or self.speed_history[-1][1] != self.speed):
+        if len(self.speed_history) == 0 or self.speed_history[-1][1] != self.speed:
             self.speed_history.append((len_history - 1, self.speed))
-        if (len(self.extruding_history) == 0
-            or self.extruding_history[-1][1] != self.extruding):
+        if (
+            len(self.extruding_history) == 0
+            or self.extruding_history[-1][1] != self.extruding
+        ):
             self.extruding_history.append((len_history - 1, self.extruding))

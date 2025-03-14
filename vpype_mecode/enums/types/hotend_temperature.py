@@ -23,8 +23,8 @@ from ..units.temperature_units import TemperatureUnits
 class HotendTemperature(BaseEnum):
     """Temperature modes for the hotend."""
 
-    CELSIUS = 'celsius'
-    KELVIN = 'kelvin'
+    CELSIUS = "celsius"
+    KELVIN = "kelvin"
 
     @classmethod
     def from_units(cls, units: TemperatureUnits):

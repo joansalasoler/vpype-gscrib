@@ -22,10 +22,10 @@ from ..base_enum import BaseEnum
 class ToolMode(BaseEnum):
     """Modes of operation for the tools."""
 
-    BEAM = 'beam'
-    BLADE = 'blade'
-    EXTRUDER = 'extruder'
-    HEATED_EXTRUDER = 'heated-extruder'
-    ADAPTIVE_BEAM = 'adaptive-beam'
-    MARKER = 'marker'
-    SPINDLE = 'spindle'
+    BEAM = "beam"
+    BLADE = "blade"
+    EXTRUDER = "extruder"
+    HEATED_EXTRUDER = "heated-extruder"
+    ADAPTIVE_BEAM = "adaptive-beam"
+    MARKER = "marker"
+    SPINDLE = "spindle"

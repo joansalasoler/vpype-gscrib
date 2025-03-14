@@ -13,7 +13,7 @@ from .gcode_entry import GCodeEntry
 from .gcode_table import GCodeTable
 
 __all__ = [
-    'GCodeTable',
-    'GCodeEntry',
-    'gcode_table',
+    "GCodeTable",
+    "GCodeEntry",
+    "gcode_table",
 ]

@@ -22,8 +22,8 @@ from ..base_enum import BaseEnum
 class TimeUnits(BaseEnum):
     """Units of time measurement."""
 
-    SECONDS = 's'
-    MILLISECONDS = 'ms'
+    SECONDS = "s"
+    MILLISECONDS = "ms"
 
     def scale(self, value_in_seconds: float) -> float:
         """Scale a value in `seconds` to this unit"""

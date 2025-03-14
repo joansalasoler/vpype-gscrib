@@ -22,5 +22,5 @@ from ..base_enum import BaseEnum
 class ExtrusionMode(BaseEnum):
     """Positioning mode for the extruder."""
 
-    ABSOLUTE = 'absolute'
-    RELATIVE = 'relative'
+    ABSOLUTE = "absolute"
+    RELATIVE = "relative"

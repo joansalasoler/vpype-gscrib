@@ -9,7 +9,7 @@ from .flat_heightmap import FlatHeightMap
 from .raster_heightmap import RasterHeightMap
 
 __all__ = [
-    'BaseHeightMap',
-    'FlatHeightMap',
-    'RasterHeightMap',
+    "BaseHeightMap",
+    "FlatHeightMap",
+    "RasterHeightMap",
 ]

@@ -22,6 +22,6 @@ from ..base_enum import BaseEnum
 class Plane(BaseEnum):
     """Working planes for machine operations."""
 
-    XY = 'xy'
-    ZX = 'zx'
-    YZ = 'yz'
+    XY = "xy"
+    ZX = "zx"
+    YZ = "yz"

@@ -22,5 +22,5 @@ from ..base_enum import BaseEnum
 class DistanceMode(BaseEnum):
     """Positioning mode for machine movement."""
 
-    ABSOLUTE = 'absolute'
-    RELATIVE = 'relative'
+    ABSOLUTE = "absolute"
+    RELATIVE = "relative"

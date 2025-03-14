@@ -3,6 +3,7 @@ import copy
 import numpy as np
 from .main import G
 
+
 class GMatrix(G):
     """
     This class applies 3D transformation matrices to CNC moves, supporting
@@ -17,11 +18,13 @@ class GMatrix(G):
 
     # Position savepoints #####################################################
     def save_position(self):
-        self.position_savepoints.append((
-            self.current_position["x"],
-            self.current_position["y"],
-            self.current_position["z"]
-        ))
+        self.position_savepoints.append(
+            (
+                self.current_position["x"],
+                self.current_position["y"],
+                self.current_position["z"],
+            )
+        )
 
     def restore_position(self):
         x, y, z = self.position_savepoints.pop()
@@ -43,22 +46,21 @@ class GMatrix(G):
 
     def translate(self, tx, ty, tz=0):
         """Apply a 3D translation."""
-        translation_matrix = np.array([
-            [1, 0, 0, tx],
-            [0, 1, 0, ty],
-            [0, 0, 1, tz],
-            [0, 0, 0, 1]
-        ])
+        translation_matrix = np.array(
+            [[1, 0, 0, tx], [0, 1, 0, ty], [0, 0, 1, tz], [0, 0, 0, 1]]
+        )
         self.matrix_stack[-1] = translation_matrix @ self.matrix_stack[-1]
 
     def rotate(self, angle):
         """Rotate around the Z axis only (in radians)."""
-        rotation_matrix = np.array([
-            [math.cos(angle), -math.sin(angle), 0, 0],
-            [math.sin(angle), math.cos(angle), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ])
+        rotation_matrix = np.array(
+            [
+                [math.cos(angle), -math.sin(angle), 0, 0],
+                [math.sin(angle), math.cos(angle), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ]
+        )
         self.matrix_stack[-1] = rotation_matrix @ self.matrix_stack[-1]
 
     def scale(self, scale):
@@ -72,12 +74,9 @@ class GMatrix(G):
             sx = sy = scale
             sz = 1
 
-        scale_matrix = np.array([
-            [sx, 0,  0,  0],
-            [0, sy,  0,  0],
-            [0,  0, sz,  0],
-            [0,  0,  0,  1]
-        ])
+        scale_matrix = np.array(
+            [[sx, 0, 0, 0], [0, sy, 0, 0], [0, 0, sz, 0], [0, 0, 0, 1]]
+        )
 
         self.matrix_stack[-1] = scale_matrix @ self.matrix_stack[-1]
 
@@ -88,12 +87,14 @@ class GMatrix(G):
 
         tt = 2 * (x_angle + angle)
 
-        reflection_matrix = np.array([
-            [math.cos(tt), math.sin(tt), 0, 0],
-            [math.sin(tt), -math.cos(tt), 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1]
-        ])
+        reflection_matrix = np.array(
+            [
+                [math.cos(tt), math.sin(tt), 0, 0],
+                [math.sin(tt), -math.cos(tt), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ]
+        )
 
         self.matrix_stack[-1] = reflection_matrix @ self.matrix_stack[-1]
 
@@ -106,13 +107,13 @@ class GMatrix(G):
     def _matrix_transform_length(self, length):
         """Transform a length while considering scaling."""
         transformed = self.transform(length, 0, 0)
-        return math.sqrt(sum(coord ** 2 for coord in transformed))
+        return math.sqrt(sum(coord**2 for coord in transformed))
 
     def _abs_move(self, x=None, y=None, z=None, **kwargs):
         """Move to an absolute position."""
-        x = x if x is not None else self.current_position['x']
-        y = y if y is not None else self.current_position['y']
-        z = z if z is not None else self.current_position['z']
+        x = x if x is not None else self.current_position["x"]
+        y = y if y is not None else self.current_position["y"]
+        z = z if z is not None else self.current_position["z"]
         super(GMatrix, self)._abs_move(x, y, z, **kwargs)
 
     def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
@@ -126,25 +127,42 @@ class GMatrix(G):
         """Determine if arc direction needs to be flipped based on transformation."""
         xy_matrix = self.matrix_stack[-1][:2, :2]
         if np.linalg.det(xy_matrix) < 0:
-            return 'CCW' if direction == 'CW' else 'CW'
+            return "CCW" if direction == "CW" else "CW"
         return direction
 
-    def arc(self, x=None, y=None, z=None, direction='CW', radius='auto',
-            helix_dim=None, helix_len=0, **kwargs):
+    def arc(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        direction="CW",
+        radius="auto",
+        helix_dim=None,
+        helix_len=0,
+        **kwargs,
+    ):
         """Apply transformations to arc movements while maintaining GCode compatibility."""
-        (x_prime,y_prime,z_prime) = self.transform(x,y,z)
-        if x is None: x_prime = None
-        if y is None: y_prime = None
-        if z is None: z_prime = None
-        if helix_len: helix_len = self._matrix_transform_length(helix_len)
+        (x_prime, y_prime, z_prime) = self.transform(x, y, z)
+        if x is None:
+            x_prime = None
+        if y is None:
+            y_prime = None
+        if z is None:
+            z_prime = None
+        if helix_len:
+            helix_len = self._matrix_transform_length(helix_len)
 
         direction = self._arc_direction_transform(direction)
 
         super(GMatrix, self).arc(
-            x=x_prime, y=y_prime, z=z_prime,
-            direction=direction, radius=radius,
-            helix_dim=helix_dim, helix_len=helix_len,
-            **kwargs
+            x=x_prime,
+            y=y_prime,
+            z=z_prime,
+            direction=direction,
+            radius=radius,
+            helix_dim=helix_dim,
+            helix_len=helix_len,
+            **kwargs,
         )
 
     @property
@@ -153,15 +171,15 @@ class GMatrix(G):
 
         current_position = self._current_position.copy()
 
-        x = current_position.get('x', 0)
-        y = current_position.get('y', 0)
-        z = current_position.get('z', 0)
+        x = current_position.get("x", 0)
+        y = current_position.get("y", 0)
+        z = current_position.get("z", 0)
 
         point = np.array([x, y, z, 1])
         transform = np.linalg.inv(self.matrix_stack[-1]) @ point
 
-        current_position['x'] = transform[0]
-        current_position['y'] = transform[1]
-        current_position['z'] = transform[2]
+        current_position["x"] = transform[0]
+        current_position["y"] = transform[1]
+        current_position["z"] = transform[2]
 
         return current_position

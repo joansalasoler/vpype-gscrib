@@ -79,7 +79,7 @@ class AutoLevelingHead(StandardHead):
         """
 
         work_z = self._compute_work_z(ctx, x, y)
-        params = { 'F' : ctx.work_speed, **tool_params }
+        params = { "F": ctx.work_speed, **tool_params }
         ctx.g.move(x=x, y=y, z=work_z, **params)
 
     def _compute_work_z(self, ctx: GContext, x: float, y: float) -> float:

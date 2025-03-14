@@ -31,11 +31,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(LengthUnits.INCHES,
-        'G20', 'Set length units, inches'
+        "G20", "Set length units, inches"
     ),
 
     GCodeEntry(LengthUnits.MILLIMETERS,
-        'G21', 'Set length units, millimeters'
+        "G21", "Set length units, millimeters"
     ),
 
     # ------------------------------------------------------------------
@@ -43,11 +43,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(DistanceMode.ABSOLUTE,
-        'G90', 'Set distance mode, absolute'
+        "G90", "Set distance mode, absolute"
     ),
 
     GCodeEntry(DistanceMode.RELATIVE,
-        'G91', 'Set distance mode, relative'
+        "G91", "Set distance mode, relative"
     ),
 
     # ------------------------------------------------------------------
@@ -55,11 +55,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(ExtrusionMode.ABSOLUTE,
-        'M82', 'Set extrusion mode, absolute'
+        "M82", "Set extrusion mode, absolute"
     ),
 
     GCodeEntry(ExtrusionMode.RELATIVE,
-        'M83', 'Set extrusion mode, relative'
+        "M83", "Set extrusion mode, relative"
     ),
 
     # ------------------------------------------------------------------
@@ -67,15 +67,15 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(FeedMode.INVERSE_TIME,
-        'G93', 'Set feed rate mode, inverse time'
+        "G93", "Set feed rate mode, inverse time"
     ),
 
     GCodeEntry(FeedMode.UNITS_PER_MINUTE,
-        'G94', 'Set feed rate mode, units per minute'
+        "G94", "Set feed rate mode, units per minute"
     ),
 
     GCodeEntry(FeedMode.UNITS_PER_REVOLUTION,
-        'G95', 'Set feed rate mode, units per revolution'
+        "G95", "Set feed rate mode, units per revolution"
     ),
 
     # ------------------------------------------------------------------
@@ -83,27 +83,27 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(SpinMode.CLOCKWISE,
-        'M03', 'Start tool, clockwise'
+        "M03", "Start tool, clockwise"
     ),
 
     GCodeEntry(SpinMode.COUNTER,
-        'M04', 'Start tool, counterclockwise'
+        "M04", "Start tool, counterclockwise"
     ),
 
     GCodeEntry(SpinMode.OFF,
-        'M05', 'Stop tool'
+        "M05", "Stop tool"
     ),
 
     GCodeEntry(PowerMode.CONSTANT,
-        'M03', 'Start tool, constant power'
+        "M03", "Start tool, constant power"
     ),
 
     GCodeEntry(PowerMode.DYNAMIC,
-        'M04', 'Start tool, dynamic power'
+        "M04", "Start tool, dynamic power"
     ),
 
     GCodeEntry(PowerMode.OFF,
-        'M05', 'Stop tool'
+        "M05", "Stop tool"
     ),
 
     # ------------------------------------------------------------------
@@ -111,11 +111,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(RackMode.AUTOMATIC,
-        'M06', 'Tool change, automatic'
+        "M06", "Tool change, automatic"
     ),
 
     GCodeEntry(RackMode.MANUAL,
-        'M06', 'Tool change, manual'
+        "M06", "Tool change, manual"
     ),
 
     # ------------------------------------------------------------------
@@ -123,15 +123,15 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(CoolantMode.FLOOD,
-        'M08', 'Turn on coolant, flood'
+        "M08", "Turn on coolant, flood"
     ),
 
     GCodeEntry(CoolantMode.MIST,
-        'M07', 'Turn on coolant, mist'
+        "M07", "Turn on coolant, mist"
     ),
 
     GCodeEntry(CoolantMode.OFF,
-        'M09', 'Turn off coolant'
+        "M09", "Turn off coolant"
     ),
 
     # ------------------------------------------------------------------
@@ -139,11 +139,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(FanMode.COOLING,
-        'M106', 'Set fan speed'
+        "M106", "Set fan speed"
     ),
 
     GCodeEntry(FanMode.OFF,
-        'M106', 'Turn off fan'
+        "M106", "Turn off fan"
     ),
 
     # ------------------------------------------------------------------
@@ -151,19 +151,19 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(BedTemperature.CELSIUS,
-        'M140', 'Set bed temperature, celsius'
+        "M140", "Set bed temperature, celsius"
     ),
 
     GCodeEntry(BedTemperature.KELVIN,
-        'M140', 'Set bed temperature, kelvin'
+        "M140", "Set bed temperature, kelvin"
     ),
 
     GCodeEntry(HotendTemperature.CELSIUS,
-        'M104', 'Set hotend temperature, celsius'
+        "M104", "Set hotend temperature, celsius"
     ),
 
     GCodeEntry(HotendTemperature.KELVIN,
-        'M104', 'Set hotend temperature, kelvin'
+        "M104", "Set hotend temperature, kelvin"
     ),
 
     # ------------------------------------------------------------------
@@ -171,15 +171,15 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(Plane.XY,
-        'G17', 'Select plane, XY'
+        "G17", "Select plane, XY"
     ),
 
     GCodeEntry(Plane.YZ,
-        'G19', 'Select plane, YZ'
+        "G19", "Select plane, YZ"
     ),
 
     GCodeEntry(Plane.ZX,
-        'G18', 'Select plane, ZX'
+        "G18", "Select plane, ZX"
     ),
 
     # ------------------------------------------------------------------
@@ -187,11 +187,11 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(TimeUnits.SECONDS,
-        'G04', 'Sleep for a while, seconds'
+        "G04", "Sleep for a while, seconds"
     ),
 
     GCodeEntry(TimeUnits.MILLISECONDS,
-        'G04', 'Sleep for a while, milliseconds'
+        "G04", "Sleep for a while, milliseconds"
     ),
 
     # ------------------------------------------------------------------
@@ -199,31 +199,31 @@ gcode_table = GCodeTable((
     # ------------------------------------------------------------------
 
     GCodeEntry(HaltMode.PAUSE,
-        'M00', 'Pause program, forced'
+        "M00", "Pause program, forced"
     ),
 
     GCodeEntry(HaltMode.OPTIONAL_PAUSE,
-        'M01', 'Pause program, optional'
+        "M01", "Pause program, optional"
     ),
 
     GCodeEntry(HaltMode.END_WITHOUT_RESET,
-        'M02', 'End of program, no reset'
+        "M02", "End of program, no reset"
     ),
 
     GCodeEntry(HaltMode.END_WITH_RESET,
-        'M30', 'End of program, stop and reset'
+        "M30", "End of program, stop and reset"
     ),
 
     GCodeEntry(HaltMode.PALLET_EXCHANGE,
-        'M60', 'Exchange pallet and end program'
+        "M60", "Exchange pallet and end program"
     ),
 
     GCodeEntry(HaltMode.WAIT_FOR_BED,
-        'M190', 'Wait for bed to reach temperature'
+        "M190", "Wait for bed to reach temperature"
     ),
 
     GCodeEntry(HaltMode.WAIT_FOR_HOTEND,
-        'M109', 'Wait for hotend to reach temperature'
+        "M109", "Wait for hotend to reach temperature"
     )
 
 ))

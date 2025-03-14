@@ -22,9 +22,9 @@ from ..base_enum import BaseEnum
 class PowerMode(BaseEnum):
     """Beam tool powe mode"""
 
-    OFF = 'off'
-    CONSTANT = 'constant'
-    DYNAMIC = 'dynamic'
+    OFF = "off"
+    CONSTANT = "constant"
+    DYNAMIC = "dynamic"
 
     def __invert__(self):
         if self == PowerMode.CONSTANT:

@@ -22,5 +22,5 @@ from ..base_enum import BaseEnum
 class BedMode(BaseEnum):
     """Bed modes for the machine."""
 
-    OFF = 'off'
-    HEATED = 'heated'
+    OFF = "off"
+    HEATED = "heated"

@@ -62,7 +62,7 @@ class RasterHeightMap(BaseHeightMap):
         self._interpolator = self._create_interpolator(self._height_map)
 
     @classmethod
-    def from_path(cls, path: str) -> 'RasterHeightMap':
+    def from_path(cls, path: str) -> "RasterHeightMap":
         """Create a HeightMap instance from an image file.
 
         Args:
@@ -80,8 +80,8 @@ class RasterHeightMap(BaseHeightMap):
 
         if image_data is None:
             raise ImageLoadError(
-                f'Could not load heightmap from `{path}`. '
-                f'File does not exist or is not a valid image.'
+                f"Could not load heightmap from '{path}'. "
+                f"File does not exist or is not a valid image."
             )
 
         return cls(image_data)
@@ -150,7 +150,7 @@ class RasterHeightMap(BaseHeightMap):
         line_array = numpy.asarray(line, dtype=float)
 
         if line_array.shape != (4,):
-            raise ValueError('Line must contain exactly 4 elements')
+            raise ValueError("Line must contain exactly 4 elements")
 
         points = self._interpolate_line(line_array)
         filtered = self._filter_points(points, self._tolerance)

@@ -45,7 +45,7 @@ class MecodeConfig(BaseModel, BaseConfig):
     # Predefined settings (do not change)
     setup: bool = Field(False)
     absolute: bool = Field(True)
-    print_lines: bool | str = Field('auto')
+    print_lines: bool | str = Field("auto")
     extrude: bool = Field(False)
 
     # Output settings
@@ -54,36 +54,35 @@ class MecodeConfig(BaseModel, BaseConfig):
     footer: Optional[str] = Field(None)
     aerotech_include: bool = Field(False)
     decimal_places: int = Field(5, ge=0)
-    comment_symbols: str = Field('(')
-    line_endings: str = Field('os')
+    comment_symbols: str = Field("(")
+    line_endings: str = Field("os")
 
     # Direct write settings
     direct_write_mode: DirectWriteMode = Field(DirectWriteMode.OFF)
-    host: str = Field('localhost')
+    host: str = Field("localhost")
     port: int = Field(8000, ge=0)
     baudrate: int = Field(250000, ge=0)
     wait_for_response: bool = Field(False)
 
     # Axis naming settings
-    x_axis: str = Field('X')
-    y_axis: str = Field('Y')
-    z_axis: str = Field('Z')
-    i_axis: str = Field('I')
-    j_axis: str = Field('J')
-    k_axis: str = Field('K')
+    x_axis: str = Field("X")
+    y_axis: str = Field("Y")
+    z_axis: str = Field("Z")
+    i_axis: str = Field("I")
+    j_axis: str = Field("J")
+    k_axis: str = Field("K")
 
     # Extrusion parameters (currently unused)
-    filament_diameter: float = Field(vp.convert_length('1.75mm'))
-    layer_height: Optional[float] = Field(vp.convert_length('0.2mm'))
-    extrusion_width: Optional[float] = Field(vp.convert_length('0.35mm'))
+    filament_diameter: float = Field(vp.convert_length("1.75mm"))
+    layer_height: Optional[float] = Field(vp.convert_length("0.2mm"))
+    extrusion_width: Optional[float] = Field(vp.convert_length("0.35mm"))
     extrusion_multiplier: float = Field(1.0)
-
 
     # Vpype's default unit of measure is pixels, so we may need to
     # convert some values to work units (millimeters or inches).
 
     _fields_with_px_units = {
-        'extrusion_width': 'px',
-        'filament_diameter': 'px',
-        'layer_height': 'px',
+        "extrusion_width": "px",
+        "filament_diameter": "px",
+        "layer_height": "px",
     }

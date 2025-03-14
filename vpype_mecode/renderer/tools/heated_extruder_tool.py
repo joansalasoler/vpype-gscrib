@@ -63,7 +63,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.current_position.get('E', 0.0)
+        current_position = ctx.g.current_position.get("E", 0.0)
         new_position = current_position + distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -79,7 +79,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.current_position.get('E', 0.0)
+        current_position = ctx.g.current_position.get("E", 0.0)
         new_position = current_position - distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -112,10 +112,10 @@ class HeatedExtruderTool(BaseTool):
         """
 
         filament_length = self._filament_length(ctx, x, y)
-        current_position = ctx.g.current_position.get('E', 0.0)
+        current_position = ctx.g.current_position.get("E", 0.0)
         new_position = current_position + filament_length
 
-        return { 'E' : new_position }
+        return { "E": new_position }
 
     def _filament_length(self, ctx: GContext, x: float, y: float) -> float:
         """Calculates the required filament length for a move.

@@ -78,9 +78,9 @@ class GCodeTable:
             existing = self._entries[key]
 
             raise KeyError(
-                f'Cannot add duplicate G-Code entry for enum `{entry.enum}`. '
-                f'An entry exists with instruction `{existing.instruction}` '
-                f'and description `{existing.description}`.'
+                f"Cannot add duplicate G-Code entry for enum '{entry.enum}'. "
+                f"An entry exists with instruction '{existing.instruction}' "
+                f"and description '{existing.description}'."
             )
 
         self._entries[key] = entry
@@ -100,23 +100,23 @@ class GCodeTable:
         """Returns the entries as an RST-formatted table."""
 
         table = [
-            '.. list-table::',
-            '   :header-rows: 1',
-            '   :widths: auto',
-            '',
-            '   * - Enum',
-            '     - Value',
-            '     - Code',
-            '     - Description'
+            ".. list-table::",
+            "   :header-rows: 1",
+            "   :widths: auto",
+            "",
+            "   * - Enum",
+            "     - Value",
+            "     - Code",
+            "     - Description",
         ]
 
         for entry in self._entries.values():
-            modules = entry.enum.__module__.split('.')
-            module = '.'.join(modules[:-1])
+            modules = entry.enum.__module__.split(".")
+            module = ".".join(modules[:-1])
 
-            table.append(f'   * - :obj:`{module}.{entry.enum}`')
-            table.append(f'     - {entry.enum.value}')
-            table.append(f'     - {entry.instruction}')
-            table.append(f'     - {entry.description}')
+            table.append(f"   * - :obj:`{module}.{entry.enum}`")
+            table.append(f"     - {entry.enum.value}")
+            table.append(f"     - {entry.instruction}")
+            table.append(f"     - {entry.description}")
 
-        return '\n'.join(table)
+        return "\n".join(table)

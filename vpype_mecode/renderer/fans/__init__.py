@@ -12,8 +12,8 @@ from .cooling_fan import CoolingFan
 from .no_fan import NoFan
 
 __all__ = [
-    'BaseFan',
-    'FanFactory',
-    'CoolingFan',
-    'NoFan',
+    "BaseFan",
+    "FanFactory",
+    "CoolingFan",
+    "NoFan",
 ]

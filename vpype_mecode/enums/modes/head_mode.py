@@ -22,5 +22,5 @@ from ..base_enum import BaseEnum
 class HeadMode(BaseEnum):
     """Head modes for the machine."""
 
-    STANDARD = 'standard'
-    AUTO_LEVELING = 'auto-leveling'
+    STANDARD = "standard"
+    AUTO_LEVELING = "auto-leveling"

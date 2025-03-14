@@ -103,4 +103,4 @@ class AdaptiveBeamTool(BaseTool):
             dict: Dictionary with the power parameter set (S).
         """
 
-        return { 'S' : ctx.height_map.get_height_at(x, y) }
+        return { "S": ctx.height_map.get_height_at(x, y) }

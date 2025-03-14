@@ -32,18 +32,18 @@ class BaseConfig(ABC):
     """
 
     @classmethod
-    def validate_gt(cls, model: 'BaseConfig', f1: str, f2: str):
+    def validate_gt(cls, model: "BaseConfig", f1: str, f2: str):
         """Validate a field value is greater than another."""
 
         if getattr(model, f1) <= getattr(model, f2):
-            raise ValueError(f'`{f1}` must be greater than `{f2}`')
+            raise ValueError(f"'{f1}' must be greater than '{f2}'")
 
     @classmethod
-    def validate_ge(cls, model: 'BaseConfig', f1: str, f2: str):
+    def validate_ge(cls, model: "BaseConfig", f1: str, f2: str):
         """Validate a field value is greater or equal to another."""
 
         if getattr(model, f1) < getattr(model, f2):
-            raise ValueError(f'`{f1}` must be greater or equal to `{f2}`')
+            raise ValueError(f"'{f1}' must be greater or equal to '{f2}'")
 
     @typechecked
     def scale_lengths(self, units: LengthUnits) -> None:
@@ -90,9 +90,9 @@ class BaseConfig(ABC):
 
         if field_name in fields_with_px_units:
             px_units = fields_with_px_units[field_name]
-            work_units = px_units.replace('px', units.value)
+            work_units = px_units.replace("px", units.value)
             value = round(units.scale(value), 6)
-            return f'{value} {work_units}'
+            return f"{value} {work_units}"
 
         if isinstance(value, (int, float)):
             return str(round(value, 6))
@@ -105,7 +105,7 @@ class BaseConfig(ABC):
     def _get_fields_with_px_units(self) -> dict:
         """Get a dictionary of fields with pixel units."""
 
-        if hasattr(self, '_fields_with_px_units'):
-            return getattr(self, '_fields_with_px_units')
+        if hasattr(self, "_fields_with_px_units"):
+            return getattr(self, "_fields_with_px_units")
 
         return {}

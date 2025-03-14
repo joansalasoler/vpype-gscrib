@@ -18,13 +18,13 @@ from .power_mode import PowerMode
 from .spin_mode import SpinMode
 
 __all__ = [
-    'BedTemperature',
-    'DistanceMode',
-    'ExtrusionMode',
-    'FeedMode',
-    'HaltMode',
-    'HotendTemperature',
-    'Plane',
-    'PowerMode',
-    'SpinMode',
+    "BedTemperature",
+    "DistanceMode",
+    "ExtrusionMode",
+    "FeedMode",
+    "HaltMode",
+    "HotendTemperature",
+    "Plane",
+    "PowerMode",
+    "SpinMode",
 ]

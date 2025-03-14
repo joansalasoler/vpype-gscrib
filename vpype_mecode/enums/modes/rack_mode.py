@@ -22,9 +22,9 @@ from ..base_enum import BaseEnum
 class RackMode(BaseEnum):
     """Tool rack operation modes."""
 
-    OFF = 'off'
-    MANUAL = 'manual'
-    AUTOMATIC = 'automatic'
+    OFF = "off"
+    MANUAL = "manual"
+    AUTOMATIC = "automatic"
 
     def __invert__(self):
         if self == RackMode.MANUAL:

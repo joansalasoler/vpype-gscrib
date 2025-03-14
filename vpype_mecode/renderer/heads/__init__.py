@@ -15,8 +15,8 @@ from .auto_leveling_head import AutoLevelingHead
 from .head_factory import HeadFactory
 
 __all__ = [
-    'BaseHead',
-    'HeadFactory',
-    'StandardHead',
-    'AutoLevelingHead',
+    "BaseHead",
+    "HeadFactory",
+    "StandardHead",
+    "AutoLevelingHead",
 ]

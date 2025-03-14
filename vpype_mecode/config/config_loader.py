@@ -73,8 +73,7 @@ class ConfigLoader:
         return values
 
     @typechecked
-    def read_config_file(
-            self, path: str, document: Document) -> List[RenderConfig]:
+    def read_config_file(self, path: str, document: Document) -> List[RenderConfig]:
         """Read and process a configuration file for all document layers.
 
         Loads the TOML configuration file and processes both document
@@ -94,12 +93,12 @@ class ConfigLoader:
         manager = ConfigManager()
         manager.load_config_file(path)
 
-        document_values = manager.config.get('document', {})
+        document_values = manager.config.get("document", {})
         document_config = self._to_config_model(document_values)
         configs.append(document_config)
 
         for index in reversed(range(len(document.layers))):
-            layer_values = manager.config.get(f'layer-{index}', {})
+            layer_values = manager.config.get(f"layer-{index}", {})
             merged_values = {**document_values, **layer_values}
             layer_config = self._to_config_model(merged_values)
 
@@ -113,7 +112,7 @@ class ConfigLoader:
     def _to_config_model(self, values: dict = {}) -> RenderConfig:
         """Read and validate a section from the configuration."""
 
-        values =  {k.replace("-", "_"): v for k, v in values.items() }
+        values = {k.replace("-", "_"): v for k, v in values.items()}
         config = self.validate_config(values)
 
         return RenderConfig.model_validate(config)

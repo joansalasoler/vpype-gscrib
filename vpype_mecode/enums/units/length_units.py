@@ -23,8 +23,8 @@ from ..base_enum import BaseEnum
 class LengthUnits(BaseEnum):
     """Units of length measurement."""
 
-    INCHES = 'in'
-    MILLIMETERS = 'mm'
+    INCHES = "in"
+    MILLIMETERS = "mm"
 
     def __init__(self, value):
         self.scale_factor = 1.0 / vpype.convert_length(value)

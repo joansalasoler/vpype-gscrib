@@ -42,25 +42,25 @@ from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
 
 
 @vpype_cli.cli.command(
-  name='mecode',
-  group='Output',
-  help= """
-  Generate G-Code for CNC machines.
+    name="mecode",
+    group="Output",
+    help="""
+    Generate G-Code for CNC machines.
 
-  This command processes a vpype Document and generates G-Code from
-  it using the `mecode` library. The ouput can be sent to the teminal,
-  a file or to a printer using mecode's direct write mode.
+    This command processes a vpype Document and generates G-Code from
+    it using the `mecode` library. The ouput can be sent to the teminal,
+    a file or to a printer using mecode's direct write mode.
 
-  The command accepts a number of options that can be used to configure
-  the G-Code generation process. They can be provided in the command
-  line as global defaults or in a TOML file than contains specific
-  settings for each layer of the document.
-  """
+    The command accepts a number of options that can be used to configure
+    the G-Code generation process. They can be provided in the command
+    line as global defaults or in a TOML file than contains specific
+    settings for each layer of the document.
+    """,
 )
 @click.version_option(
     version=__version__,
-    prog_name='vpype-mecode',
-    message='%(prog)s %(version)s'
+    prog_name="vpype-mecode",
+    message="%(prog)s %(version)s"
 )
 @vpype_cli.global_processor
 def vpype_mecode(document: Document, **kwargs) -> Document:
@@ -97,7 +97,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
     except VpypeMecodeError as e:
         raise click.UsageError(str(e))
     except ValidationError as e:
-        error_message = e.errors()[0]['msg']
+        error_message = e.errors()[0]["msg"]
         raise click.UsageError(error_message)
     except TOMLDecodeError as e:
         error_message = f"Cannot read configuration file: {e}"
@@ -112,6 +112,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 # Utility methods
 # ---------------------------------------------------------------------
 
+
 def _validate_user_config():
     """Raises an exception if the user's vpype.toml file had errors"""
 
@@ -124,11 +125,11 @@ def _validate_document(document: Document):
 
     if document.is_empty():
         raise click.UsageError(
-            'Cannot generate G-Code from empty document')
+            "Cannot generate G-Code from empty document")
 
     if document.page_size is None:
         raise click.UsageError(
-            'It is required for the document to have a page size.')
+            "It is required for the document to have a page size.")
 
 
 def _setup_mecode_config(params, renderer_config: RenderConfig) -> MecodeConfig:
@@ -144,7 +145,7 @@ def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
     """Create and validate the rendering configurations, either from
     the command line parameters or a TOML file."""
 
-    config_path = params['config']
+    config_path = params["config"]
 
     if config_path is None:
         return [RenderConfig.model_validate(params),]
@@ -164,7 +165,7 @@ for param in command_options:
 
 try:
     cm = vpype.config_manager
-    toml_values = cm.config.get('vpype-mecode', {})
+    toml_values = cm.config.get("vpype-mecode", {})
     config = _config_loader.validate_config(toml_values)
 
     for param in command_options:
@@ -172,7 +173,7 @@ try:
             default_value = config[param.name]
             param.override_default_value(default_value)
 except ValidationError as e:
-    message = e.errors()[0]['msg']
+    message = e.errors()[0]["msg"]
     message = f"Invalid value in file 'vpype.toml': {message}"
     _config_exception = click.UsageError(message)
 except click.BadParameter as e:

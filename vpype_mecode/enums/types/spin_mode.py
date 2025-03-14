@@ -22,9 +22,9 @@ from ..base_enum import BaseEnum
 class SpinMode(BaseEnum):
     """Spindle rotation direction and state."""
 
-    OFF = 'off'
-    CLOCKWISE = 'clockwise'
-    COUNTER = 'counter'
+    OFF = "off"
+    CLOCKWISE = "clockwise"
+    COUNTER = "counter"
 
     def __invert__(self):
         if self == SpinMode.CLOCKWISE:

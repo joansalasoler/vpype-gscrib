@@ -17,15 +17,15 @@ from . import processor
 from . import renderer
 from . import utils
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
 
 __all__ = [
-    'mecode',
-    'codes',
-    'config',
-    'enums',
-    'excepts',
-    'processor',
-    'renderer',
-    'utils',
+    "mecode",
+    "codes",
+    "config",
+    "enums",
+    "excepts",
+    "processor",
+    "renderer",
+    "utils",
 ]

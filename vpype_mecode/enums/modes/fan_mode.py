@@ -22,8 +22,8 @@ from ..base_enum import BaseEnum
 class FanMode(BaseEnum):
     """Fan modes for the machine."""
 
-    COOLING = 'cooling'
-    OFF = 'off'
+    COOLING = "cooling"
+    OFF = "off"
 
     def __invert__(self):
         if self == FanMode.OFF:

@@ -16,9 +16,9 @@ from .config_option import ConfigOption
 from .config_loader import ConfigLoader
 
 __all__ = [
-    'BaseConfig',
-    'ConfigLoader',
-    'RenderConfig',
-    'MecodeConfig',
-    'ConfigOption',
+    "BaseConfig",
+    "ConfigLoader",
+    "RenderConfig",
+    "MecodeConfig",
+    "ConfigOption",
 ]

@@ -18,11 +18,11 @@ from .rack_mode import RackMode
 from .tool_mode import ToolMode
 
 __all__ = [
-    'BedMode',
-    'CoolantMode',
-    'DirectWriteMode',
-    'FanMode',
-    'HeadMode',
-    'RackMode',
-    'ToolMode'
+    "BedMode",
+    "CoolantMode",
+    "DirectWriteMode",
+    "FanMode",
+    "HeadMode",
+    "RackMode",
+    "ToolMode",
 ]
