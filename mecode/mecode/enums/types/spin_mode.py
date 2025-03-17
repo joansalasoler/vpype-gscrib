@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
 class SpinMode(BaseEnum):
@@ -25,12 +25,3 @@ class SpinMode(BaseEnum):
     OFF = "off"
     CLOCKWISE = "clockwise"
     COUNTER = "counter"
-
-    def __invert__(self):
-        if self == SpinMode.CLOCKWISE:
-            return SpinMode.COUNTER
-
-        if self == SpinMode.COUNTER:
-            return SpinMode.CLOCKWISE
-
-        return self

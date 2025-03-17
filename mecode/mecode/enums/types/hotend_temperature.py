@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..base_enum import BaseEnum
-from ..units.temperature_units import TemperatureUnits
+from vpype_mecode.builder.enums import BaseEnum
+from vpype_mecode.builder.enums import TemperatureUnits
 
 
 class HotendTemperature(BaseEnum):

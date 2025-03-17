@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
 class TimeUnits(BaseEnum):

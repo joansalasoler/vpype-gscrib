@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import vpype
-from ..base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
 class LengthUnits(BaseEnum):

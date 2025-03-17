@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ..base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
 class PowerMode(BaseEnum):
@@ -25,12 +25,3 @@ class PowerMode(BaseEnum):
     OFF = "off"
     CONSTANT = "constant"
     DYNAMIC = "dynamic"
-
-    def __invert__(self):
-        if self == PowerMode.CONSTANT:
-            return PowerMode.DYNAMIC
-
-        if self == PowerMode.DYNAMIC:
-            return PowerMode.CONSTANT
-
-        return self

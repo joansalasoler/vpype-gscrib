@@ -25,8 +25,3 @@ class RackMode(BaseEnum):
     OFF = "off"
     MANUAL = "manual"
     AUTOMATIC = "automatic"
-
-    def __invert__(self):
-        if self == RackMode.MANUAL:
-            return RackMode.AUTOMATIC
-        return RackMode.MANUAL

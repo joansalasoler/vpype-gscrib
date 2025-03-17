@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from .gcode_builder import GBuilder
 from .core_builder import CoreGBuilder
-from .utils.point import Point
 
 __all__ = [
+    "GBuilder",
     "CoreGBuilder",
-    "Point",
 ]

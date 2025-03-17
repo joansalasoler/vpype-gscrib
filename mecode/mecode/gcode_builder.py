@@ -21,7 +21,7 @@ from typing import Any
 from typeguard import typechecked
 
 from vpype_mecode.builder.utils.point import Point
-from vpype_mecode.codes import gcode_table
+from vpype_mecode.builder.codes import gcode_table
 from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 from vpype_mecode.excepts import *

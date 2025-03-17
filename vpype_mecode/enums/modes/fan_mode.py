@@ -22,10 +22,5 @@ from vpype_mecode.builder.enums.base_enum import BaseEnum
 class FanMode(BaseEnum):
     """Fan modes for the machine."""
 
-    COOLING = "cooling"
     OFF = "off"
-
-    def __invert__(self):
-        if self == FanMode.OFF:
-            return FanMode.COOLING
-        return FanMode.OFF
+    COOLING = "cooling"

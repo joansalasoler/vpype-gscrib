@@ -25,8 +25,3 @@ class CoolantMode(BaseEnum):
     OFF = "off"
     MIST = "mist"
     FLOOD = "flood"
-
-    def __invert__(self):
-        if self == CoolantMode.MIST:
-            return CoolantMode.FLOOD
-        return CoolantMode.MIST
