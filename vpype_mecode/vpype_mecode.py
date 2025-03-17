@@ -38,7 +38,7 @@ from vpype_mecode.vpype_options import command_options
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
 from vpype_mecode.renderer import GBuilder, GRenderer
-from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
+from vpype_mecode.config import ConfigLoader, BuilderConfig, RenderConfig
 
 
 @vpype_cli.cli.command(
@@ -132,10 +132,10 @@ def _validate_document(document: Document):
             "It is required for the document to have a page size.")
 
 
-def _setup_mecode_config(params, renderer_config: RenderConfig) -> MecodeConfig:
+def _setup_mecode_config(params, renderer_config: RenderConfig) -> BuilderConfig:
     """Create and validate the Mecode configuration."""
 
-    mecode_config = MecodeConfig.model_validate(params)
+    mecode_config = BuilderConfig.model_validate(params)
     mecode_config.scale_lengths(renderer_config.length_units)
 
     return mecode_config

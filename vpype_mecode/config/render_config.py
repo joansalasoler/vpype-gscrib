@@ -24,6 +24,7 @@ import vpype as vp
 from pydantic import BaseModel, Field
 
 from vpype_mecode.enums import *
+from vpype_mecode.builder.enums import *
 from .base_config import BaseConfig
 
 

@@ -55,7 +55,7 @@ class AutoLevelingHead(StandardHead):
             ctx (GContext): The G-code generation context
         """
 
-        cx, cy, cz = ctx.g.axis
+        cx, cy, cz = ctx.g.position
         work_z = self._compute_work_z(ctx, cx, cy)
         plunge_offset = ctx.plunge_z - ctx.work_z
         plunge_z = work_z + plunge_offset

@@ -24,8 +24,8 @@ from click import Context, Option, Parameter, BadParameter
 from click.core import ParameterSource
 from vpype_cli import ChoiceType, LengthType
 
-from vpype_mecode.enums import LengthUnits
-from .mecode_config import MecodeConfig
+from vpype_mecode.builder.enums import LengthUnits
+from .builder_config import BuilderConfig
 from .render_config import RenderConfig
 
 
@@ -48,7 +48,7 @@ class ConfigOption(Option):
 
     _config_fields = (
         RenderConfig.model_fields |
-        MecodeConfig.model_fields
+        BuilderConfig.model_fields
     )
 
     def __init__(self, option_name: str, **kwargs):

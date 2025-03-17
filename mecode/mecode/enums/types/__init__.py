@@ -14,6 +14,7 @@ from .feed_mode import FeedMode
 from .halt_mode import HaltMode
 from .hotend_temperature import HotendTemperature
 from .plane import Plane
+from .positioning_mode import PositioningMode
 from .power_mode import PowerMode
 from .spin_mode import SpinMode
 
@@ -25,6 +26,7 @@ __all__ = [
     "HaltMode",
     "HotendTemperature",
     "Plane",
+    "PositioningMode",
     "PowerMode",
     "SpinMode",
 ]

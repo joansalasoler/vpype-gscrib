@@ -17,27 +17,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-from collections import namedtuple
-from typing import Optional
+from typing import Any
 from typeguard import typechecked
 
+from vpype_mecode.builder.utils.point import Point
 from vpype_mecode.codes import gcode_table
-from vpype_mecode.enums import BaseEnum
-from vpype_mecode.excepts import *
+from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
+from vpype_mecode.excepts import *
 
 from .gcode_state import GState
-from ..mecode import GMatrix
+from . import CoreGBuilder
 
 
-Position = namedtuple("Position", "x y z")
-
-
-class GBuilder(GMatrix):
+class GBuilder(CoreGBuilder):
     """G-code command generator for CNC machines and similar devices.
 
     A high-level G-code generator that provides methods for common CNC
-    operations. Extends `GMatrix` to handle coordinate transformations
+    operations. Extends `CoreGBuilder` to handle coordinate transformations
     and maintains internal state to prevent invalid operations and
     ensure proper sequencing of commands.
 
@@ -70,16 +67,6 @@ class GBuilder(GMatrix):
 
         return self._state
 
-    @property
-    def axis(self) -> Position:
-        """Get the current XYZ positions of the axis."""
-
-        return Position(
-            self.current_position["x"],
-            self.current_position["y"],
-            self.current_position["z"],
-        )
-
     @typechecked
     def select_units(self, length_units: LengthUnits) -> None:
         """Set the unit system for subsequent commands.
@@ -91,7 +78,7 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_length_units(length_units)
-        statement = self._get_gcode_from_table(length_units)
+        statement = self._get_statement(length_units)
         self.write(statement)
 
     @typechecked
@@ -105,7 +92,7 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_plane(plane)
-        statement = self._get_gcode_from_table(plane)
+        statement = self._get_statement(plane)
         self.write(statement)
 
     @typechecked
@@ -118,9 +105,9 @@ class GBuilder(GMatrix):
         >>> G90|G91
         """
 
+        self._distance_mode = mode
         self._state.set_distance_mode(mode)
-        self.is_relative = mode == DistanceMode.RELATIVE
-        statement = self._get_gcode_from_table(mode)
+        statement = self._get_statement(mode)
         self.write(statement)
 
     @typechecked
@@ -134,7 +121,7 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_extrusion_mode(mode)
-        statement = self._get_gcode_from_table(mode)
+        statement = self._get_statement(mode)
         self.write(statement)
 
     @typechecked
@@ -148,7 +135,7 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_feed_mode(mode)
-        statement = self._get_gcode_from_table(mode)
+        statement = self._get_statement(mode)
         self.write(statement)
 
     @typechecked
@@ -172,7 +159,8 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_tool_power(power)
-        self.write(f"S{power}")
+        statement = self.formatter.format_parameters({ "S": power })
+        self.write(statement)
 
     @typechecked
     def set_fan_speed(self, speed: int, fan_number: int = 0) -> None:
@@ -194,9 +182,9 @@ class GBuilder(GMatrix):
         if speed < 0 or speed > 255:
             raise ValueError(f"Invalid fan speed '{speed}'.")
 
-        params = f"P{fan_number} S{speed}"
+        params = { "P": fan_number, "S": speed }
         mode = FanMode.COOLING if speed > 0 else FanMode.OFF
-        statement = self._get_gcode_from_table(mode, params)
+        statement = self._get_statement(mode, params)
         self.write(statement)
 
     @typechecked
@@ -211,7 +199,7 @@ class GBuilder(GMatrix):
         """
 
         bed_units = BedTemperature.from_units(units)
-        statement = self._get_gcode_from_table(bed_units, f"S{temp}")
+        statement = self._get_statement(bed_units, { "S": temp })
         self.write(statement)
 
     @typechecked
@@ -226,10 +214,12 @@ class GBuilder(GMatrix):
         """
 
         hotend_units = HotendTemperature.from_units(units)
-        statement = self._get_gcode_from_table(hotend_units, f"S{temp}")
+        statement = self._get_statement(hotend_units, { "S": temp })
         self.write(statement)
 
-    def set_axis_position(self, x=None, y=None, z=None, **kwargs):
+    def set_axis_position(self,
+        x: float | None = None, y: float | None = None,
+        z: float | None = None, **kwargs : Any) -> None:
         """Set the current position without moving the head.
 
         This command changes the machine's coordinate system by setting
@@ -246,7 +236,13 @@ class GBuilder(GMatrix):
         >>> G92 [X<x>] [Y<y>] [Z<z>] [<axis><value> ...]
         """
 
-        super(GMatrix, self).set_axis_position(x, y, z, **kwargs)
+        mode = PositioningMode.OFFSET
+        params = { "x": x, "y": y, "z": z, **kwargs }
+        statement = self._get_statement(mode, params)
+
+        self._current_params.update(kwargs)
+        self._current_axes = Point(x, y, z)
+        self.write(statement)
 
     @typechecked
     def sleep(self, units: TimeUnits, seconds: float) -> None:
@@ -265,8 +261,8 @@ class GBuilder(GMatrix):
         if seconds < 0.001:
             raise ValueError(f"Invalid sleep time '{seconds}'.")
 
-        params = f"P{units.scale(seconds)}"
-        statement = self._get_gcode_from_table(units, params)
+        params = { "P": units.scale(seconds) }
+        statement = self._get_statement(units, params)
         self.write(statement)
 
     @typechecked
@@ -294,9 +290,10 @@ class GBuilder(GMatrix):
             raise ValueError("Not a valid spin mode.")
 
         self._state.set_spin_mode(mode, speed)
-        mode_statement = self._get_gcode_from_table(mode)
-        statement = f"S{speed} {mode_statement}"
-        self.write(statement, resp_needed=True)
+        params = self.formatter.format_parameters({ "S": speed })
+        mode_statement = self._get_statement(mode)
+        statement = f"{params} {mode_statement}"
+        self.write(statement, requires_response=True)
 
     def tool_off(self) -> None:
         """Deactivate the current tool.
@@ -305,8 +302,8 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_spin_mode(SpinMode.OFF)
-        statement = self._get_gcode_from_table(SpinMode.OFF)
-        self.write(statement, resp_needed=True)
+        statement = self._get_statement(SpinMode.OFF)
+        self.write(statement, requires_response=True)
 
     @typechecked
     def power_on(self, mode: PowerMode, power: float) -> None:
@@ -334,9 +331,10 @@ class GBuilder(GMatrix):
             raise ValueError("Not a valid power mode.")
 
         self._state.set_power_mode(mode, power)
-        mode_statement = self._get_gcode_from_table(mode)
-        statement = f"S{power} {mode_statement}"
-        self.write(statement, resp_needed=True)
+        params = self.formatter.format_parameters({ "S": power })
+        mode_statement = self._get_statement(mode)
+        statement = f"{params} {mode_statement}"
+        self.write(statement, requires_response=True)
 
     def power_off(self) -> None:
         """Power off the current tool.
@@ -345,8 +343,8 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_power_mode(PowerMode.OFF)
-        statement = self._get_gcode_from_table(PowerMode.OFF)
-        self.write(statement, resp_needed=True)
+        statement = self._get_statement(PowerMode.OFF)
+        self.write(statement, requires_response=True)
 
     @typechecked
     def tool_change(self, mode: RackMode, tool_number: int) -> None:
@@ -371,10 +369,10 @@ class GBuilder(GMatrix):
             raise ValueError("Not a valid rack mode.")
 
         self._state.set_rack_mode(mode, tool_number)
+        change_statement = self._get_statement(mode)
         tool_digits = 2 ** math.ceil(math.log2(len(str(tool_number))))
-        change_statement = self._get_gcode_from_table(mode)
         statement = f"T{tool_number:0{tool_digits}} {change_statement}"
-        self.write(statement, resp_needed=True)
+        self.write(statement, requires_response=True)
 
     @typechecked
     def coolant_on(self, mode: CoolantMode) -> None:
@@ -393,8 +391,8 @@ class GBuilder(GMatrix):
             raise ValueError("Not a valid coolant mode.")
 
         self._state.set_coolant_mode(mode)
-        statement = self._get_gcode_from_table(mode)
-        self.write(statement, resp_needed=True)
+        statement = self._get_statement(mode)
+        self.write(statement, requires_response=True)
 
     def coolant_off(self) -> None:
         """Deactivate coolant system.
@@ -403,8 +401,8 @@ class GBuilder(GMatrix):
         """
 
         self._state.set_coolant_mode(CoolantMode.OFF)
-        statement = self._get_gcode_from_table(CoolantMode.OFF)
-        self.write(statement, resp_needed=True)
+        statement = self._get_statement(CoolantMode.OFF)
+        self.write(statement, requires_response=True)
 
     @typechecked
     def halt_program(self, mode: HaltMode, **kwargs) -> None:
@@ -425,9 +423,8 @@ class GBuilder(GMatrix):
             raise ValueError("Not a valid halt mode.")
 
         self._state.set_halt_mode(mode)
-        params = self._get_params_string_from_dict(kwargs)
-        statement = self._get_gcode_from_table(mode, params)
-        self.write(statement, resp_needed=True)
+        statement = self._get_statement(mode, kwargs)
+        self.write(statement, requires_response=True)
 
     @typechecked
     def emergency_halt(self, message: str) -> None:
@@ -454,122 +451,22 @@ class GBuilder(GMatrix):
         self.comment(f"Emergency halt: {message}")
         self.halt_program(HaltMode.PAUSE)
 
-    def rapid(self, x=None, y=None, z=None, **kwargs):
-        """Execute a rapid move to the specified location.
-
-        Performs a maximum-speed, uncoordinated move where each axis
-        moves independently at its maximum rate to reach the target
-        position. This is typically used for non-cutting movements like
-        positioning or tool changes.
-
-        Args:
-            x (float, optional): Target X-axis position
-            y (float, optional): Target Y-axis position
-            z (float, optional): Target Z-axis position
-            **kwargs: Additional parameters
-
-        >>> G0 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
-        """
-
-        super().rapid(x, y, z, **kwargs)
-
-    def move(self, x=None, y=None, z=None, rapid=False, **kwargs):
-        """Execute a controlled linear move to the specified location.
-
-        Performs a coordinated linear movement at the current feed rate.
-        All axes will arrive at their target positions simultaneously,
-        following a straight line path.
-
-        Args:
-            x (float, optional): Target X-axis position
-            y (float, optional): Target Y-axis position
-            z (float, optional): Target Z-axis position
-            **kwargs: Additional parameters
-
-
-        >>> G1 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
-        """
-
-        super().move(x, y, z, rapid=rapid, **kwargs)
-
-    def rapid_absolute(self, x=None, y=None, z=None, **kwargs) -> None:
-        """Execute a rapid positioning move to absolute coordinates.
-
-        Performs a maximum-speed move to the specified absolute
-        coordinates, bypassing any active coordinate system
-        transformations. This method temporarily switches to absolute
-        positioning mode if relative mode is active.
-
-        Args:
-            x (float, optional): Target X-axis position
-            y (float, optional): Target Y-axis position
-            z (float, optional): Target Z-axis position
-            **kwargs: Additional parameters
-
-        >>> G0 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
-        """
-
-        kwargs["rapid"] = True
-        self.move_absolute(x, y, z, **kwargs)
-
-    def move_absolute(self, x=None, y=None, z=None, **kwargs) -> None:
-        """Execute a controlled move to absolute coordinates.
-
-        Performs a coordinated linear move to the specified absolute
-        coordinates, bypassing any active coordinate system
-        transformations. This method temporarily switches to absolute
-        positioning mode if relative mode is active.
-
-        Args:
-            x (float, optional): Target X-axis position
-            y (float, optional): Target Y-axis position
-            z (float, optional): Target Z-axis position
-            **kwargs: Additional parameters
-
-        >>> G1 [X<x>] [Y<y>] [Z<z>] [<param><value> ...]
-        """
-
-        if self.is_relative == False:
-            super(GMatrix, self).move(x, y, z, **kwargs)
-        else:
-            self.set_distance_mode(DistanceMode.ABSOLUTE)
-            super(GMatrix, self).move(x, y, z, **kwargs)
-            self.set_distance_mode(DistanceMode.RELATIVE)
-
-    def write(self, statement_in: str, resp_needed=False):
+    def write(self, statement, requires_response=False):
         """Write a G-code statement to the G-code output.
 
         Args:
-            statement_in (str): G-code statement to write
-            resp_needed (bool): Indicates if a response is expected
+            statement (str): G-code statement to write
+            requires_response (bool): If a response is expected
         """
 
         self._state.set_halt_mode(HaltMode.OFF)
-        super(GMatrix, self).write(statement_in, resp_needed)
+        super().write(statement, requires_response)
 
-    @typechecked
-    def comment(self, message: str) -> None:
-        """Write a comment to the G-code output.
-
-        Args:
-            message (str): Text of the comment
-
-        >>> ; <message>
-        """
-
-        comment = self.format_comment(message)
-        self.write(comment)
-
-    def _get_params_string_from_dict(self, params: dict) -> str:
-        """Converts a dictionary to a G-Code parameters statement"""
-
-        return " ".join(f"{k}{v}" for k, v in params.items())
-
-    def _get_gcode_from_table(self, value: BaseEnum, params: Optional[str] = None) -> str:
+    def _get_statement(self, value: BaseEnum, params: dict = {}) -> str:
         """Generate a G-code statement from the codes table."""
 
         entry = gcode_table.get_entry(value)
-        comment = self.format_comment(entry.description)
-        args = f" {params}" if params else ""
+        command = self.formatter.format_command(entry.instruction, params)
+        comment = self.formatter.format_comment(entry.description)
 
-        return f"{entry.instruction}{args} {comment}"
+        return f"{command} {comment}"

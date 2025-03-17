@@ -22,7 +22,7 @@ from enum import Enum
 from typing import Dict, Any
 from typeguard import typechecked
 
-from vpype_mecode.enums import LengthUnits
+from vpype_mecode.builder.enums import LengthUnits
 
 
 @dataclass

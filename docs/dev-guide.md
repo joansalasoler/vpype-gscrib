@@ -168,7 +168,7 @@ The following steps outline how to add a new G-code command.
 2. Make sure the enum extends `BaseEnum`.
 
 ```python
-from vpype_mecode.enums import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 class LengthUnits(BaseEnum):
     INCHES = 'in'
@@ -191,13 +191,13 @@ gcode_table = GCodeTable((
 
 1. Open `vpype_mecode/renderer/gcode_builder.py`.
 2. Modify `GBuilder` to support the new command by adding a new method.
-3. Use `self._get_gcode_from_table()` to build the G-code statement.
+3. Use `self._get_statement()` to build the G-code statement.
 4. Write the G-code statement using `self.write(statement)`.
 
 ```python
 @typechecked
 def select_units(self, length_units: LengthUnits) -> None:
-    statement = self._get_gcode_from_table(length_units)
+    statement = self._get_statement(length_units)
     self.write(statement)
 ```
 

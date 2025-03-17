@@ -18,7 +18,7 @@
 
 from typing import Tuple, Type
 from typeguard import typechecked
-from vpype_mecode.enums import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 from .gcode_entry import GCodeEntry
 

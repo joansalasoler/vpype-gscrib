@@ -21,10 +21,27 @@ Built-in enums to G-Code mappings.
 """
 
 from vpype_mecode.enums import *
+from vpype_mecode.builder.enums import *
 from .gcode_table import GCodeEntry, GCodeTable
 
 
 gcode_table = GCodeTable((
+
+    # ------------------------------------------------------------------
+    # Positioning
+    # ------------------------------------------------------------------
+
+    GCodeEntry(PositioningMode.RAPID,
+        "G00", "Rapid positioning"
+    ),
+
+    GCodeEntry(PositioningMode.LINEAR,
+        "G01", "Linear interpolation"
+    ),
+
+    GCodeEntry(PositioningMode.OFFSET,
+        "G92", "Set axis position"
+    ),
 
     # ------------------------------------------------------------------
     # Length Units

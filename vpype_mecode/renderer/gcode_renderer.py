@@ -26,9 +26,10 @@ from typeguard import typechecked
 from vpype import Document, LineCollection
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.processor import DocumentRenderer
+from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
-from .gcode_builder import GBuilder
+from vpype_mecode.builder.gcode_builder import GBuilder
 from .gcode_context import GContext
 from .fans import FanFactory
 from .heads import HeadFactory
@@ -149,7 +150,7 @@ class GRenderer(DocumentRenderer):
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 
-        self._g.reflect(0)
+        # self._g.reflect(0)
         self._g.translate(0, height)
         self._g.scale(length_units.scale_factor)
 
@@ -228,7 +229,7 @@ class GRenderer(DocumentRenderer):
         # map is available, the segment is traced as is.
 
         ctx = self._context
-        cx, cy, cz = self._g.axis
+        cx, cy, cz = self._g.position
 
         for x, y, z in ctx.height_map.sample_path([cx, cy, x, y])[1:]:
             tool_params = self._tool.get_trace_params(ctx, x, y)
@@ -378,7 +379,8 @@ class GRenderer(DocumentRenderer):
         for key, value in document_values.items():
             self._g.comment(f"@set {key} = {value}")
 
-    def _write_layer_config_info(self, current_ctx: GContext, previous_ctx: GContext):
+    def _write_layer_config_info(self,
+        current_ctx: GContext, previous_ctx: GContext):
         """Write configuration changes as G-code comments."""
 
         document_ctx = self._document_context
@@ -403,4 +405,5 @@ class GRenderer(DocumentRenderer):
         """Write an include file as G-code comments."""
 
         with open(path, encoding="utf-8") as f:
-            self._g._write_out(lines=f.readlines())
+            for line in f.readlines():
+                self._g.write(line)

@@ -28,13 +28,16 @@ from vpype_cli import TextType, IntRangeType, FloatRangeType
 from vpype_cli import IntegerType, LengthType, PathType
 
 from vpype_mecode.config import ConfigOption
+from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
 
 command_options = (
+
     # ------------------------------------------------------------------
     # Global Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="output",
         type=PathType(dir_okay=False, writable=True),
@@ -52,9 +55,11 @@ command_options = (
         to the document and each of its layers.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Renderer Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="length-units",
         type=LengthUnits,
@@ -247,9 +252,11 @@ command_options = (
         operations, such as tool changes and program completion.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Transform Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="height-map-path",
         type=PathType(exists=True, dir_okay=False, resolve_path=True),
@@ -278,9 +285,11 @@ command_options = (
         value will be filtered out. Measured in work units.
         """,
     ),
+
     # ------------------------------------------------------------------
     # 3D Printing Settings
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="layer-height",
         type=LengthType(min=0.001),
@@ -322,9 +331,11 @@ command_options = (
         units per minute.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Output Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="header-gcode",
         hidden=True,
@@ -343,9 +354,11 @@ command_options = (
         end of the generated G-Code program.
         """,
     ),
+
     # ------------------------------------------------------------------
     # Direct Writing to Device (mecode)
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="direct-write-mode",
         type=DirectWriteMode,
@@ -387,9 +400,11 @@ command_options = (
         the machine when using direct writing.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Output Options (mecode)
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="decimal-places",
         type=IntRangeType(min=0),
@@ -415,6 +430,7 @@ command_options = (
         Use 'os' to match your system's default.
         """,
     ),
+
     # ------------------------------------------------------------------
     # Axis Naming (mecode)
     # ------------------------------------------------------------------
@@ -439,37 +455,5 @@ command_options = (
         Custom label for the machine's Z axis in the generated G-Code.
         """,
     ),
-    ConfigOption(
-        option_name="i-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's I axis in the generated G-Code.
-        """,
-    ),
-    ConfigOption(
-        option_name="j-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's J axis in the generated G-Code.
-        """,
-    ),
-    ConfigOption(
-        option_name="k-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's K axis in the generated G-Code.
-        """,
-    ),
-    # ------------------------------------------------------------------
-    # Unsupported Mecode Options (mecode)
-    # ------------------------------------------------------------------
-    ConfigOption(
-        option_name="aerotech-include",
-        hidden=True,
-        is_flag=True,
-        help="""
-        Adds Aerotech-specific functions and variable definitions to the
-        output G-Code, if applicable.
-        """,
-    ),
+
 )

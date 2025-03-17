@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 from dataclasses import FrozenInstanceError
 from vpype_mecode.renderer import GBuilder, GContext
 from vpype_mecode.config import RenderConfig
-from vpype_mecode.enums import LengthUnits
+from vpype_mecode.builder.enums import LengthUnits
 from vpype_mecode.utils import BaseHeightMap
 
 

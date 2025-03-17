@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from typeguard import typechecked
-from vpype_mecode.enums import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
 class GCodeEntry:

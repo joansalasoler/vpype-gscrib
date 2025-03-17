@@ -11,7 +11,7 @@ complete G-code programs.
 
 from .bed_mode import BedMode
 from .coolant_mode import CoolantMode
-from .direct_write_mode import DirectWriteMode
+from vpype_mecode.builder.enums.modes.direct_write_mode import DirectWriteMode
 from .fan_mode import FanMode
 from .head_mode import HeadMode
 from .rack_mode import RackMode

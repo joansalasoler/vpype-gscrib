@@ -11,7 +11,7 @@ command-line inputs and TOML files.
 
 from .base_config import BaseConfig
 from .render_config import RenderConfig
-from .mecode_config import MecodeConfig
+from .builder_config import BuilderConfig
 from .config_option import ConfigOption
 from .config_loader import ConfigLoader
 
@@ -19,6 +19,6 @@ __all__ = [
     "BaseConfig",
     "ConfigLoader",
     "RenderConfig",
-    "MecodeConfig",
+    "BuilderConfig",
     "ConfigOption",
 ]

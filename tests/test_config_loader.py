@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 from vpype import Document
 
 from vpype_mecode.config import ConfigOption, ConfigLoader
-from vpype_mecode.enums import LengthUnits, TimeUnits
+from vpype_mecode.builder.enums import LengthUnits, TimeUnits
 
 
 # --------------------------------------------------------------------

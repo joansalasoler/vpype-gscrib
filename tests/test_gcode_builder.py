@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
 from vpype_mecode.renderer import GBuilder
+from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
 
@@ -17,8 +18,8 @@ def mock_write():
     with patch.object(GBuilder, 'write') as mock:
         mock.last_statement = None
 
-        def side_effect(statement_in, resp_needed = False):
-            mock.last_statement = statement_in
+        def side_effect(statement, requires_response = False):
+            mock.last_statement = statement
 
         mock.side_effect = side_effect
 
@@ -54,7 +55,7 @@ def test_set_distance_mode_relative(gbuilder, mock_write):
 def test_set_tool_power(gbuilder, mock_write):
     gbuilder.set_tool_power(1000.0)
     assert gbuilder.state.current_tool_power == 1000.0
-    assert mock_write.last_statement.startswith('S1000.0')
+    assert mock_write.last_statement.startswith('S1000')
 
 def test_set_tool_power_invalid(gbuilder):
     with pytest.raises(ValueError):
@@ -77,7 +78,7 @@ def test_tool_on(gbuilder, mock_write):
     gbuilder.tool_on(SpinMode.CLOCKWISE, 1000.0)
     assert gbuilder.state.current_spin_mode == SpinMode.CLOCKWISE
     assert gbuilder.state.current_tool_power == 1000.0
-    assert mock_write.last_statement.startswith('S1000.0 M03')
+    assert mock_write.last_statement.startswith('S1000 M03')
 
 def test_tool_on_invalid_mode(gbuilder):
     with pytest.raises(ValueError):
@@ -93,7 +94,7 @@ def test_power_on(gbuilder, mock_write):
     gbuilder.power_on(PowerMode.CONSTANT, 75.0)
     assert gbuilder.state.current_power_mode == PowerMode.CONSTANT
     assert gbuilder.state.current_tool_power == 75.0
-    assert mock_write.last_statement.startswith('S75.0')
+    assert mock_write.last_statement.startswith('S75')
 
 def test_power_off(gbuilder):
     gbuilder.power_on(PowerMode.CONSTANT, 75.0)
@@ -128,9 +129,9 @@ def test_set_bed_temperature(gbuilder, mock_write):
 
 def test_current_axis_position(gbuilder):
     gbuilder.move(x=10, y=20, z=30)
-    assert gbuilder.axis.x == 10
-    assert gbuilder.axis.y == 20
-    assert gbuilder.axis.z == 30
+    assert gbuilder.position.x == 10
+    assert gbuilder.position.y == 20
+    assert gbuilder.position.z == 30
 
 def test_emergency_halt(gbuilder, mock_write):
     gbuilder.emergency_halt('Test emergency')

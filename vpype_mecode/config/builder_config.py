@@ -19,15 +19,14 @@
 import dataclasses
 from typing import Optional
 
-import vpype as vp
 from pydantic import BaseModel, Field
 
-from vpype_mecode.enums import DirectWriteMode
+from vpype_mecode.builder.enums import DirectWriteMode
 from .base_config import BaseConfig
 
 
 @dataclasses.dataclass
-class MecodeConfig(BaseModel, BaseConfig):
+class BuilderConfig(BaseModel, BaseConfig):
     """
     Configuration settings for the `mecode` library.
 
@@ -43,16 +42,11 @@ class MecodeConfig(BaseModel, BaseConfig):
     """
 
     # Predefined settings (do not change)
-    setup: bool = Field(False)
     absolute: bool = Field(True)
     print_lines: bool | str = Field("auto")
-    extrude: bool = Field(False)
 
     # Output settings
     output: Optional[str] = Field(None)
-    header: Optional[str] = Field(None)
-    footer: Optional[str] = Field(None)
-    aerotech_include: bool = Field(False)
     decimal_places: int = Field(5, ge=0)
     comment_symbols: str = Field("(")
     line_endings: str = Field("os")
@@ -68,21 +62,3 @@ class MecodeConfig(BaseModel, BaseConfig):
     x_axis: str = Field("X")
     y_axis: str = Field("Y")
     z_axis: str = Field("Z")
-    i_axis: str = Field("I")
-    j_axis: str = Field("J")
-    k_axis: str = Field("K")
-
-    # Extrusion parameters (currently unused)
-    filament_diameter: float = Field(vp.convert_length("1.75mm"))
-    layer_height: Optional[float] = Field(vp.convert_length("0.2mm"))
-    extrusion_width: Optional[float] = Field(vp.convert_length("0.35mm"))
-    extrusion_multiplier: float = Field(1.0)
-
-    # Vpype's default unit of measure is pixels, so we may need to
-    # convert some values to work units (millimeters or inches).
-
-    _fields_with_px_units = {
-        "extrusion_width": "px",
-        "filament_diameter": "px",
-        "layer_height": "px",
-    }

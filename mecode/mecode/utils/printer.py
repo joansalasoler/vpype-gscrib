@@ -30,10 +30,10 @@ except NameError:
         return isinstance(s, str)
 
     def encode2To3(s):
-        return bytes(s, "UTF-8")
+        return bytes(s, "utf-8")
 
     def decode2To3(s):
-        return s.decode("UTF-8")
+        return s.decode("utf-8")
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))

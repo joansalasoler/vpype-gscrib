@@ -22,6 +22,7 @@ from typeguard import typechecked
 
 from vpype_mecode.excepts import *
 from vpype_mecode.enums import *
+from vpype_mecode.builder.enums import *
 
 
 class GState:
@@ -49,14 +50,19 @@ class GState:
         self._is_tool_active: bool = False
 
     @property
+    def is_coolant_active(self) -> bool:
+        """Check if coolant is currently active."""
+        return self._is_coolant_active
+
+    @property
     def is_tool_active(self) -> bool:
         """Check if tool is currently active."""
         return self._is_tool_active
 
     @property
-    def is_coolant_active(self) -> bool:
-        """Check if coolant is currently active."""
-        return self._is_coolant_active
+    def is_relative(self) -> bool:
+        """Check if relative distance mode is active."""
+        return self._current_distance_mode == DistanceMode.RELATIVE
 
     @property
     def current_tool_number(self) -> int:
