@@ -1,5 +1,5 @@
 import pytest
-from vpype_mecode.excepts import ToolStateError, CoolantStateError
+from vpype_mecode.builder.excepts import ToolStateError, CoolantStateError
 from vpype_mecode.renderer import GState
 from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
