@@ -8,11 +8,16 @@ but they are interesting to consider.
 
 Add more test cases.
 
-## Simplify and Improve Mecode
+## Known Bugs (a.k.a. Hidden Features)
 
-While the Mecode library is great, it has some options that I feel
-should be removed or better implemented as machine components. For
-example, extrusion, filament and layer height settings.
+The heightmap is applied even when no component requires it, causing
+unnecessary stroke splits if a heightmap is defined.
+
+Moving the head to "park for service" is unnecessary when tool swapping
+is disabled.
+
+Prevent users from setting safe_z lower than work_z and plunge_z when
+using heightmaps to avoid plunging below the material.
 
 ## Multipass Strategies
 
@@ -21,22 +26,17 @@ ideal for Z-height control. A better approach would allow roughing and
 finishing passes with different settings. Currently, this can be done by
 duplicating layers manually, but it's not convenient.
 
-## Heightmap Tool Compensation
-
-While currently used for Z-height adjustment, future implementations
-could use height maps to modulate tool power instead. For example, to
-adjust a laser’s intensity or control extrusion rates.
-
 ## Z Height Adjustment by Pen Thickness
 
 Vpype supports setting pen thickness. This could be used to adjust
 Z height automatically for machines without built-in pressure control.
+This can be handled by a heightmap generator.
 
 ## Artistic Painting with Acrylic Markers
 
 A head mode that adjusts pressure (Z height) and speed based on stroke
 type, angle, length, and randomness. Would create a more human-like
-artistic effect.
+artistic effect. This can be handled by a heightmap generator.
 
 ## Custom Brush Strokes with AI
 
