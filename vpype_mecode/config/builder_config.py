@@ -37,8 +37,8 @@ class BuilderConfig(BaseModel, BaseConfig):
 
     Example:
         >>> params = { 'output': 'output.gcode' }
-        >>> mecode_config = MecodeConfig.model_validate(params)
-        >>> print(mecode_config.output)
+        >>> builder_config = BuilderConfig.model_validate(params)
+        >>> print(builder_config.output)
     """
 
     # Predefined settings (do not change)

@@ -229,8 +229,8 @@ Here's an example of generating G-code with laser power modulation:
 vpype \
   read drawing.svg \
   mecode \
-    --power-type=dynamic \
     --tool-type=adaptive-beam \
+    --power-mode=dynamic \
     --height-map-path=heightmap.png \
     --height-map-scale=100.0 \
     --output=output.gcode
@@ -238,8 +238,8 @@ vpype \
 
 **Key Options Explained**:
 
-* **--power-type=dynamic**: Dynamically adjust laser power.
 * **--tool-type=adaptive-beam**: Enable heightmap to control laser power.
+* **--power-mode=dynamic**: Dynamically adjust laser power.
 * **--height-map-scale=100**: Scale factor for power adjustments
 
 By leveraging this technique, you can transform photographs into detailed

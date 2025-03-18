@@ -87,8 +87,9 @@ vpype-mecode/
 │   ├── __init__.py       # Package initialization
 │   ├── vpype_mecode.py   # Command line interface (CLI)
 │   ├── vpype_options.py  # Command line options
+│   ├── builder           # Modified Mecode library
+│   ├── renderer          # Generates G-code from documents
 │   └── ...               # Other module files
-├── mecode/               # Modified Mecode library
 ├── tests/                # Tests directory
 └── docs/                 # Documentation builder
 ```
@@ -164,7 +165,7 @@ The following steps outline how to add a new G-code command.
 
 **Define the Command:**
 
-1. Create a new enum for command inside `vpype_mecode/enums/`.
+1. Create a new enum for command inside `vpype_mecode/builder/enums/`.
 2. Make sure the enum extends `BaseEnum`.
 
 ```python

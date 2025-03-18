@@ -63,7 +63,7 @@ vector graphics and automated manufacturing.
 
    Home <self>
    User Guide <user-guide>
-   Machine Modes <machine-modes>
+   Machine Components <machine-modes>
    Development Guide <dev-guide>
    Command Line Interface <cli>
    Configuration Template <config>
