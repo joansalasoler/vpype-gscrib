@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-G-code generation utilities.
+Heightmap implementations for G-code generation.
 """
 
 from .base_heightmap import BaseHeightMap

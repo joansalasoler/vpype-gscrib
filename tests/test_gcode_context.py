@@ -1,10 +1,10 @@
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 from dataclasses import FrozenInstanceError
 from vpype_mecode.renderer import GBuilder, GContext
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.builder.enums import LengthUnits
-from vpype_mecode.utils import BaseHeightMap
+from vpype_mecode.heightmaps import BaseHeightMap
 
 
 # --------------------------------------------------------------------

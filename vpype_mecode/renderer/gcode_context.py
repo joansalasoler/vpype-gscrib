@@ -21,7 +21,7 @@ from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
 from vpype_mecode.builder.gcode_builder import GBuilder
 from vpype_mecode.config import RenderConfig
-from vpype_mecode.utils import BaseHeightMap, FlatHeightMap, RasterHeightMap
+from vpype_mecode.heightmaps import BaseHeightMap, FlatHeightMap, RasterHeightMap
 from vpype_mecode.enums import *
 
 

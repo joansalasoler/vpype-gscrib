@@ -84,6 +84,7 @@ API Reference
    vpype_mecode.config
    vpype_mecode.enums
    vpype_mecode.excepts
+   vpype_mecode.heightmaps
    vpype_mecode.processor
    vpype_mecode.builder
    vpype_mecode.builder.codes
@@ -98,4 +99,3 @@ API Reference
    vpype_mecode.renderer.heads
    vpype_mecode.renderer.racks
    vpype_mecode.renderer.tools
-   vpype_mecode.utils
