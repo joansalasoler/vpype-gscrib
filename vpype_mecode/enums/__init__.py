@@ -10,18 +10,18 @@ are stored in the `vpype_mecode.enums.codes_table`. The `GBuilder` class
 uses this table to create the appropriate G-code statements.
 """
 
-from .modes import BedMode
-from .modes import CoolantMode
-from .modes import FanMode
-from .modes import HeadMode
-from .modes import RackMode
-from .modes import ToolMode
+from .types import BedType
+from .types import CoolantType
+from .types import FanType
+from .types import HeadType
+from .types import RackType
+from .types import ToolType
 
 __all__ = [
-    "BedMode",
-    "CoolantMode",
-    "FanMode",
-    "HeadMode",
-    "RackMode",
-    "ToolMode",
+    "BedType",
+    "CoolantType",
+    "FanType",
+    "HeadType",
+    "RackType",
+    "ToolType",
 ]

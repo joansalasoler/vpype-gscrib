@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import CoolantMode
+from vpype_mecode.builder.enums import CoolantMode
 from vpype_mecode.renderer.gcode_context import GContext
 from .base_coolant import BaseCoolant
 

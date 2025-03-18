@@ -103,12 +103,12 @@ class GRenderer(DocumentRenderer):
         context = self._ctx_queue[0]
 
         self._context = context
-        self._head = HeadFactory.create(context.head_mode)
-        self._tool = ToolFactory.create(context.tool_mode)
-        self._coolant = CoolantFactory.create(context.coolant_mode)
-        self._rack = RackFactory.create(context.rack_mode)
-        self._bed = BedFactory.create(context.bed_mode)
-        self._fan = FanFactory.create(context.fan_mode)
+        self._head_type = HeadFactory.create(context.head_type)
+        self._tool_type = ToolFactory.create(context.tool_type)
+        self._coolant_type = CoolantFactory.create(context.coolant_type)
+        self._rack_type = RackFactory.create(context.rack_type)
+        self._bed_type = BedFactory.create(context.bed_type)
+        self._fan_type = FanFactory.create(context.fan_type)
         self._ctx_queue.rotate(-1)
 
         return context
@@ -150,11 +150,11 @@ class GRenderer(DocumentRenderer):
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 
-        # self._g.reflect(0)
+        self._g.reflect(0)
         self._g.translate(0, height)
         self._g.scale(length_units.scale_factor)
 
-        self._bed.turn_on(self._context)
+        self._bed_type.turn_on(self._context)
 
     @typechecked
     def begin_layer(self, layer: LineCollection):
@@ -178,14 +178,14 @@ class GRenderer(DocumentRenderer):
         x, y = self._first_point_of_path(first_path)
         self._write_layer_header(layer)
 
-        self._head.park_for_service(self._context)
-        self._rack.change_tool(self._context)
+        self._head_type.park_for_service(self._context)
+        self._rack_type.change_tool(self._context)
 
-        self._head.safe_retract(self._context)
-        self._head.travel_to(self._context, x, y)
-        self._tool.activate(self._context)
-        self._coolant.turn_on(self._context)
-        self._fan.turn_on(self._context)
+        self._head_type.safe_retract(self._context)
+        self._head_type.travel_to(self._context, x, y)
+        self._tool_type.activate(self._context)
+        self._coolant_type.turn_on(self._context)
+        self._fan_type.turn_on(self._context)
 
     @typechecked
     def begin_path(self, path: array):
@@ -205,10 +205,10 @@ class GRenderer(DocumentRenderer):
 
         x, y = self._first_point_of_path(path)
 
-        self._head.retract(self._context)
-        self._head.travel_to(self._context, x, y)
-        self._head.plunge(self._context)
-        self._tool.power_on(self._context)
+        self._head_type.retract(self._context)
+        self._head_type.travel_to(self._context, x, y)
+        self._head_type.plunge(self._context)
+        self._tool_type.power_on(self._context)
 
     @typechecked
     def trace_segment(self, path: array, x: float, y: float):
@@ -232,8 +232,8 @@ class GRenderer(DocumentRenderer):
         cx, cy, cz = self._g.position
 
         for x, y, z in ctx.height_map.sample_path([cx, cy, x, y])[1:]:
-            tool_params = self._tool.get_trace_params(ctx, x, y)
-            self._head.trace_to(ctx, x, y, tool_params)
+            tool_params = self._tool_type.get_trace_params(ctx, x, y)
+            self._head_type.trace_to(ctx, x, y, tool_params)
 
     @typechecked
     def end_path(self, path: array):
@@ -249,8 +249,8 @@ class GRenderer(DocumentRenderer):
             path (array): Path being processed
         """
 
-        self._tool.power_off(self._context)
-        self._head.retract(self._context)
+        self._tool_type.power_off(self._context)
+        self._head_type.retract(self._context)
 
     @typechecked
     def end_layer(self, layer: LineCollection):
@@ -267,10 +267,10 @@ class GRenderer(DocumentRenderer):
             layer (LineCollection): Layer being processed
         """
 
-        self._head.safe_retract(self._context)
-        self._tool.deactivate(self._context)
-        self._fan.turn_off(self._context)
-        self._coolant.turn_off(self._context)
+        self._head_type.safe_retract(self._context)
+        self._tool_type.deactivate(self._context)
+        self._fan_type.turn_off(self._context)
+        self._coolant_type.turn_off(self._context)
 
     @typechecked
     def end_document(self, document: Document):
@@ -288,8 +288,8 @@ class GRenderer(DocumentRenderer):
         """
 
         self._context = self._document_context
-        self._bed.turn_off(self._context)
-        self._head.park_for_service(self._context)
+        self._bed_type.turn_off(self._context)
+        self._head_type.park_for_service(self._context)
 
         self._write_user_footer()
         self._g.halt_program(HaltMode.END_WITH_RESET)

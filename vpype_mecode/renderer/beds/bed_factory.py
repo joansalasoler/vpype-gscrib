@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import BedMode
+from vpype_mecode.enums import BedType
 
 from .base_bed import BaseBed
 from .heated_bed import HeatedBed
@@ -31,22 +31,22 @@ class BedFactory:
     """
 
     @classmethod
-    def create(cls, mode: BedMode) -> BaseBed:
+    def create(cls, bed_type: BedType) -> BaseBed:
         """Create a new bed manger instance.
 
         Args:
-            mode (BedMode): Bed mode.
+            bed_type (BedType): Bed type.
 
         Returns:
             BaseBed: Bed manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            BedMode.OFF: NoBed,
-            BedMode.HEATED: HeatedBed,
+            BedType.OFF: NoBed,
+            BedType.HEATED: HeatedBed,
         }
 
-        return providers[mode]()
+        return providers[bed_type]()

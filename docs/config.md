@@ -21,12 +21,12 @@ length-units = "mm"             # mm (millimeters), in (inches)
 time-units = "s"                # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
-head-mode = "standard"          # standard, auto-leveling
-tool-mode = "marker"            # beam, adaptive-beam, blade, extruder, heated-extruder, marker, spindle
-rack-mode = "manual"            # off, manual, automatic
-coolant-mode = "off"            # off, mist, flood
-fan-mode = "off"                # off, cooling
-bed-mode = "off"                # off, heated
+head-type = "standard"          # standard, auto-leveling
+tool-type = "marker"            # beam, adaptive-beam, blade, extruder, heated-extruder, marker, spindle
+rack-type = "manual"            # off, manual, automatic
+coolant-type = "off"            # off, mist, flood
+fan-type = "off"                # off, cooling
+bed-type = "off"                # off, heated
 
 # Tool configuration
 tool-number = 1                 # Tool identifier number
@@ -74,12 +74,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-0]
 
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
+# head-type = "standard"
+# tool-type = "marker"
+# rack-type = "manual"
+# coolant-type = "off"
+# fan-type = "off"
+# bed-type = "off"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
@@ -107,12 +107,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-1]
 
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
+# head-type = "standard"
+# tool-type = "marker"
+# rack-type = "manual"
+# coolant-type = "off"
+# fan-type = "off"
+# bed-type = "off"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
@@ -140,12 +140,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-2]
 
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
+# head-type = "standard"
+# tool-type = "marker"
+# rack-type = "manual"
+# coolant-type = "off"
+# fan-type = "off"
+# bed-type = "off"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000

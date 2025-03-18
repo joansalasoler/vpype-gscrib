@@ -177,7 +177,7 @@ class LengthUnits(BaseEnum):
 
 **Map the Command:**
 
-1. Open `vpype_mecode/codes/mappings.py`.
+1. Open `vpype_mecode/builder/codes/gcode_mappings.py`.
 2. Add the enum values and their G-code instructions.
 
 ```python
@@ -189,7 +189,7 @@ gcode_table = GCodeTable((
 
 **Implement the Command:**
 
-1. Open `vpype_mecode/renderer/gcode_builder.py`.
+1. Open `vpype_mecode/builder/gcode_builder.py`.
 2. Modify `GBuilder` to support the new command by adding a new method.
 3. Use `self._get_statement()` to build the G-code statement.
 4. Write the G-code statement using `self.write(statement)`.
@@ -265,42 +265,42 @@ class CustomHead(BaseHead):
         ctx.g.rapid_absolute(0, 0)
 ```
 
-**Define a New Mode for the Component:**
+**Define a New Type for the Component:**
 
-Each renderer component is associated with a **mode**, which defines the
-available options for that component type. These modes are stored in an
+Each renderer component is associated with a **type**, which defines the
+available options for that component. These types are stored in an
 enum —a predefined list of valid options that users can choose from.
-To register your component, add a corresponding mode to the enum.
+To register your component, add a corresponding type to the enum.
 
 ```python
-class HeadMode(BaseEnum):
+class HeadType(BaseEnum):
     STANDARD = 'standard'
-    CUSTOM = 'custom'  # New mode
+    CUSTOM = 'custom'  # New type
 ```
 
-**Map the Mode to the Implementation:**
+**Map the Type to the Implementation:**
 
-Now that the system recognizes your new mode, you need to specify which
-class should be instantiated when that mode is selected. This is done in
-the **component’s factory**, which maps each mode to its implementation.
+Now that the system recognizes your new type, you need to specify which
+class should be instantiated when that type is selected. This is done in
+the **component’s factory**, which maps each type to its implementation.
 
 ```python
 class HeadFactory:
 
     @classmethod
-    def create(cls, mode: HeadMode) -> BaseHead:
+    def create(cls, head_type: HeadType) -> BaseHead:
         providers = {
-            HeadMode.STANDARD: StandardHead,
-            HeadMode.CUSTOM: CustomHead,  # Register new component
+            HeadType.STANDARD: StandardHead,
+            HeadType.CUSTOM: CustomHead,  # Register new component
         }
 
-        return providers[mode]()
+        return providers[head_type]()
 ```
 
 **Test your component:**
 
 ```bash
-vpype read input.svg mecode --head-mode=custom --output=output.gcode
+vpype read input.svg mecode --head-type=custom --output=output.gcode
 ```
 
 ## Contributing

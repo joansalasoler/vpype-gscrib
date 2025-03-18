@@ -103,8 +103,8 @@ def test_power_off(gbuilder):
 
 def test_tool_change(gbuilder, mock_write):
     tool_number = 1
-    gbuilder.tool_change(RackMode.MANUAL, tool_number)
-    assert gbuilder.state.current_rack_mode == RackMode.MANUAL
+    gbuilder.tool_change(ToolSwapMode.MANUAL, tool_number)
+    assert gbuilder.state.current_tool_swap_mode == ToolSwapMode.MANUAL
     assert gbuilder.state.current_tool_number == tool_number
     assert mock_write.last_statement.startswith('T1')
 

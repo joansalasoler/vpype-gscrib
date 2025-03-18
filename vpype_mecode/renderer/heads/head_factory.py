@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import HeadMode
+from vpype_mecode.enums import HeadType
 
 from .base_head import BaseHead
 from .standard_head import StandardHead
@@ -33,22 +33,22 @@ class HeadFactory:
     """
 
     @classmethod
-    def create(cls, mode: HeadMode) -> BaseHead:
+    def create(cls, head_type: HeadType) -> BaseHead:
         """Create a new head manger instance.
 
         Args:
-            mode (HeadMode): Head mode.
+            head_type (HeadType): Head type.
 
         Returns:
             BaseHead: Head manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            HeadMode.STANDARD: StandardHead,
-            HeadMode.AUTO_LEVELING: AutoLevelingHead,
+            HeadType.STANDARD: StandardHead,
+            HeadType.AUTO_LEVELING: AutoLevelingHead,
         }
 
-        return providers[mode]()
+        return providers[head_type]()

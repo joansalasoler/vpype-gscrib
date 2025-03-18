@@ -76,46 +76,46 @@ command_options = (
         """,
     ),
     ConfigOption(
-        option_name="head-mode",
-        type=HeadMode,
+        option_name="head-type",
+        type=HeadType,
         help="""
         Specifies the head type for G-code generation. The head determines
         how axis movements are generated and coordinated.
         """,
     ),
     ConfigOption(
-        option_name="tool-mode",
-        type=ToolMode,
+        option_name="tool-type",
+        type=ToolType,
         help="""
         Specifies the tool type for G-code generation. The generated
         code adapts to the selected tool type.
         """,
     ),
     ConfigOption(
-        option_name="rack-mode",
-        type=RackMode,
+        option_name="rack-type",
+        type=RackType,
         help="""
         Specifies if tool changes are needed between layers or if the
         machine can handle multiple tools.
         """,
     ),
     ConfigOption(
-        option_name="coolant-mode",
-        type=CoolantMode,
+        option_name="coolant-type",
+        type=CoolantType,
         help="""
         Selects the type of coolant used during operation.
         """,
     ),
     ConfigOption(
-        option_name="fan-mode",
-        type=FanMode,
+        option_name="fan-type",
+        type=FanType,
         help="""
         Selects the type of fan used during operation.
         """,
     ),
     ConfigOption(
-        option_name="bed-mode",
-        type=BedMode,
+        option_name="bed-type",
+        type=BedType,
         help="""
         Selects the type of bed used for operation.
         """,

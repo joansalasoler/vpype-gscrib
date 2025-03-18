@@ -118,31 +118,31 @@ def test_power_mode_off_already_active(gstate):
     assert gstate.current_power_mode == PowerMode.OFF
     assert gstate.current_tool_power == 0
 
-def test_set_rack_mode(gstate):
-    gstate.set_rack_mode(RackMode.MANUAL, 101)
-    assert gstate.current_rack_mode == RackMode.MANUAL
+def test_set_tool_number(gstate):
+    gstate.set_tool_number(ToolSwapMode.MANUAL, 101)
+    assert gstate.current_tool_swap_mode == ToolSwapMode.MANUAL
     assert gstate.current_tool_number == 101
 
-def test_set_rack_mode_invalid_tool():
+def test_set_tool_invalid_tool():
     gstate = GState()
 
     with pytest.raises(ValueError):
-        gstate.set_rack_mode(RackMode.MANUAL, 0)
+        gstate.set_tool_number(ToolSwapMode.MANUAL, 0)
 
     with pytest.raises(ValueError):
-        gstate.set_rack_mode(RackMode.MANUAL, -1)
+        gstate.set_tool_number(ToolSwapMode.MANUAL, -1)
 
-def test_set_rack_mode_with_active_tool(gstate):
+def test_set_tool_with_active_tool(gstate):
     gstate.set_power_mode(PowerMode.CONSTANT, 75.0)
 
     with pytest.raises(ToolStateError):
-        gstate.set_rack_mode(RackMode.MANUAL, 1)
+        gstate.set_tool_number(ToolSwapMode.MANUAL, 1)
 
-def test_set_rack_mode_with_active_coolant(gstate):
+def test_set_tool_with_active_coolant(gstate):
     gstate.set_coolant_mode(CoolantMode.FLOOD)
 
     with pytest.raises(CoolantStateError):
-        gstate.set_rack_mode(RackMode.MANUAL, 1)
+        gstate.set_tool_number(ToolSwapMode.MANUAL, 1)
 
 def test_set_halt_mode(gstate):
     gstate.set_halt_mode(HaltMode.PAUSE)

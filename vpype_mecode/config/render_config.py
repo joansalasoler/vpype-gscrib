@@ -54,16 +54,16 @@ class RenderConfig(BaseModel, BaseConfig):
     time_units: TimeUnits = Field(TimeUnits.SECONDS)
 
     # Machine components modes
-    coolant_mode: CoolantMode = Field(CoolantMode.OFF)
-    head_mode: HeadMode = Field(HeadMode.STANDARD)
-    power_mode: PowerMode = Field(PowerMode.CONSTANT)
-    rack_mode: RackMode = Field(RackMode.MANUAL)
-    spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
-    tool_mode: ToolMode = Field(ToolMode.MARKER)
-    bed_mode: BedMode = Field(BedMode.OFF)
-    fan_mode: FanMode = Field(FanMode.OFF)
+    coolant_type: CoolantType = Field(CoolantType.OFF)
+    head_type: HeadType = Field(HeadType.STANDARD)
+    rack_type: RackType = Field(RackType.MANUAL)
+    tool_type: ToolType = Field(ToolType.MARKER)
+    bed_type: BedType = Field(BedType.OFF)
+    fan_type: FanType = Field(FanType.OFF)
 
     # Tool parameters
+    spin_mode: SpinMode = Field(SpinMode.CLOCKWISE)
+    power_mode: PowerMode = Field(PowerMode.CONSTANT)
     power_level: int = Field(50.0, ge=0)
     spindle_rpm: int = Field(1000, ge=0)
     warmup_delay: float = Field(2.0, ge=0.001)

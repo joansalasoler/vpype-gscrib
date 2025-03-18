@@ -110,7 +110,7 @@ and
 [Cookbook](https://vpype.readthedocs.io/en/latest/cookbook.html)
 helpful for mastering this powerful tool.
 
-## Modes for G-code Generation
+## Component Types for G-code Generation
 
 Vpype-Mecode allows users to configure their machine's behavior during
 G-code generation by selecting different modes. These modes control
@@ -121,19 +121,19 @@ By combining the right modes, you can optimize your workflow and tailor
 the G-code output to match your machine's capabilities and the specific
 requirements of your project.
 
-### What Are Modes?
+### What Are Component Types?
 
-Modes are configurable components that govern machine behavior. Each mode
-is responsible for a different aspect of the machine's operation:
+Component types are configurable components that govern machine behavior.
+Each type is responsible for a different aspect of the machine's operation:
 
-* **Bed Modes**: Control the behavior of the machine's bed.
-* **Coolant Modes**: Manage the machine's coolant system.
-* **Fan Modes**: Activate or deactivate machine fans.
-* **Head Movement Modes**: Define how the tool head moves.
-* **Rack Modes**: Control how tools are changed during the process.
-* **Tool Modes**: Define how specific tools operate.
+* **Bed Types**: Control the behavior of the machine's bed.
+* **Coolant Types**: Manage the machine's coolant system.
+* **Fan Types**: Activate or deactivate machine fans.
+* **Head Movement Types**: Define how the tool head moves.
+* **Rack Types**: Control how tools are changed during the process.
+* **Tool Types**: Define how specific tools operate.
 
-### Why Use Modes?
+### Why Use Component Types?
 
 By selecting and combining different modes, you can fine-tune your
 G-code generation to match your machine's capabilities and your specific
@@ -141,14 +141,15 @@ use case. For example, if you're working with a laser cutter on an uneven
 bed surface, you may choose to use an auto-leveling head or an adaptive
 beam tool for optimal results.
 
-Modes give you the flexibility to customize your workflow, whether you're
-doing engraving, milling, 3D printing, or any other CNC-related task.
+Component types give you the flexibility to customize your workflow,
+whether you're doing engraving, milling, 3D printing, or any other
+CNC-related task.
 
-### Learn More About Modes
+### Learn More About Component Types
 
-To explore the available modes and how to combine them effectively,
-please refer to our [Modes Documentation](machine-modes.md), which
-provides detailed descriptions and examples for each mode.
+To explore the available types and how to combine them effectively,
+please refer to our [Component Types Documentation](machine-modes.md),
+which provides detailed descriptions and examples for each types.
 
 ## Height Maps
 
@@ -190,7 +191,7 @@ vpype \
   read drawing.svg \
   mecode \
     --length-units=mm \
-    --head-mode=auto-leveling \
+    --head-type=auto-leveling \
     --height-map-path=heightmap.png \
     --height-map-scale=50.0 \
     --output=output.gcode
@@ -202,7 +203,7 @@ across the surface.
 
 **Understanding the Options:**
 
-* **--head-mode=auto-leveling**: Enables Z-axis height map compensation.
+* **--head-type=auto-leveling**: Enables Z-axis height map compensation.
 * **--height-map-path**: Grayscale image defining height variations.
 * **--height-map-scale**: Scale factor for height adjustments.
 
@@ -228,8 +229,8 @@ Here's an example of generating G-code with laser power modulation:
 vpype \
   read drawing.svg \
   mecode \
-    --power-mode=dynamic \
-    --tool-mode=adaptive-beam \
+    --power-type=dynamic \
+    --tool-type=adaptive-beam \
     --height-map-path=heightmap.png \
     --height-map-scale=100.0 \
     --output=output.gcode
@@ -237,8 +238,8 @@ vpype \
 
 **Key Options Explained**:
 
-* **--power-mode=dynamic**: Dynamically adjust laser power.
-* **--tool-mode=adaptive-beam**: Enable heightmap to control laser power.
+* **--power-type=dynamic**: Dynamically adjust laser power.
+* **--tool-type=adaptive-beam**: Enable heightmap to control laser power.
 * **--height-map-scale=100**: Scale factor for power adjustments
 
 By leveraging this technique, you can transform photographs into detailed
@@ -263,8 +264,8 @@ example.
 
 [document]
 length-units = "mm"          # Using metric units
-tool-mode = "marker"         # Using marker mode for pen plotting
-rack-mode = "manual"         # Manual tool changes for different pens
+tool-type = "marker"         # Using marker mode for pen plotting
+rack-type = "manual"         # Manual tool changes for different pens
 travel-speed = "3000mm"      # Speed for non-drawing moves
 safe-z = "1cm"               # Safe height for non-drawing moves
 plunge-z = "1mm"             # Height at which to begin plunging

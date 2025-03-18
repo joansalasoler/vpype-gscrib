@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import RackMode
+from vpype_mecode.builder.enums import ToolSwapMode
 from vpype_mecode.renderer.gcode_context import GContext
 from .base_rack import BaseRack
 
@@ -38,4 +38,4 @@ class AutomaticRack(BaseRack):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.tool_change(RackMode.AUTOMATIC, ctx.tool_number)
+        ctx.g.tool_change(ToolSwapMode.AUTOMATIC, ctx.tool_number)

@@ -26,7 +26,7 @@ def mock_configs(mock_config):
 @pytest.fixture
 def grenderer(mock_builder, mock_configs):
     renderer = GRenderer(mock_builder, mock_configs)
-    renderer._head.trace_to = MagicMock()
+    renderer._head_type.trace_to = MagicMock()
     renderer._g.teardown = MagicMock()
     return renderer
 
@@ -53,12 +53,12 @@ def test_grenderer_initialization(grenderer):
     assert grenderer._g is not None
     assert grenderer._context is not None
     assert grenderer._document_context is not None
-    assert grenderer._bed is not None
-    assert grenderer._coolant is not None
-    assert grenderer._fan is not None
-    assert grenderer._head is not None
-    assert grenderer._rack is not None
-    assert grenderer._tool is not None
+    assert grenderer._bed_type is not None
+    assert grenderer._coolant_type is not None
+    assert grenderer._fan_type is not None
+    assert grenderer._head_type is not None
+    assert grenderer._rack_type is not None
+    assert grenderer._tool_type is not None
     assert len(grenderer._ctx_queue) > 1
 
 def test_begin_document(grenderer, mock_document):
@@ -88,7 +88,7 @@ def test_trace_segment(grenderer):
     grenderer.trace_segment(path, x, y)
     assert grenderer._context is not None
     assert grenderer._context == initial_context
-    grenderer._head.trace_to.assert_called_once()
+    grenderer._head_type.trace_to.assert_called_once()
 
 def test_end_path(grenderer, mock_layer):
     initial_context = grenderer._context

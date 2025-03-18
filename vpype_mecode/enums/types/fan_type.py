@@ -16,12 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.builder.enums.base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
-class RackMode(BaseEnum):
-    """Tool rack operation modes."""
+class FanType(BaseEnum):
+    """Fan controller types for the machine."""
 
     OFF = "off"
-    MANUAL = "manual"
-    AUTOMATIC = "automatic"
+    COOLING = "cooling"

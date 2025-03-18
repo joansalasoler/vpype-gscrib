@@ -9,7 +9,6 @@ CNC machines, plotters, and other G-code compatible devices.
 """
 
 from . import builder
-from . import codes
 from . import config
 from . import enums
 from . import excepts
@@ -21,7 +20,6 @@ __version__ = "0.1.0"
 
 __all__ = [
     "builder",
-    "codes",
     "config",
     "enums",
     "excepts",

@@ -1,8 +1,8 @@
 import pytest
 
 from vpype_mecode.builder.enums import BaseEnum
-from vpype_mecode.codes.gcode_entry import GCodeEntry
-from vpype_mecode.codes.gcode_table import GCodeTable
+from vpype_mecode.builder.codes.gcode_entry import GCodeEntry
+from vpype_mecode.builder.codes.gcode_table import GCodeTable
 
 
 # --------------------------------------------------------------------

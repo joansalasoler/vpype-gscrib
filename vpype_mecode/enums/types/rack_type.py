@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.builder.enums.base_enum import BaseEnum
+from vpype_mecode.builder.enums import BaseEnum
 
 
-class HeadMode(BaseEnum):
-    """Head modes for the machine."""
+class RackType(BaseEnum):
+    """Tool controller types operation modes."""
 
-    STANDARD = "standard"
-    AUTO_LEVELING = "auto-leveling"
+    OFF = "off"
+    MANUAL = "manual"
+    AUTOMATIC = "automatic"
