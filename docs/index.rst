@@ -91,7 +91,6 @@ API Reference
    vpype_mecode.builder.enums
    vpype_mecode.builder.formatters
    vpype_mecode.builder.writters
-   vpype_mecode.builder.utils
    vpype_mecode.renderer
    vpype_mecode.renderer.beds
    vpype_mecode.renderer.coolants
