@@ -8,14 +8,10 @@ machines and similar devices. `GRenderer` is the main class that generates
 the G-code program from a `vpype` document.
 """
 
-from vpype_mecode.builder.gcode_builder import GBuilder
 from .gcode_context import GContext
 from .gcode_renderer import GRenderer
-from vpype_mecode.builder.gcode_state import GState
 
 __all__ = [
-    "GBuilder",
     "GContext",
     "GRenderer",
-    "GState",
 ]

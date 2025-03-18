@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path('..').resolve()))
 
 from docutils.parsers.rst import Directive, Parser
 from docutils.utils import new_document
-from vpype_mecode.codes import gcode_table
+from vpype_mecode.builder.codes import gcode_table
 
 # Configuration file for the Sphinx documentation builder.
 #

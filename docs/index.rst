@@ -90,7 +90,7 @@ API Reference
    vpype_mecode.builder.codes
    vpype_mecode.builder.enums
    vpype_mecode.builder.formatters
-   vpype_mecode.builder.writters
+   vpype_mecode.builder.writers
    vpype_mecode.renderer
    vpype_mecode.renderer.beds
    vpype_mecode.renderer.coolants

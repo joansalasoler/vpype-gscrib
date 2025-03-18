@@ -35,9 +35,10 @@ from vpype import Document
 
 from vpype_mecode import __version__
 from vpype_mecode.vpype_options import command_options
+from vpype_mecode.builder import GBuilder
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
-from vpype_mecode.renderer import GBuilder, GRenderer
+from vpype_mecode.renderer import GRenderer
 from vpype_mecode.config import ConfigLoader, BuilderConfig, RenderConfig
 
 

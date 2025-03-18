@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from vpype_mecode.renderer import GBuilder
+from vpype_mecode.builder import GBuilder
 from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
