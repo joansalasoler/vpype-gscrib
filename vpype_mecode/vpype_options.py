@@ -356,12 +356,12 @@ command_options = (
     ),
 
     # ------------------------------------------------------------------
-    # Direct Writing to Device (mecode)
+    # Direct Writing to Device
     # ------------------------------------------------------------------
 
     ConfigOption(
-        option_name="direct-write-mode",
-        type=DirectWriteMode,
+        option_name="direct-write",
+        type=DirectWrite,
         help="""
         Sends the generated G-Code directly to a connected machine via a
         socket or serial connection.
@@ -402,7 +402,7 @@ command_options = (
     ),
 
     # ------------------------------------------------------------------
-    # G-Code Output Options (mecode)
+    # G-Code Output Options
     # ------------------------------------------------------------------
 
     ConfigOption(
@@ -432,7 +432,7 @@ command_options = (
     ),
 
     # ------------------------------------------------------------------
-    # Axis Naming (mecode)
+    # Axis Naming
     # ------------------------------------------------------------------
     ConfigOption(
         option_name="x-axis",

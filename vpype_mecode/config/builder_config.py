@@ -21,17 +21,17 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from vpype_mecode.builder.enums import DirectWriteMode
+from vpype_mecode.builder.enums import DirectWrite
 from .base_config import BaseConfig
 
 
 @dataclasses.dataclass
 class BuilderConfig(BaseModel, BaseConfig):
     """
-    Configuration settings for the `mecode` library.
+    Configuration settings for the G-code builder.
 
     This class stores various options that are passed directly to the
-    `mecode` library, which is responsible for generating the G-Code.
+    `GBuilder` instance, which is responsible for generating the G-Code.
     See the :doc:`command line reference </cli>` for detailed information
     about the properties of this class.
 
@@ -41,18 +41,15 @@ class BuilderConfig(BaseModel, BaseConfig):
         >>> print(builder_config.output)
     """
 
-    # Predefined settings (do not change)
-    absolute: bool = Field(True)
-    print_lines: bool | str = Field("auto")
-
     # Output settings
     output: Optional[str] = Field(None)
     decimal_places: int = Field(5, ge=0)
     comment_symbols: str = Field("(")
     line_endings: str = Field("os")
+    print_lines: bool | str = Field(False)
 
     # Direct write settings
-    direct_write_mode: DirectWriteMode = Field(DirectWriteMode.OFF)
+    direct_write: DirectWrite = Field(DirectWrite.OFF)
     host: str = Field("localhost")
     port: int = Field(8000, ge=0)
     baudrate: int = Field(250000, ge=0)
