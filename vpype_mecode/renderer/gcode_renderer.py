@@ -152,7 +152,7 @@ class GRenderer(DocumentRenderer):
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 
-        self._g.reflect(0)
+        self._g.mirror(plane="zx")
         self._g.translate(0, height)
         self._g.scale(length_units.scale_factor)
 
