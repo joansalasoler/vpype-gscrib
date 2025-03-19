@@ -47,6 +47,14 @@ command_options = (
         """,
     ),
     ConfigOption(
+        option_name="print-lines",
+        is_flag=True,
+        help="""
+        Always output G-Code lines to the terminal, even if the output
+        file is specified or direct write is enabled.
+        """,
+    ),
+    ConfigOption(
         option_name="config",
         type=PathType(exists=True, dir_okay=False, resolve_path=True),
         default=None,
