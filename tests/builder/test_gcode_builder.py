@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
 from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder import Point
 from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
@@ -39,6 +40,16 @@ def test_select_plane(gbuilder, mock_write):
     gbuilder.select_plane(Plane.XY)
     assert gbuilder.state.current_plane == Plane.XY
     assert mock_write.last_statement.startswith('G17')
+
+def test_set_axis_position(gbuilder, mock_write):
+    gbuilder.set_axis_position(x=10, y=20, z=30)
+    assert gbuilder.position == Point(10, 20, 30)
+    assert mock_write.last_statement.startswith('G92 X10 Y20 Z30')
+
+def test_set_axis_position_partial(gbuilder, mock_write):
+    gbuilder.set_axis_position(x=10)
+    assert gbuilder.position == Point(10, 0, 0)
+    assert mock_write.last_statement.startswith('G92 X10')
 
 def test_set_distance_mode_absolute(gbuilder, mock_write):
     gbuilder.set_distance_mode(DistanceMode.ABSOLUTE)
