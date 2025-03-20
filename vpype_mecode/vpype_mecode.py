@@ -95,6 +95,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 
         processor = DocumentProcessor(renderer)
         processor.process(document)
+
     except VpypeMecodeError as e:
         raise click.UsageError(str(e))
     except ValidationError as e:

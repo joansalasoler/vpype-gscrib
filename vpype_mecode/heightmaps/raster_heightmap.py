@@ -54,6 +54,13 @@ class RasterHeightMap(BaseHeightMap):
         >>> height = height_map.get_height_at(100, 100)
     """
 
+    __slots__ = (
+        "_scale_z",
+        "_tolerance",
+        "_height_map",
+        "_interpolator"
+    )
+
     @typechecked
     def __init__(self, image_data: ndarray) -> None:
         self._scale_z = 1.0

@@ -85,6 +85,19 @@ class GRenderer(DocumentRenderer):
         _fan (BaseFan): Fan controller
     """
 
+    __slots__ = (
+        "_g",
+        "_ctx_queue",
+        "_document_context",
+        "_context",
+        "_head_type",
+        "_tool_type",
+        "_coolant_type",
+        "_rack_type",
+        "_bed_type",
+        "_fan_type",
+    )
+
     @typechecked
     def __init__(self, builder: GBuilder, configs: List[RenderConfig]):
         """G-code renderer initialization.
