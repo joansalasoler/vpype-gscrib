@@ -84,12 +84,12 @@ def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_d
             'length_units': 'in',
             'time_units': 'ms'
         },
-        'layer-0': {
+        'layer-1': {
             'work_speed': 200,
             'length_units': 'mm',
             'time_units': 's'
         },
-        'layer-1': {
+        'layer-2': {
             'work_speed': 300
         }
     }
@@ -100,8 +100,8 @@ def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_d
     assert result[0].work_speed == 100
     assert result[0].length_units == 'in'
     assert result[0].time_units == 'ms'
-    assert result[1].work_speed == 300 # Layers in reversed order
-    assert result[2].work_speed == 200 # Layers in reversed order
+    assert result[1].work_speed == 200 # Layers in reversed order
+    assert result[2].work_speed == 300 # Layers in reversed order
     assert result[1].length_units == 'in' # Inherit from document
     assert result[2].length_units == 'in' # Inherit from document
     assert result[1].time_units == 'ms' # Inherit from document

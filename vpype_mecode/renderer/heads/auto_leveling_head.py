@@ -60,8 +60,11 @@ class AutoLevelingHead(StandardHead):
         plunge_offset = ctx.plunge_z - ctx.work_z
         plunge_z = work_z + plunge_offset
 
-        ctx.g.move(z=plunge_z, F=ctx.travel_speed)
-        ctx.g.move(z=work_z, F=ctx.plunge_speed)
+        if ctx.g.position.z != plunge_z:
+            ctx.g.move(z=plunge_z, F=ctx.travel_speed)
+
+        if ctx.g.position.z != work_z:
+            ctx.g.move(z=work_z, F=ctx.plunge_speed)
 
     def trace_to(self, ctx: GContext, x: float, y: float, tool_params: dict):
         """Trace a path to a specified position at work speed.

@@ -1,5 +1,6 @@
 import math
 import pytest
+from math import inf
 
 from vpype_mecode.builder import Point
 from vpype_mecode.builder import CoreGBuilder
@@ -43,7 +44,7 @@ class MockWriter(BaseWriter):
 
 def test_default_initialization():
     builder = CoreGBuilder()
-    assert builder.position == Point.zero()
+    assert builder.position == Point.unknown()
     assert not builder.is_relative
     assert len(builder._writers) > 0
 
@@ -90,12 +91,12 @@ def test_set_axis_position(builder, mock_writer):
 
 def test_set_axis_position_partial(builder, mock_writer):
     builder.set_axis_position(x=10)
-    assert builder.position == Point(10, 0, 0)
+    assert builder.position == Point(10, -inf, -inf)
     assert "G92 X10" in mock_writer.written_lines
 
 def test_set_axis_position_additional_axis(builder, mock_writer):
     builder.set_axis_position(x=10, E=20)
-    assert builder.position == Point(10, 0, 0)
+    assert builder.position == Point(10, -inf, -inf)
     assert "G92 X10 E20" in mock_writer.written_lines
     assert builder.get_parameter('E') == 20
 
