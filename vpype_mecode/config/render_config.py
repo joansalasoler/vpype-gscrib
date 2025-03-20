@@ -20,12 +20,12 @@ import dataclasses
 from typing import Optional
 
 import pydantic
-import vpype as vp
 from pydantic import BaseModel, Field
 
 from vpype_mecode.enums import *
 from vpype_mecode.builder.enums import *
 from .base_config import BaseConfig
+from .custom_fields import LengthField, PathField
 
 
 @dataclasses.dataclass
@@ -46,8 +46,8 @@ class RenderConfig(BaseModel, BaseConfig):
     """
 
     # Custom program header and footer
-    header_gcode: Optional[str] = Field(None)
-    footer_gcode: Optional[str] = Field(None)
+    header_gcode: Optional[str] = PathField(None)
+    footer_gcode: Optional[str] = PathField(None)
 
     # Length and time units
     length_units: LengthUnits = Field(LengthUnits.MILLIMETERS)
@@ -70,10 +70,10 @@ class RenderConfig(BaseModel, BaseConfig):
     tool_number: int = Field(1, ge=1)
 
     # Motion parameters
-    work_speed: float = Field(vp.convert_length("500mm"), ge=0)
-    plunge_speed: float = Field(vp.convert_length("100mm"), ge=0)
-    travel_speed: float = Field(vp.convert_length("1000mm"), ge=0)
-    retract_speed: float = Field(vp.convert_length("2100mm"), ge=0)
+    work_speed: float = LengthField("500mm", "px/min", ge=0)
+    plunge_speed: float = LengthField("100mm", "px/min", ge=0)
+    travel_speed: float = LengthField("1000mm", "px/min", ge=0)
+    retract_speed: float = LengthField("2100mm", "px/min", ge=0)
 
     # Fan parameters
     fan_speed: int = Field(255, ge=0, le=255)
@@ -83,19 +83,19 @@ class RenderConfig(BaseModel, BaseConfig):
     hotend_temperature: int = Field(120)
 
     # Predefined Z-axis positions
-    work_z: float = Field(vp.convert_length("0mm"))
-    plunge_z: float = Field(vp.convert_length("1mm"))
-    safe_z: float = Field(vp.convert_length("10mm"))
-    park_z: float = Field(vp.convert_length("50mm"))
+    work_z: float = LengthField("0mm", "px")
+    plunge_z: float = LengthField("1mm", "px")
+    safe_z: float = LengthField("10mm", "px")
+    park_z: float = LengthField("50mm", "px")
 
     # Extrusion parameters
-    nozzle_diameter: float = Field(vp.convert_length("0.4mm"), gt=0)
-    filament_diameter: float = Field(vp.convert_length("1.75mm"), gt=0)
-    layer_height: float = Field(vp.convert_length("0.2mm"), gt=0)
-    retract_length: float = Field(vp.convert_length("1.5mm"), ge=0)
+    nozzle_diameter: float = LengthField("0.4mm", "px", gt=0)
+    filament_diameter: float = LengthField("1.75mm", "px", gt=0)
+    layer_height: float = LengthField("0.2mm", "px", gt=0)
+    retract_length: float = LengthField("1.5mm", "px", ge=0)
 
     # Heightmap transformation parameters
-    height_map_path: Optional[str] = Field(None)
+    height_map_path: Optional[str] = PathField(None)
     height_map_scale: float = Field(50.0, gt=0)
     height_map_tolerance: float = Field(0.01, ge=0)
 
@@ -109,21 +109,3 @@ class RenderConfig(BaseModel, BaseConfig):
         cls.validate_ge(model, "park_z", "safe_z")
 
         return model
-
-    # Vpype's default unit of measure is pixels, so we may need to
-    # convert some values to work units (millimeters or inches).
-
-    _fields_with_px_units = {
-        "work_speed": "px/min",
-        "plunge_speed": "px/min",
-        "travel_speed": "px/min",
-        "retract_speed": "px/min",
-        "work_z": "px",
-        "plunge_z": "px",
-        "safe_z": "px",
-        "park_z": "px",
-        "nozzle_diameter": "px",
-        "filament_diameter": "px",
-        "layer_height": "px",
-        "retract_length": "px",
-    }

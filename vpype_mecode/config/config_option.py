@@ -118,7 +118,7 @@ class ConfigOption(Option):
 
             if len(str_value) > 0 and not str_value[-1].isalpha():
                 raise BadParameter(
-                    "Units are required (e.g., 10mm, 2in).")
+                    f"Units are required for '{param.name}' (e.g., 10mm, 2in).")
 
         return value
 

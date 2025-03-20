@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from abc import ABC
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -23,6 +24,7 @@ from typing import Dict, Any
 from typeguard import typechecked
 
 from vpype_mecode.builder.enums import LengthUnits
+from .custom_fields import LengthFieldInfo, PathFieldInfo
 
 
 @dataclass
@@ -46,29 +48,13 @@ class BaseConfig(ABC):
             raise ValueError(f"'{f1}' must be greater or equal to '{f2}'")
 
     @typechecked
-    def scale_lengths(self, units: LengthUnits) -> None:
-        """
-        Scale lengths in-place according to the specified units. Only
-        the fields listed in `_fields_with_px_units` will be scaled.
-
-        Args:
-            units (LengthUnits): The work units to use for scaling.
-        """
-
-        fields_with_px_units = self._get_fields_with_px_units()
-
-        for field_name in fields_with_px_units.keys():
-            value = units.scale(getattr(self, field_name))
-            setattr(self, field_name, value)
-
-    @typechecked
     def format_values(self, units: LengthUnits) -> Dict[str, str]:
         """
         Format configuration values for display.
 
         If applicable, numeric values are scaled to the given units,
         rounded to 6 decimal places and their units appended if the
-        field is listed in `_fields_with_px_units`.
+        field is of type `LengthField`.
 
         Args:
             units (LengthUnits): The work units to use for formatting.
@@ -86,13 +72,20 @@ class BaseConfig(ABC):
     def _format_value(self, field_name: str, value: Any, units: LengthUnits) -> str:
         """Format a single value as a human-readable string."""
 
-        fields_with_px_units = self._get_fields_with_px_units()
+        field_info = None
 
-        if field_name in fields_with_px_units:
-            px_units = fields_with_px_units[field_name]
+        if hasattr(self, "model_fields"):
+            model_fields = getattr(self, "model_fields")
+            field_info = model_fields[field_name]
+
+        if isinstance(field_info, LengthFieldInfo):
+            px_units = field_info._length_units_string
             work_units = px_units.replace("px", units.value)
             value = round(units.scale(value), 6)
             return f"{value} {work_units}"
+
+        if isinstance(field_info, PathFieldInfo):
+            return str(value) if not value else os.path.relpath(value)
 
         if isinstance(value, (int, float)):
             return str(round(value, 6))
@@ -101,11 +94,3 @@ class BaseConfig(ABC):
             return value.value
 
         return str(value)
-
-    def _get_fields_with_px_units(self) -> dict:
-        """Get a dictionary of fields with pixel units."""
-
-        if hasattr(self, "_fields_with_px_units"):
-            return getattr(self, "_fields_with_px_units")
-
-        return {}

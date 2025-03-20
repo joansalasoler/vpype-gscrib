@@ -136,10 +136,7 @@ def _validate_document(document: Document):
 def _setup_builder_config(params, renderer_config: RenderConfig) -> BuilderConfig:
     """Create and validate the Mecode configuration."""
 
-    builder_config = BuilderConfig.model_validate(params)
-    builder_config.scale_lengths(renderer_config.length_units)
-
-    return builder_config
+    return BuilderConfig.model_validate(params)
 
 
 def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
