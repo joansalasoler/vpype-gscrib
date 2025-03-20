@@ -1,0 +1,52 @@
+# =====================================================================
+# Multi Tool Machining
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "spindle"
+rack-type = "automatic"
+coolant-type = "flood"
+fan-type = "off"
+bed-type = "off"
+
+# Speeds in units per minute
+work-speed = "700.0mm"
+plunge-speed = "300.0mm"
+travel-speed = "1300.0mm"
+
+# Z-axis heights
+work-z = "0.0mm"
+plunge-z = "1.0mm"
+safe-z = "10.0mm"
+park-z = "50.0mm"
+
+[layer-1]
+
+# Tool configuration
+tool-number = 1
+spin-mode = "clockwise"
+spindle-rpm = 1000
+warmup-delay = 1.0
+
+[layer-2]
+
+# Tool configuration
+tool-number = 2
+spin-mode = "clockwise"
+spindle-rpm = 1000
+warmup-delay = 1.0
+
+[layer-3]
+
+# Tool configuration
+tool-number = 3
+spin-mode = "counter"
+spindle-rpm = 500
+warmup-delay = 2.0

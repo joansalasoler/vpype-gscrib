@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="tiny" height="2.64583333cm" version="1.2" viewBox="0 0 100.0 100.0" width="2.64583333cm">
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:source>vpype line 0 100 100 100 line 100 100 100 0 line 100 0 0 0 line 0 0 0 100 write --page-size 100x100 --center square.svg
+</dc:source>
+        <dc:date>2025-03-20T09:05:35.990435</dc:date>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs/>
+  <g fill="none" id="layer1" inkscape:groupmode="layer" inkscape:label="1" stroke="#0000ff" style="display:inline">
+    <line x1="0.0" x2="100.0" y1="100.0" y2="100.0"/>
+    <line x1="100.0" x2="100.0" y1="100.0" y2="0.0"/>
+    <line x1="100.0" x2="0.0" y1="0.0" y2="0.0"/>
+    <line x1="0.0" x2="0.0" y1="0.0" y2="100.0"/>
+  </g>
+</svg>

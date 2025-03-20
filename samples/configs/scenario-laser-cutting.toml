@@ -1,0 +1,34 @@
+# =====================================================================
+# Laser Cutting
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "beam"
+rack-type = "off"
+coolant-type = "off"
+fan-type = "off"
+bed-type = "off"
+
+# Tool configuration
+tool-number = 1
+power-mode = "constant"
+power-level = 100.0
+warmup-delay = 2.0
+
+# Speeds in units per minute
+work-speed = "500.0mm"
+plunge-speed = "100.0mm"
+travel-speed = "1000.0mm"
+
+# Z-axis heights
+work-z = "0mm"
+plunge-z = "0mm"
+safe-z = "0mm"
+park-z = "0mm"
