@@ -97,8 +97,8 @@ class ConfigLoader:
         document_config = self._to_config_model(document_values)
         configs.append(document_config)
 
-        for index in reversed(range(len(document.layers))):
-            layer_values = manager.config.get(f"layer-{index}", {})
+        for index in range(len(document.layers)):
+            layer_values = manager.config.get(f"layer-{1 + index}", {})
             merged_values = {**document_values, **layer_values}
             layer_config = self._to_config_model(merged_values)
 
