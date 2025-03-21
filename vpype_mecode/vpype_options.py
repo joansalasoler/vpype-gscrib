@@ -376,15 +376,6 @@ command_options = (
         """,
     ),
     ConfigOption(
-        option_name="wait-for-response",
-        is_flag=True,
-        help="""
-        When enabled, waits for an acknowledgment from the machine after
-        sending each G-Code command. This ensures each command is received
-        and processed before sending the next one.
-        """,
-    ),
-    ConfigOption(
         option_name="host",
         type=TextType(),
         help="""
@@ -394,10 +385,10 @@ command_options = (
     ),
     ConfigOption(
         option_name="port",
-        type=IntRangeType(min=0),
+        type=TextType(),
         help="""
-        The port number used for network communication with the machine
-        when using direct writing.
+        The port used for network communication with the machine when
+        using direct writing.
         """,
     ),
     ConfigOption(

@@ -51,9 +51,8 @@ class BuilderConfig(BaseModel, BaseConfig):
     # Direct write settings
     direct_write: DirectWrite = Field(DirectWrite.OFF)
     host: str = Field("localhost")
-    port: int = Field(8000, ge=0)
+    port: str = Field("8000")
     baudrate: int = Field(250000, ge=0)
-    wait_for_response: bool = Field(False)
 
     # Axis naming settings
     x_axis: str = Field("X")

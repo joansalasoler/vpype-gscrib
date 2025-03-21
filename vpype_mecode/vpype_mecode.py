@@ -36,6 +36,7 @@ from vpype import Document
 from vpype_mecode import __version__
 from vpype_mecode.vpype_options import command_options
 from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder.excepts import DeviceError
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
 from vpype_mecode.renderer import GRenderer
@@ -84,7 +85,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
         _validate_user_config()
 
         render_configs = _setup_render_configs(document, kwargs)
-        builder_config = _setup_builder_config(kwargs, render_configs[0])
+        builder_config = _setup_builder_config(kwargs)
 
         # Initialize the G-Code renderer
 
@@ -95,7 +96,8 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 
         processor = DocumentProcessor(renderer)
         processor.process(document)
-
+    except DeviceError as e:
+        raise click.Abort(str(e))
     except VpypeMecodeError as e:
         raise click.UsageError(str(e))
     except ValidationError as e:
@@ -134,7 +136,7 @@ def _validate_document(document: Document):
             "It is required for the document to have a page size.")
 
 
-def _setup_builder_config(params, renderer_config: RenderConfig) -> BuilderConfig:
+def _setup_builder_config(params) -> BuilderConfig:
     """Create and validate the Mecode configuration."""
 
     return BuilderConfig.model_validate(params)
