@@ -21,12 +21,13 @@ length-units = "mm"             # mm (millimeters), in (inches)
 time-units = "s"                # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
-head-type = "standard"          # standard, auto-leveling
-tool-type = "marker"            # beam, adaptive-beam, blade, extruder, heated-extruder, marker, spindle
-rack-type = "manual"            # off, manual, automatic
+bed-type = "off"                # off, heated
 coolant-type = "off"            # off, mist, flood
 fan-type = "off"                # off, cooling
-bed-type = "off"                # off, heated
+head-type = "standard"          # standard, auto-leveling
+rack-type = "manual"            # off, manual, automatic
+tool-type = "marker"            # beam, adaptive-beam, blade, extruder,
+                                # heated-extruder, marker, spindle
 
 # Tool configuration
 tool-number = 1                 # Tool identifier number
@@ -74,12 +75,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-1]
 
-# head-type = "standard"
-# tool-type = "marker"
-# rack-type = "manual"
+# bed-type = "off"
 # coolant-type = "off"
 # fan-type = "off"
-# bed-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
@@ -107,12 +108,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-2]
 
-# head-type = "standard"
-# tool-type = "marker"
-# rack-type = "manual"
+# bed-type = "off"
 # coolant-type = "off"
 # fan-type = "off"
-# bed-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
@@ -140,12 +141,12 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-3]
 
-# head-type = "standard"
-# tool-type = "marker"
-# rack-type = "manual"
+# bed-type = "off"
 # coolant-type = "off"
 # fan-type = "off"
-# bed-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
