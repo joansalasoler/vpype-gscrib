@@ -20,7 +20,7 @@ def mock_write():
     with patch.object(GBuilder, 'write') as mock:
         mock.last_statement = None
 
-        def side_effect(statement, requires_response = False):
+        def side_effect(statement, wait = False):
             mock.last_statement = statement
 
         mock.side_effect = side_effect

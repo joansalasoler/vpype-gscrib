@@ -32,7 +32,7 @@ class MockWriter(BaseWriter):
     def disconnect(self, wait=True):
         self.is_connected = False
 
-    def write(self, data: bytes, requires_response=False):
+    def write(self, data: bytes, wait=False):
         self.written_lines.append(data.decode('utf-8').strip())
 
 
