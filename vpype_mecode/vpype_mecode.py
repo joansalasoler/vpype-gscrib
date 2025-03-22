@@ -35,10 +35,12 @@ from vpype import Document
 
 from vpype_mecode import __version__
 from vpype_mecode.vpype_options import command_options
+from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder.excepts import DeviceError
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
-from vpype_mecode.renderer import GBuilder, GRenderer
-from vpype_mecode.config import ConfigLoader, MecodeConfig, RenderConfig
+from vpype_mecode.renderer import GRenderer
+from vpype_mecode.config import ConfigLoader, BuilderConfig, RenderConfig
 
 
 @vpype_cli.cli.command(
@@ -83,17 +85,19 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
         _validate_user_config()
 
         render_configs = _setup_render_configs(document, kwargs)
-        mecode_config = _setup_mecode_config(kwargs, render_configs[0])
+        builder_config = _setup_builder_config(kwargs)
 
         # Initialize the G-Code renderer
 
-        builder = GBuilder(**mecode_config.model_dump())
+        builder = GBuilder(**builder_config.model_dump())
         renderer = GRenderer(builder, render_configs)
 
         # Process the document using the configured renderer
 
         processor = DocumentProcessor(renderer)
         processor.process(document)
+    except DeviceError as e:
+        raise click.Abort(str(e))
     except VpypeMecodeError as e:
         raise click.UsageError(str(e))
     except ValidationError as e:
@@ -132,13 +136,10 @@ def _validate_document(document: Document):
             "It is required for the document to have a page size.")
 
 
-def _setup_mecode_config(params, renderer_config: RenderConfig) -> MecodeConfig:
+def _setup_builder_config(params) -> BuilderConfig:
     """Create and validate the Mecode configuration."""
 
-    mecode_config = MecodeConfig.model_validate(params)
-    mecode_config.scale_lengths(renderer_config.length_units)
-
-    return mecode_config
+    return BuilderConfig.model_validate(params)
 
 
 def _setup_render_configs(document: Document, params) -> List[RenderConfig]:

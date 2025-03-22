@@ -26,9 +26,11 @@ from typeguard import typechecked
 from vpype import Document, LineCollection
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.processor import DocumentRenderer
+from vpype_mecode.builder.enums.types import DistanceMode, FeedMode
+from vpype_mecode.builder.enums.types import HaltMode, Plane
 from vpype_mecode.enums import *
 
-from .gcode_builder import GBuilder
+from vpype_mecode.builder.gcode_builder import GBuilder
 from .gcode_context import GContext
 from .fans import FanFactory
 from .heads import HeadFactory
@@ -36,6 +38,10 @@ from .tools import ToolFactory
 from .coolants import CoolantFactory
 from .racks import RackFactory
 from .beds import BedFactory
+
+
+HEAD_SEPARATOR = "=" * 60
+SECTION_SEPARATOR = "-" * 60
 
 
 class GRenderer(DocumentRenderer):
@@ -79,8 +85,18 @@ class GRenderer(DocumentRenderer):
         _fan (BaseFan): Fan controller
     """
 
-    _HEAD_SEPARATOR = "=" * 60
-    _SECTION_SEPARATOR = "-" * 60
+    __slots__ = (
+        "_g",
+        "_ctx_queue",
+        "_document_context",
+        "_context",
+        "_head_type",
+        "_tool_type",
+        "_coolant_type",
+        "_rack_type",
+        "_bed_type",
+        "_fan_type",
+    )
 
     @typechecked
     def __init__(self, builder: GBuilder, configs: List[RenderConfig]):
@@ -102,12 +118,12 @@ class GRenderer(DocumentRenderer):
         context = self._ctx_queue[0]
 
         self._context = context
-        self._head = HeadFactory.create(context.head_mode)
-        self._tool = ToolFactory.create(context.tool_mode)
-        self._coolant = CoolantFactory.create(context.coolant_mode)
-        self._rack = RackFactory.create(context.rack_mode)
-        self._bed = BedFactory.create(context.bed_mode)
-        self._fan = FanFactory.create(context.fan_mode)
+        self._head_type = HeadFactory.create(context.head_type)
+        self._tool_type = ToolFactory.create(context.tool_type)
+        self._coolant_type = CoolantFactory.create(context.coolant_type)
+        self._rack_type = RackFactory.create(context.rack_type)
+        self._bed_type = BedFactory.create(context.bed_type)
+        self._fan_type = FanFactory.create(context.fan_type)
         self._ctx_queue.rotate(-1)
 
         return context
@@ -149,11 +165,11 @@ class GRenderer(DocumentRenderer):
         self._g.select_units(length_units)
         self._g.select_plane(Plane.XY)
 
-        self._g.reflect(0)
+        self._g.mirror(plane="zx")
         self._g.translate(0, height)
         self._g.scale(length_units.scale_factor)
 
-        self._bed.turn_on(self._context)
+        self._bed_type.turn_on(self._context)
 
     @typechecked
     def begin_layer(self, layer: LineCollection):
@@ -177,14 +193,14 @@ class GRenderer(DocumentRenderer):
         x, y = self._first_point_of_path(first_path)
         self._write_layer_header(layer)
 
-        self._head.park_for_service(self._context)
-        self._rack.change_tool(self._context)
+        self._head_type.park_for_service(self._context)
+        self._rack_type.change_tool(self._context)
 
-        self._head.safe_retract(self._context)
-        self._head.travel_to(self._context, x, y)
-        self._tool.activate(self._context)
-        self._coolant.turn_on(self._context)
-        self._fan.turn_on(self._context)
+        self._head_type.safe_retract(self._context)
+        self._head_type.travel_to(self._context, x, y)
+        self._tool_type.activate(self._context)
+        self._coolant_type.turn_on(self._context)
+        self._fan_type.turn_on(self._context)
 
     @typechecked
     def begin_path(self, path: array):
@@ -204,10 +220,10 @@ class GRenderer(DocumentRenderer):
 
         x, y = self._first_point_of_path(path)
 
-        self._head.retract(self._context)
-        self._head.travel_to(self._context, x, y)
-        self._head.plunge(self._context)
-        self._tool.power_on(self._context)
+        self._head_type.retract(self._context)
+        self._head_type.travel_to(self._context, x, y)
+        self._head_type.plunge(self._context)
+        self._tool_type.power_on(self._context)
 
     @typechecked
     def trace_segment(self, path: array, x: float, y: float):
@@ -228,11 +244,11 @@ class GRenderer(DocumentRenderer):
         # map is available, the segment is traced as is.
 
         ctx = self._context
-        cx, cy, cz = self._g.axis
+        cx, cy, cz = self._g.position
 
         for x, y, z in ctx.height_map.sample_path([cx, cy, x, y])[1:]:
-            tool_params = self._tool.get_trace_params(ctx, x, y)
-            self._head.trace_to(ctx, x, y, tool_params)
+            tool_params = self._tool_type.get_trace_params(ctx, x, y)
+            self._head_type.trace_to(ctx, x, y, tool_params)
 
     @typechecked
     def end_path(self, path: array):
@@ -248,8 +264,8 @@ class GRenderer(DocumentRenderer):
             path (array): Path being processed
         """
 
-        self._tool.power_off(self._context)
-        self._head.retract(self._context)
+        self._tool_type.power_off(self._context)
+        self._head_type.retract(self._context)
 
     @typechecked
     def end_layer(self, layer: LineCollection):
@@ -266,10 +282,10 @@ class GRenderer(DocumentRenderer):
             layer (LineCollection): Layer being processed
         """
 
-        self._head.safe_retract(self._context)
-        self._tool.deactivate(self._context)
-        self._fan.turn_off(self._context)
-        self._coolant.turn_off(self._context)
+        self._head_type.safe_retract(self._context)
+        self._tool_type.deactivate(self._context)
+        self._fan_type.turn_off(self._context)
+        self._coolant_type.turn_off(self._context)
 
     @typechecked
     def end_document(self, document: Document):
@@ -287,8 +303,8 @@ class GRenderer(DocumentRenderer):
         """
 
         self._context = self._document_context
-        self._bed.turn_off(self._context)
-        self._head.park_for_service(self._context)
+        self._bed_type.turn_off(self._context)
+        self._head_type.park_for_service(self._context)
 
         self._write_user_footer()
         self._g.halt_program(HaltMode.END_WITH_RESET)
@@ -347,14 +363,14 @@ class GRenderer(DocumentRenderer):
         iso_datetime = datetime.now().isoformat()
         num_layers = len(document.layers)
 
-        self._g.comment(self._HEAD_SEPARATOR)
+        self._g.comment(HEAD_SEPARATOR)
         self._g.comment(f"Date: {iso_datetime}")
         self._g.comment(f"Generated by: {generator}")
         self._g.comment(f"Vpype version: {version('vpype')}")
         self._g.comment("Program zero: bottom-left")
         self._g.comment(f"Number of layers: {num_layers}")
         self._write_document_config_info()
-        self._g.comment(self._HEAD_SEPARATOR)
+        self._g.comment(HEAD_SEPARATOR)
 
     def _write_layer_header(self, layer: LineCollection):
         """Write layer configuration as G-code comments."""
@@ -362,10 +378,10 @@ class GRenderer(DocumentRenderer):
         layer_name = layer.property("vp_name")
         previous_ctx = self._previous_context()
 
-        self._g.comment(self._SECTION_SEPARATOR)
+        self._g.comment(SECTION_SEPARATOR)
         self._g.comment(f"Layer: {layer_name}")
         self._write_layer_config_info(self._context, previous_ctx)
-        self._g.comment(self._SECTION_SEPARATOR)
+        self._g.comment(SECTION_SEPARATOR)
 
     def _write_document_config_info(self):
         """Write configuration changes as G-code comments."""
@@ -373,12 +389,13 @@ class GRenderer(DocumentRenderer):
         document_ctx = self._document_context
         document_values = document_ctx.format_config_values()
 
-        self._g.comment(self._SECTION_SEPARATOR)
+        self._g.comment(SECTION_SEPARATOR)
 
         for key, value in document_values.items():
             self._g.comment(f"@set {key} = {value}")
 
-    def _write_layer_config_info(self, current_ctx: GContext, previous_ctx: GContext):
+    def _write_layer_config_info(self,
+        current_ctx: GContext, previous_ctx: GContext):
         """Write configuration changes as G-code comments."""
 
         document_ctx = self._document_context
@@ -394,7 +411,7 @@ class GRenderer(DocumentRenderer):
         }
 
         if len(changed_settings) > 0:
-            self._g.comment(self._SECTION_SEPARATOR)
+            self._g.comment(SECTION_SEPARATOR)
 
             for key, value in changed_settings.items():
                 self._g.comment(f"@set {key} = {value}")
@@ -403,4 +420,5 @@ class GRenderer(DocumentRenderer):
         """Write an include file as G-code comments."""
 
         with open(path, encoding="utf-8") as f:
-            self._g._write_out(lines=f.readlines())
+            for line in f.readlines():
+                self._g.write(line)

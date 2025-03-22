@@ -55,13 +55,16 @@ class AutoLevelingHead(StandardHead):
             ctx (GContext): The G-code generation context
         """
 
-        cx, cy, cz = ctx.g.axis
+        cx, cy, cz = ctx.g.position
         work_z = self._compute_work_z(ctx, cx, cy)
         plunge_offset = ctx.plunge_z - ctx.work_z
         plunge_z = work_z + plunge_offset
 
-        ctx.g.move(z=plunge_z, F=ctx.travel_speed)
-        ctx.g.move(z=work_z, F=ctx.plunge_speed)
+        if ctx.g.position.z != plunge_z:
+            ctx.g.move(z=plunge_z, F=ctx.travel_speed)
+
+        if ctx.g.position.z != work_z:
+            ctx.g.move(z=work_z, F=ctx.plunge_speed)
 
     def trace_to(self, ctx: GContext, x: float, y: float, tool_params: dict):
         """Trace a path to a specified position at work speed.

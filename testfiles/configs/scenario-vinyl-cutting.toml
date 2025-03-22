@@ -1,0 +1,28 @@
+# =====================================================================
+# Vinyl Cutting
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "blade"
+rack-type = "off"
+coolant-type = "off"
+fan-type = "off"
+bed-type = "off"
+
+# Speeds in units per minute
+work-speed = "400.0mm"
+plunge-speed = "200.0mm"
+travel-speed = "800.0mm"
+
+# Z-axis heights
+work-z = "0mm"
+plunge-z = "0.1mm"
+safe-z = "5cm"
+park-z = "5cm"

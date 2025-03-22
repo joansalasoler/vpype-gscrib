@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import ToolMode
+from vpype_mecode.enums import ToolType
 
 from .base_tool import BaseTool
 from .beam_tool import BeamTool
@@ -38,27 +38,27 @@ class ToolFactory:
     """
 
     @classmethod
-    def create(cls, mode: ToolMode) -> BaseTool:
+    def create(cls, tool_type: ToolType) -> BaseTool:
         """Create a new tool manger instance.
 
         Args:
-            mode (ToolMode): Tool mode.
+            tool_type (ToolType): Tool type.
 
         Returns:
             BaseTool: Tool manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            ToolMode.BEAM: BeamTool,
-            ToolMode.BLADE: BladeTool,
-            ToolMode.EXTRUDER: ExtruderTool,
-            ToolMode.HEATED_EXTRUDER: HeatedExtruderTool,
-            ToolMode.ADAPTIVE_BEAM: AdaptiveBeamTool,
-            ToolMode.MARKER: MarkerTool,
-            ToolMode.SPINDLE: SpindleTool,
+            ToolType.BEAM: BeamTool,
+            ToolType.BLADE: BladeTool,
+            ToolType.EXTRUDER: ExtruderTool,
+            ToolType.HEATED_EXTRUDER: HeatedExtruderTool,
+            ToolType.ADAPTIVE_BEAM: AdaptiveBeamTool,
+            ToolType.MARKER: MarkerTool,
+            ToolType.SPINDLE: SpindleTool,
         }
 
-        return providers[mode]()
+        return providers[tool_type]()

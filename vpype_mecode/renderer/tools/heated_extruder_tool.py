@@ -19,7 +19,8 @@
 import math
 
 from vpype_mecode.renderer import GContext
-from vpype_mecode.enums import ExtrusionMode, HaltMode, TemperatureUnits
+from vpype_mecode.builder.enums import ExtrusionMode, HaltMode
+from vpype_mecode.builder.enums import TemperatureUnits
 from .base_tool import BaseTool
 
 
@@ -63,7 +64,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.current_position.get("E", 0.0)
+        current_position = ctx.g.get_parameter("E")
         new_position = current_position + distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -79,7 +80,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.current_position.get("E", 0.0)
+        current_position = ctx.g.get_parameter("E")
         new_position = current_position - distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -112,7 +113,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         filament_length = self._filament_length(ctx, x, y)
-        current_position = ctx.g.current_position.get("E", 0.0)
+        current_position = ctx.g.get_parameter("E")
         new_position = current_position + filament_length
 
         return { "E": new_position }
@@ -133,7 +134,7 @@ class HeatedExtruderTool(BaseTool):
             float: The required filament length in work units
         """
 
-        cx, cy, cz = ctx.g.axis
+        cx, cy, cz = ctx.g.position
 
         radius = ctx.filament_diameter / 2.0
         cross_section = math.pi * radius * radius

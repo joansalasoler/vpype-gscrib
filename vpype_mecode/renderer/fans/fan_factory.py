@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import FanMode
+from vpype_mecode.enums import FanType
 
 from .base_fan import BaseFan
 from .cooling_fan import CoolingFan
@@ -27,22 +27,22 @@ class FanFactory:
     """A factory for creating fan managers."""
 
     @classmethod
-    def create(cls, mode: FanMode) -> BaseFan:
+    def create(cls, fan_type: FanType) -> BaseFan:
         """Create a new fan manger instance.
 
         Args:
-            mode (FanMode): Fan mode.
+            fan_type (FanType): Fan type.
 
         Returns:
             BaseFan: Fan manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            FanMode.COOLING: CoolingFan,
-            FanMode.OFF: NoFan,
+            FanType.COOLING: CoolingFan,
+            FanType.OFF: NoFan,
         }
 
-        return providers[mode]()
+        return providers[fan_type]()

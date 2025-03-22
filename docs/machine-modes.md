@@ -1,4 +1,4 @@
-# Machine Modes for G-code Generation
+# Machine Components for G-code Generation
 
 Vpype-Mecode allows users to configure the machine operation by combining
 different **renderer components**, or modes. These modes control essential
@@ -7,7 +7,7 @@ movement, tool changes, and tool operations.
 
 ---
 
-## Bed Modes
+## Bed Types
 
 The bed mode defines how the machine bed is controlled during the
 operation.
@@ -17,7 +17,7 @@ operation.
 * **off**: No bed operations are performed. This disables bed control
   and is used when no specific bed-related functionality is required.
 
-## Coolant Modes
+## Coolant Types
 
 Coolant systems control the cooling mechanisms of the machine, such as
 flood coolant or mist coolant. These are important for temperature
@@ -27,7 +27,7 @@ regulation during machining processes.
 * **mist**: Activates the mist coolant system during machining.
 * **off**: Disables the coolant system.
 
-## Fan Modes
+## Fan Types
 
 Fan modes control the cooling fan of the machine, which is typically
 used to cool down the system or remove debris.
@@ -35,7 +35,7 @@ used to cool down the system or remove debris.
 * **cooling**: Activates a basic fan to cool down the system.
 * **off**: Disables the fan, leaving it inactive during operations.
 
-## Head Movement Modes
+## Head Movement Types
 
 The head movement mode defines how the machine's head (tool carrier)
 behaves during operations. Different heads offer varying levels of
@@ -46,7 +46,7 @@ precision and compensation.
 * **auto-leveling**: This advanced head mode integrates a height map for
   compensation, ensuring consistent tool engagement on uneven surfaces.
 
-## Rack Modes
+## Rack Types
 
 Rack modes determine how tools are handled during the operation. This
 includes how tools are changed or managed.
@@ -56,7 +56,7 @@ includes how tools are changed or managed.
 * **manual**: Requires the operator to manually change tools.
 * **off**: Disables the rack, meaning no tool changes will occur.
 
-## Tool Modes
+## Tool Types
 
 The tool mode controls which tool is being used and how it operates. The
 tool can range from laser tools to spindles or even markers, and each
@@ -80,7 +80,7 @@ tool may require different activation and deactivation patterns.
 * **spindle**: A tool used for milling or drilling, which requires
   activation and deactivation to control the spindle motor.
 
-## Combining Modes for Advanced G-code Generation
+## Combining Types for Advanced G-code Generation
 
 To configure the G-code generation, you can combine the relevant modes
 according to your machine's capabilities and requirements. For example,
@@ -93,10 +93,10 @@ surface while keeping the material cool during the process.
 vpype \
   read drawing.svg \
   mecode \
-    --tool-mode=spindle \
-    --coolant-mode=flood \
-    --head-mode=auto-leveling \
-    --rack-mode=manual \
+    --tool-type=spindle \
+    --coolant-type=flood \
+    --head-type=auto-leveling \
+    --rack-type=manual \
     --height-map-path=map.png \
     --height-map-tolerance=0.01 \
     --height-map-scale=50.0 \
@@ -105,10 +105,10 @@ vpype \
 
 **Explanation:**
 
-* **--tool-mode=spindle** — Use a spindle for milling
-* **--head-mode=auto-leveling** — Use a heightmap to adjust Z-height
-* **--coolant-mode=flood** — Apply flood coolant
-* **--rack-mode=manual** — Requires manual tool changes
+* **--tool-type=spindle** — Use a spindle for milling
+* **--head-type=auto-leveling** — Use a heightmap to adjust Z-height
+* **--coolant-type=flood** — Apply flood coolant
+* **--rack-type=manual** — Requires manual tool changes
 * **--height-map-path=map.png** — Height map for Z-height compensation
 * **--height-map-tolerance=0.01** — Tolerance for height adjustments
 * **--height-map-scale=50.0** — Scaling of the height map

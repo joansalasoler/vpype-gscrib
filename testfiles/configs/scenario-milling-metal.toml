@@ -1,0 +1,34 @@
+# =====================================================================
+# Milling Metal
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "spindle"
+rack-type = "manual"
+coolant-type = "mist"
+fan-type = "off"
+bed-type = "off"
+
+# Tool configuration
+tool-number = 1
+spin-mode = "clockwise"
+spindle-rpm = 12000
+warmup-delay = 2.0
+
+# Speeds in units per minute
+work-speed = "600.0mm"
+plunge-speed = "200.0mm"
+travel-speed = "1200.0mm"
+
+# Z-axis heights
+work-z = "0.0mm"
+plunge-z = "1.0mm"
+safe-z = "10.0mm"
+park-z = "50.0mm"

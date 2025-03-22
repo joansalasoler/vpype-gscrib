@@ -28,19 +28,30 @@ from vpype_cli import TextType, IntRangeType, FloatRangeType
 from vpype_cli import IntegerType, LengthType, PathType
 
 from vpype_mecode.config import ConfigOption
+from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
 
 
 command_options = (
+
     # ------------------------------------------------------------------
     # Global Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="output",
         type=PathType(dir_okay=False, writable=True),
         help="""
         File path where the generated G-Code will be saved. If not
         specified, the G-Code will be printed to the terminal.
+        """,
+    ),
+    ConfigOption(
+        option_name="print-lines",
+        is_flag=True,
+        help="""
+        Always output G-Code lines to the terminal, even if the output
+        file is specified or direct write is enabled.
         """,
     ),
     ConfigOption(
@@ -52,9 +63,11 @@ command_options = (
         to the document and each of its layers.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Renderer Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="length-units",
         type=LengthUnits,
@@ -71,46 +84,46 @@ command_options = (
         """,
     ),
     ConfigOption(
-        option_name="head-mode",
-        type=HeadMode,
+        option_name="head-type",
+        type=HeadType,
         help="""
         Specifies the head type for G-code generation. The head determines
         how axis movements are generated and coordinated.
         """,
     ),
     ConfigOption(
-        option_name="tool-mode",
-        type=ToolMode,
+        option_name="tool-type",
+        type=ToolType,
         help="""
         Specifies the tool type for G-code generation. The generated
         code adapts to the selected tool type.
         """,
     ),
     ConfigOption(
-        option_name="rack-mode",
-        type=RackMode,
+        option_name="rack-type",
+        type=RackType,
         help="""
         Specifies if tool changes are needed between layers or if the
         machine can handle multiple tools.
         """,
     ),
     ConfigOption(
-        option_name="coolant-mode",
-        type=CoolantMode,
+        option_name="coolant-type",
+        type=CoolantType,
         help="""
         Selects the type of coolant used during operation.
         """,
     ),
     ConfigOption(
-        option_name="fan-mode",
-        type=FanMode,
+        option_name="fan-type",
+        type=FanType,
         help="""
         Selects the type of fan used during operation.
         """,
     ),
     ConfigOption(
-        option_name="bed-mode",
-        type=BedMode,
+        option_name="bed-type",
+        type=BedType,
         help="""
         Selects the type of bed used for operation.
         """,
@@ -247,9 +260,11 @@ command_options = (
         operations, such as tool changes and program completion.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Transform Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="height-map-path",
         type=PathType(exists=True, dir_okay=False, resolve_path=True),
@@ -278,9 +293,11 @@ command_options = (
         value will be filtered out. Measured in work units.
         """,
     ),
+
     # ------------------------------------------------------------------
     # 3D Printing Settings
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="layer-height",
         type=LengthType(min=0.001),
@@ -322,9 +339,11 @@ command_options = (
         units per minute.
         """,
     ),
+
     # ------------------------------------------------------------------
     # G-Code Output Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="header-gcode",
         hidden=True,
@@ -343,24 +362,17 @@ command_options = (
         end of the generated G-Code program.
         """,
     ),
+
     # ------------------------------------------------------------------
-    # Direct Writing to Device (mecode)
+    # Direct Writing to Device
     # ------------------------------------------------------------------
+
     ConfigOption(
-        option_name="direct-write-mode",
-        type=DirectWriteMode,
+        option_name="direct-write",
+        type=DirectWrite,
         help="""
         Sends the generated G-Code directly to a connected machine via a
         socket or serial connection.
-        """,
-    ),
-    ConfigOption(
-        option_name="wait-for-response",
-        is_flag=True,
-        help="""
-        When enabled, waits for an acknowledgment from the machine after
-        sending each G-Code command. This ensures each command is received
-        and processed before sending the next one.
         """,
     ),
     ConfigOption(
@@ -373,10 +385,10 @@ command_options = (
     ),
     ConfigOption(
         option_name="port",
-        type=IntRangeType(min=0),
+        type=TextType(),
         help="""
-        The port number used for network communication with the machine
-        when using direct writing.
+        The port used for network communication with the machine when
+        using direct writing.
         """,
     ),
     ConfigOption(
@@ -387,9 +399,11 @@ command_options = (
         the machine when using direct writing.
         """,
     ),
+
     # ------------------------------------------------------------------
-    # G-Code Output Options (mecode)
+    # G-Code Output Options
     # ------------------------------------------------------------------
+
     ConfigOption(
         option_name="decimal-places",
         type=IntRangeType(min=0),
@@ -415,8 +429,9 @@ command_options = (
         Use 'os' to match your system's default.
         """,
     ),
+
     # ------------------------------------------------------------------
-    # Axis Naming (mecode)
+    # Axis Naming
     # ------------------------------------------------------------------
     ConfigOption(
         option_name="x-axis",
@@ -439,37 +454,5 @@ command_options = (
         Custom label for the machine's Z axis in the generated G-Code.
         """,
     ),
-    ConfigOption(
-        option_name="i-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's I axis in the generated G-Code.
-        """,
-    ),
-    ConfigOption(
-        option_name="j-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's J axis in the generated G-Code.
-        """,
-    ),
-    ConfigOption(
-        option_name="k-axis",
-        type=TextType(),
-        help="""
-        Custom label for the machine's K axis in the generated G-Code.
-        """,
-    ),
-    # ------------------------------------------------------------------
-    # Unsupported Mecode Options (mecode)
-    # ------------------------------------------------------------------
-    ConfigOption(
-        option_name="aerotech-include",
-        hidden=True,
-        is_flag=True,
-        help="""
-        Adds Aerotech-specific functions and variable definitions to the
-        output G-Code, if applicable.
-        """,
-    ),
+
 )

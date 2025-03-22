@@ -8,24 +8,22 @@ interface for processing vector paths and generating G-code commands for
 CNC machines, plotters, and other G-code compatible devices.
 """
 
-from . import mecode
-from . import codes
+from . import builder
 from . import config
 from . import enums
 from . import excepts
 from . import processor
 from . import renderer
-from . import utils
+from . import heightmaps
 
 __version__ = "0.1.0"
 
 __all__ = [
-    "mecode",
-    "codes",
+    "builder",
     "config",
     "enums",
     "excepts",
     "processor",
     "renderer",
-    "utils",
+    "heightmaps",
 ]

@@ -11,14 +11,22 @@ command-line inputs and TOML files.
 
 from .base_config import BaseConfig
 from .render_config import RenderConfig
-from .mecode_config import MecodeConfig
+from .builder_config import BuilderConfig
 from .config_option import ConfigOption
 from .config_loader import ConfigLoader
+from .custom_fields import LengthField
+from .custom_fields import LengthFieldInfo
+from .custom_fields import PathField
+from .custom_fields import PathFieldInfo
 
 __all__ = [
     "BaseConfig",
     "ConfigLoader",
     "RenderConfig",
-    "MecodeConfig",
+    "BuilderConfig",
     "ConfigOption",
+    "LengthField",
+    "LengthFieldInfo",
+    "PathField",
+    "PathFieldInfo",
 ]

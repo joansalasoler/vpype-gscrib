@@ -1,30 +1,26 @@
 # -*- coding: utf-8 -*-
 
 """
-Type definitions for machine control parameters.
+Available machine modes.
 
-This package provides enumeration classes that define various machine
-control parameters and operational modes.
+This module provides a collection of enumeration classes that define
+various operational modes for G-code generation. Each mode represents a
+specific aspect of machine control that a user can combine to create
+complete G-code programs.
 """
 
-from .bed_temperature import BedTemperature
-from .distance_mode import DistanceMode
-from .extrusion_mode import ExtrusionMode
-from .feed_mode import FeedMode
-from .halt_mode import HaltMode
-from .hotend_temperature import HotendTemperature
-from .plane import Plane
-from .power_mode import PowerMode
-from .spin_mode import SpinMode
+from .bed_type import BedType
+from .coolant_type import CoolantType
+from .fan_type import FanType
+from .head_type import HeadType
+from .rack_type import RackType
+from .tool_type import ToolType
 
 __all__ = [
-    "BedTemperature",
-    "DistanceMode",
-    "ExtrusionMode",
-    "FeedMode",
-    "HaltMode",
-    "HotendTemperature",
-    "Plane",
-    "PowerMode",
-    "SpinMode",
+    "BedType",
+    "CoolantType",
+    "FanType",
+    "HeadType",
+    "RackType",
+    "ToolType",
 ]

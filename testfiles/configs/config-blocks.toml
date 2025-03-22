@@ -1,0 +1,53 @@
+# =====================================================================
+# Header and Footer Settings
+# =====================================================================
+
+[document]
+
+# Custom header and footer
+
+header-gcode = "blocks/header.gcode"
+footer-gcode = "blocks/footer.gcode"
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "marker"
+rack-type = "manual"
+coolant-type = "off"
+fan-type = "off"
+bed-type = "off"
+
+# Tool configuration
+tool-number = 1
+spin-mode = "clockwise"
+spindle-rpm = 1000
+power-mode = "constant"
+power-level = 50
+warmup-delay = 2.0
+
+# Speeds in units per minute
+work-speed = "500.0mm"
+plunge-speed = "100.0mm"
+travel-speed = "1000.0mm"
+
+# Z-axis heights
+work-z = "0.0mm"
+plunge-z = "1.0mm"
+safe-z = "10.0mm"
+park-z = "50.0mm"
+
+# Extrusion parameters
+nozzle-diameter = "0.4mm"
+filament-diameter = "1.75mm"
+layer-height = "0.2mm"
+retract-length = "1.5mm"
+retract-speed = "2100mm"
+
+# Other parameters
+fan-speed = 255
+bed-temperature = 60
+hotend-temperature = 120

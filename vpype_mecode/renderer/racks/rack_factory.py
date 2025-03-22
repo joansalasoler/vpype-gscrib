@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import RackMode
+from vpype_mecode.enums import RackType
 
 from .automatic_rack import AutomaticRack
 from .base_rack import BaseRack
@@ -35,23 +35,23 @@ class RackFactory:
     """
 
     @classmethod
-    def create(cls, mode: RackMode) -> BaseRack:
+    def create(cls, rack_type: RackType) -> BaseRack:
         """Create a new tool rack manger instance.
 
         Args:
-            mode (RackMode): Rack mode.
+            rack_type (RackType): Rack type.
 
         Returns:
             BaseRack: Rack manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            RackMode.OFF: NoRack,
-            RackMode.MANUAL: ManualRack,
-            RackMode.AUTOMATIC: AutomaticRack,
+            RackType.OFF: NoRack,
+            RackType.MANUAL: ManualRack,
+            RackType.AUTOMATIC: AutomaticRack,
         }
 
-        return providers[mode]()
+        return providers[rack_type]()

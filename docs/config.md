@@ -21,12 +21,13 @@ length-units = "mm"             # mm (millimeters), in (inches)
 time-units = "s"                # s (seconds), ms (milliseconds)
 
 # Component modes specify how to generate the G-Code
-head-mode = "standard"          # standard, auto-leveling
-tool-mode = "marker"            # beam, adaptive-beam, blade, extruder, heated-extruder, marker, spindle
-rack-mode = "manual"            # off, manual, automatic
-coolant-mode = "off"            # off, mist, flood
-fan-mode = "off"                # off, cooling
-bed-mode = "off"                # off, heated
+bed-type = "off"                # off, heated
+coolant-type = "off"            # off, mist, flood
+fan-type = "off"                # off, cooling
+head-type = "standard"          # standard, auto-leveling
+rack-type = "manual"            # off, manual, automatic
+tool-type = "marker"            # beam, adaptive-beam, blade, extruder,
+                                # heated-extruder, marker, spindle
 
 # Tool configuration
 tool-number = 1                 # Tool identifier number
@@ -68,51 +69,18 @@ hotend-temperature = 120        # Celsius degrees
 # Layer-Specific Settings
 #
 # - Create a new [layer-N] section for each layer.
-# - Settings not specified here will inherit from the [document] section.
-# - Layers are numbered in the order they appear in the document.
+# - Settings not specified here will inherit from [document].
+# - Layers are numbered starting from 1, from bottom to top.
 # =====================================================================
-
-[layer-0]
-
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
-# tool-number = 1
-# spin-mode = "clockwise"
-# spindle-rpm = 1000
-# power-mode = "constant"
-# power-level = 50
-# warmup-delay = 2.0
-# work-speed = "500.0mm"
-# plunge-speed = "100.0mm"
-# travel-speed = "1000.0mm"
-# work-z = "0.0mm"
-# plunge-z = "1.0mm"
-# safe-z = "10.0mm"
-# park-z = "50.0mm"
-# nozzle-diameter = "0.4mm"
-# filament-diameter = "1.75mm"
-# layer-height = "0.2mm"
-# retract-length = "1.5mm"
-# retract-speed = "2100mm"
-# height-map-path = "map.png"
-# height-map-scale = 50.0
-# height-map-tolerance = 0.01
-# fan-speed = 255
-# bed-temperature = 60
-# hotend-temperature = 120
 
 [layer-1]
 
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
+# bed-type = "off"
+# coolant-type = "off"
+# fan-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000
@@ -140,12 +108,45 @@ hotend-temperature = 120        # Celsius degrees
 
 [layer-2]
 
-# head-mode = "standard"
-# tool-mode = "marker"
-# rack-mode = "manual"
-# coolant-mode = "off"
-# fan-mode = "off"
-# bed-mode = "off"
+# bed-type = "off"
+# coolant-type = "off"
+# fan-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
+# tool-number = 1
+# spin-mode = "clockwise"
+# spindle-rpm = 1000
+# power-mode = "constant"
+# power-level = 50
+# warmup-delay = 2.0
+# work-speed = "500.0mm"
+# plunge-speed = "100.0mm"
+# travel-speed = "1000.0mm"
+# work-z = "0.0mm"
+# plunge-z = "1.0mm"
+# safe-z = "10.0mm"
+# park-z = "50.0mm"
+# nozzle-diameter = "0.4mm"
+# filament-diameter = "1.75mm"
+# layer-height = "0.2mm"
+# retract-length = "1.5mm"
+# retract-speed = "2100mm"
+# height-map-path = "map.png"
+# height-map-scale = 50.0
+# height-map-tolerance = 0.01
+# fan-speed = 255
+# bed-temperature = 60
+# hotend-temperature = 120
+
+[layer-3]
+
+# bed-type = "off"
+# coolant-type = "off"
+# fan-type = "off"
+# head-type = "standard"
+# rack-type = "manual"
+# tool-type = "marker"
 # tool-number = 1
 # spin-mode = "clockwise"
 # spindle-rpm = 1000

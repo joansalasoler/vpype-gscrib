@@ -1,0 +1,36 @@
+# =====================================================================
+# Plasma Cutting
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "adaptive-beam"
+rack-type = "manual"
+coolant-type = "off"
+fan-type = "off"
+bed-type = "off"
+
+# Tool configuration
+tool-number = 1
+spin-mode = "off"
+spindle-rpm = 1000
+power-mode = "constant"
+power-level = 80.0
+warmup-delay = 2.0
+
+# Speeds in units per minute
+work-speed = "1000.0mm"
+plunge-speed = "100.0mm"
+travel-speed = "1200.0mm"
+
+# Z-axis heights
+work-z = "1.5mm"
+plunge-z = "3.0mm"
+safe-z = "5.0mm"
+park-z = "5.0mm"

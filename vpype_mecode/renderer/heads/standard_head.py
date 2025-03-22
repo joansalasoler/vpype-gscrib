@@ -38,7 +38,8 @@ class StandardHead(BaseHead):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.rapid(z=ctx.safe_z)
+        if ctx.g.position.z != ctx.safe_z:
+            ctx.g.rapid(z=ctx.safe_z)
 
     def retract(self, ctx: GContext):
         """Retract the machine head.
@@ -50,7 +51,8 @@ class StandardHead(BaseHead):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.rapid(z=ctx.safe_z)
+        if ctx.g.position.z != ctx.safe_z:
+            ctx.g.rapid(z=ctx.safe_z)
 
     def plunge(self, ctx: GContext):
         """Plunge the machine head to the work height.
@@ -63,8 +65,11 @@ class StandardHead(BaseHead):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.move(z=ctx.plunge_z, F=ctx.travel_speed)
-        ctx.g.move(z=ctx.work_z, F=ctx.plunge_speed)
+        if ctx.g.position.z != ctx.plunge_z:
+            ctx.g.move(z=ctx.plunge_z, F=ctx.travel_speed)
+
+        if ctx.g.position.z != ctx.work_z:
+            ctx.g.move(z=ctx.work_z, F=ctx.plunge_speed)
 
     def travel_to(self, ctx: GContext, x: float, y: float):
         """Move the machine head to a specified position.
@@ -107,6 +112,9 @@ class StandardHead(BaseHead):
             ctx (GContext): The G-code generation context
         """
 
-        ctx.g.rapid(z=ctx.safe_z)
-        park_z = ctx.scale_length(ctx.park_z)
-        ctx.g.rapid_absolute(x=0, y=0, z=park_z)
+        if ctx.g.position.z != ctx.safe_z:
+            ctx.g.rapid(z=ctx.safe_z)
+
+        if ctx.g.position.z != ctx.park_z:
+            park_z = ctx.scale_length(ctx.park_z)
+            ctx.g.rapid_absolute(x=0, y=0, z=park_z)

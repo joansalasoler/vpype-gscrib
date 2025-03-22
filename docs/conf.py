@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path('..').resolve()))
 
 from docutils.parsers.rst import Directive, Parser
 from docutils.utils import new_document
-from vpype_mecode.codes import gcode_table
+from vpype_mecode.builder.codes import gcode_table
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -34,7 +34,7 @@ extensions = [
 
 root_doc = "index"
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'venv', 'mecode']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'venv']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

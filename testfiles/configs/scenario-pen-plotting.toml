@@ -1,0 +1,28 @@
+# =====================================================================
+# Pen Plotting
+# =====================================================================
+
+[document]
+
+# Length and time units
+length-units = "mm"
+time-units = "s"
+
+# Component modes
+head-type = "standard"
+tool-type = "marker"
+rack-type = "off"
+coolant-type = "off"
+fan-type = "off"
+bed-type = "off"
+
+# Speeds in units per minute
+work-speed = "400.0mm"
+plunge-speed = "100.0mm"
+travel-speed = "800.0mm"
+
+# Z-axis heights
+work-z = "0.0mm"
+plunge-z = "1.0mm"
+safe-z = "10.0mm"
+park-z = "50.0mm"

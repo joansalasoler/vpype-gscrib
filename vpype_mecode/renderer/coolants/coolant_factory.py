@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_mecode.enums import CoolantMode
+from vpype_mecode.enums import CoolantType
 
 from .base_coolant import BaseCoolant
 from .flood_coolant import FloodCoolant
@@ -34,23 +34,23 @@ class CoolantFactory:
     """
 
     @classmethod
-    def create(cls, mode: CoolantMode) -> BaseCoolant:
+    def create(cls, coolant_type: CoolantType) -> BaseCoolant:
         """Create a new coolant manger instance.
 
         Args:
-            mode (CoolantMode): Coolant mode.
+            coolant_type (CoolantType): Coolant type.
 
         Returns:
             BaseCoolant: Coolant manger instance.
 
         Raises:
-            KeyError: If mode is not valid.
+            KeyError: If type is not valid.
         """
 
         providers = {
-            CoolantMode.OFF: NoCoolant,
-            CoolantMode.MIST: MistCoolant,
-            CoolantMode.FLOOD: FloodCoolant,
+            CoolantType.OFF: NoCoolant,
+            CoolantType.MIST: MistCoolant,
+            CoolantType.FLOOD: FloodCoolant,
         }
 
-        return providers[mode]()
+        return providers[coolant_type]()
