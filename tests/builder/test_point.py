@@ -11,9 +11,9 @@ from vpype_mecode.builder.point import Point
 
 def test_default_initialization():
     point = Point()
-    assert point.x == 0.0
-    assert point.y == 0.0
-    assert point.z == 0.0
+    assert point.x == None
+    assert point.y == None
+    assert point.z == None
 
 def test_initialization_with_values():
     point = Point(1.0, 2.0, 3.0)

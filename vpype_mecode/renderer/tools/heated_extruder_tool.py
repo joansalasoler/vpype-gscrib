@@ -64,7 +64,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.get_parameter("E")
+        current_position = ctx.g.get_move_parameter("E")
         new_position = current_position + distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -80,7 +80,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         distance = ctx.length_units.scale(ctx.retract_length)
-        current_position = ctx.g.get_parameter("E")
+        current_position = ctx.g.get_move_parameter("E")
         new_position = current_position - distance
 
         ctx.g.move(E=new_position, F=ctx.retract_speed)
@@ -113,7 +113,7 @@ class HeatedExtruderTool(BaseTool):
         """
 
         filament_length = self._filament_length(ctx, x, y)
-        current_position = ctx.g.get_parameter("E")
+        current_position = ctx.g.get_move_parameter("E")
         new_position = current_position + filament_length
 
         return { "E": new_position }

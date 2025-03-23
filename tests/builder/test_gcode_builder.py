@@ -1,5 +1,4 @@
 import pytest
-from math import inf
 from unittest.mock import patch
 from vpype_mecode.builder import GBuilder
 from vpype_mecode.builder import Point
@@ -20,7 +19,7 @@ def mock_write():
     with patch.object(GBuilder, 'write') as mock:
         mock.last_statement = None
 
-        def side_effect(statement, wait = False):
+        def side_effect(statement):
             mock.last_statement = statement
 
         mock.side_effect = side_effect
@@ -49,7 +48,7 @@ def test_set_axis_position(gbuilder, mock_write):
 
 def test_set_axis_position_partial(gbuilder, mock_write):
     gbuilder.set_axis_position(x=10)
-    assert gbuilder.position == Point(10, -inf, -inf)
+    assert gbuilder.position == Point(10, None, None)
     assert mock_write.last_statement.startswith('G92 X10')
 
 def test_set_distance_mode_absolute(gbuilder, mock_write):

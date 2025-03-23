@@ -89,6 +89,7 @@ API Reference
    vpype_mecode.builder
    vpype_mecode.builder.codes
    vpype_mecode.builder.enums
+   vpype_mecode.builder.excepts
    vpype_mecode.builder.formatters
    vpype_mecode.builder.writers
    vpype_mecode.renderer

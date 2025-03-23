@@ -21,14 +21,16 @@ def formatter():
 
 def test_default_initialization(formatter):
     assert formatter._decimal_places == 5
-    assert formatter._labels == {"x": "X", "y": "Y", "z": "Z"}
+    assert formatter._labels == {"X": "X", "Y": "Y", "Z": "Z"}
     assert formatter._comment_template == "; {}"
 
 # Test axis label settings
 
 def test_set_axis_label_valid(formatter):
     formatter.set_axis_label("x", "A")
-    assert formatter._labels["x"] == "A"
+    assert formatter._labels["X"] == "A"
+    formatter.set_axis_label("X", "B")
+    assert formatter._labels["X"] == "B"
 
 def test_set_axis_label_invalid_axis(formatter):
     with pytest.raises(ValueError):
@@ -143,7 +145,7 @@ def test_format_parameters_axes(formatter):
 
 def test_format_parameters_custom(formatter):
     params = {"x": 10, "F": 1000, "comment": "test"}
-    assert formatter.format_parameters(params) == "X10 F1000 commenttest"
+    assert formatter.format_parameters(params) == "X10 F1000 COMMENTtest"
 
 # Test command formatting
 
