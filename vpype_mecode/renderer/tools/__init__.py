@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Handles tool operations.
+Tool activation and parameter control.
 
 This module provides implementations for different machine tools such as
 lasers, spindles, and other end effectors. Each implementation handles

@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock
 from dataclasses import FrozenInstanceError
-from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder import GCodeBuilder
 from vpype_mecode.renderer import GContext
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.builder.enums import LengthUnits
@@ -14,7 +14,7 @@ from vpype_mecode.heightmaps import BaseHeightMap
 
 @pytest.fixture
 def mock_gbuilder():
-    return Mock(spec=GBuilder)
+    return Mock(spec=GCodeBuilder)
 
 @pytest.fixture
 def mock_gcontext(mock_gbuilder, render_config):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Plugin exceptions and errors.
+Top-level plugin exceptions and error handling.
 
 This module defines a collection of exceptions to handle errors related
 to G-code processing and generation.

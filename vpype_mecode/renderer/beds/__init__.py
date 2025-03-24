@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Handles machine beds.
+Machine work area management.
 
 This module provides implementations for controlling the machine's bed,
 which serves as the foundational surface for machining or printing

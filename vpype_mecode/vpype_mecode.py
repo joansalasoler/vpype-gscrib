@@ -35,7 +35,7 @@ from vpype import Document
 
 from vpype_mecode import __version__
 from vpype_mecode.vpype_options import command_options
-from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder import GCodeBuilder
 from vpype_mecode.builder.excepts import DeviceError
 from vpype_mecode.excepts import VpypeMecodeError
 from vpype_mecode.processor import DocumentProcessor
@@ -89,7 +89,7 @@ def vpype_mecode(document: Document, **kwargs) -> Document:
 
         # Initialize the G-Code renderer
 
-        builder = GBuilder(**builder_config.model_dump())
+        builder = GCodeBuilder(**builder_config.model_dump())
         renderer = GRenderer(builder, render_configs)
 
         # Process the document using the configured renderer

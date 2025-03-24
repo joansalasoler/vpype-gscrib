@@ -2,7 +2,7 @@ import math
 import pytest
 
 from vpype_mecode.builder import Point
-from vpype_mecode.builder import CoreGBuilder
+from vpype_mecode.builder import GCodeCore
 from vpype_mecode.builder.writers import BaseWriter
 
 
@@ -16,7 +16,7 @@ def mock_writer():
 
 @pytest.fixture
 def builder(mock_writer):
-    builder = CoreGBuilder()
+    builder = GCodeCore()
     builder._writers = [mock_writer]
     return builder
 
@@ -42,13 +42,13 @@ class MockWriter(BaseWriter):
 # Test Initialization
 
 def test_default_initialization():
-    builder = CoreGBuilder()
+    builder = GCodeCore()
     assert builder.position == Point.unknown()
     assert not builder.is_relative
     assert len(builder._writers) > 0
 
 def test_custom_initialization():
-    builder = CoreGBuilder(
+    builder = GCodeCore(
         output="test.gcode",
         print_lines=True,
         decimal_places=3,
@@ -285,7 +285,7 @@ def test_comment_with_args(builder, mock_writer):
 def test_multiple_writers():
     writer1 = MockWriter()
     writer2 = MockWriter()
-    builder = CoreGBuilder()
+    builder = GCodeCore()
     builder._writers = [writer1, writer2]
 
     builder.move(x=10)
@@ -298,7 +298,7 @@ def test_multiple_writers():
 def test_context_manager():
     mock_writer = MockWriter()
 
-    with CoreGBuilder() as builder:
+    with GCodeCore() as builder:
         builder._writers = [mock_writer]
         builder.move(x=10)
 

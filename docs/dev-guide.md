@@ -158,7 +158,7 @@ class RenderConfig(BaseModel, BaseConfig):
 
 G-code commands define specific machine instructions within the system.
 These commands are implemented using enums and mapped to their
-corresponding G-code instructions. The `GBuilder` class provides
+corresponding G-code instructions. The `GCodeBuilder` class provides
 high-level methods to generate and manage these commands.
 
 The following steps outline how to add a new G-code command.
@@ -191,7 +191,7 @@ gcode_table = GCodeTable((
 **Implement the Command:**
 
 1. Open `vpype_mecode/builder/gcode_builder.py`.
-2. Modify `GBuilder` to support the new command by adding a new method.
+2. Modify `GCodeBuilder` to support the new command by adding a new method.
 3. Use `self._get_statement()` to build the G-code statement.
 4. Write the G-code statement using `self.write(statement)`.
 

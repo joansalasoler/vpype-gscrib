@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Handles the coolant system control.
+Coolant system activation and control.
 
 This module provides implementations for various coolant systems in CNC
 machines, each generating specific G-code for controlling different

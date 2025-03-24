@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Generates G-code programs from `vpype` documents.
+Converts vector graphics into G-code programs.
 
 This module provides the main tools to generate G-code programs for CNC
 machines and similar devices. `GRenderer` is the main class that generates

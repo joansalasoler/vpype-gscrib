@@ -4,7 +4,7 @@ import pytest
 from numpy import array
 from vpype import Document, LineCollection
 from vpype_mecode.config import RenderConfig
-from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder import GCodeBuilder
 from vpype_mecode.renderer import GRenderer
 
 
@@ -14,7 +14,7 @@ from vpype_mecode.renderer import GRenderer
 
 @pytest.fixture
 def mock_builder():
-    return GBuilder()
+    return GCodeBuilder()
 
 @pytest.fixture
 def mock_config():

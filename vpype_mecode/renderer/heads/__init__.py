@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Handles machine head movements.
+Tool head positioning and movement control.
 
 This module provides implementations for controlling the movement of the
 machine's head (tool carrier). It includes G-code generation for various

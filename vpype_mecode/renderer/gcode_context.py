@@ -19,7 +19,7 @@
 
 from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
-from vpype_mecode.builder.gcode_builder import GBuilder
+from vpype_mecode.builder.gcode_builder import GCodeBuilder
 from vpype_mecode.config import RenderConfig
 from vpype_mecode.heightmaps import BaseHeightMap, FlatHeightMap, RasterHeightMap
 from vpype_mecode.enums import *
@@ -36,8 +36,8 @@ class GContext:
     the provided `RenderConfig` as read-only properties. Values are
     automatically scaled according to the unit conventions below:
 
-    - Times: seconds (will be scaled by `GBuilder`)
-    - Lengths: pixels (will be scaled by `GBuilder`)
+    - Times: seconds (will be scaled by `GCodeBuilder`)
+    - Lengths: pixels (will be scaled by `GCodeBuilder`)
     - Speeds: units per minute (mm/min or in/min)
 
     Example:
@@ -46,7 +46,7 @@ class GContext:
         >>> print(ctx.work_speed)  # Speed in units/min
 
     Args:
-        builder (GBuilder): G-code builder instance
+        builder (GCodeBuilder): G-code builder instance
         config (RenderConfig): Configuration object
     """
 
@@ -58,11 +58,11 @@ class GContext:
     )
 
     @typechecked
-    def __init__(self, builder: GBuilder, config: RenderConfig):
+    def __init__(self, builder: GCodeBuilder, config: RenderConfig):
         """Initialize the G-code context.
 
         Args:
-            builder (GBuilder): The G-code builder instance
+            builder (GCodeBuilder): The G-code builder instance
             config (RenderConfig): Configuration object
         """
 
@@ -74,7 +74,7 @@ class GContext:
         self._frozen = True
 
     @property
-    def g(self) -> GBuilder:
+    def g(self) -> GCodeBuilder:
         """The G-code builder instance"""
 
         return self._g

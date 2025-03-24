@@ -31,7 +31,7 @@ class BuilderConfig(BaseModel, BaseConfig):
     Configuration settings for the G-code builder.
 
     This class stores various options that are passed directly to the
-    `GBuilder` instance, which is responsible for generating the G-Code.
+    `GCodeBuilder` instance, which is responsible for generating the G-Code.
     See the :doc:`command line reference </cli>` for detailed information
     about the properties of this class.
 

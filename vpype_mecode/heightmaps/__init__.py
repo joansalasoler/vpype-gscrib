@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Heightmap implementations for G-code generation.
+Heightmap implementations for toolpath and power compensation.
 """
 
 from .base_heightmap import BaseHeightMap

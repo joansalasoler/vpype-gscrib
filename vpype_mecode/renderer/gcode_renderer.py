@@ -30,7 +30,7 @@ from vpype_mecode.builder.enums.types import DistanceMode, FeedMode
 from vpype_mecode.builder.enums.types import HaltMode, Plane
 from vpype_mecode.enums import *
 
-from vpype_mecode.builder.gcode_builder import GBuilder
+from vpype_mecode.builder.gcode_builder import GCodeBuilder
 from .gcode_context import GContext
 from .fans import FanFactory
 from .heads import HeadFactory
@@ -67,14 +67,14 @@ class GRenderer(DocumentRenderer):
 
     The renderer coordinates these components to process the document
     hierarchy: Document → Layers → Paths → Segments, generating
-    appropriate G-code commands through the `GBuilder` instance.
+    appropriate G-code commands through the `GCodeBuilder` instance.
 
     Args:
-        builder (GBuilder): G-code builder instance
+        builder (GCodeBuilder): G-code builder instance
         configs (List[RenderConfig]): Configuration parameters
 
     Attributes:
-        _g (GBuilder): G-code command builder instance
+        _g (GCodeBuilder): G-code command builder instance
         _config (RenderConfig): Rendering configuration parameters
         _context (GContext): Current rendering context
         _head (BaseHead): Machine head controller
@@ -99,15 +99,15 @@ class GRenderer(DocumentRenderer):
     )
 
     @typechecked
-    def __init__(self, builder: GBuilder, configs: List[RenderConfig]):
+    def __init__(self, builder: GCodeBuilder, configs: List[RenderConfig]):
         """G-code renderer initialization.
 
         Args:
-            builder (GBuilder): G-code builder instance
+            builder (GCodeBuilder): G-code builder instance
             config (List[RenderConfig]): Configuration parameters
         """
 
-        self._g: GBuilder = builder
+        self._g: GCodeBuilder = builder
         self._ctx_queue = self._build_contexts(builder, configs)
         self._document_context = self._switch_context()
         self._context = self._document_context
@@ -327,7 +327,7 @@ class GRenderer(DocumentRenderer):
         self._g.emergency_halt(str(e))
         self._g.teardown()
 
-    def _build_contexts(self, builder: GBuilder, configs: List[RenderConfig]) -> deque:
+    def _build_contexts(self, builder: GCodeBuilder, configs: List[RenderConfig]) -> deque:
         """Builds a context queue from a list of configurations."""
 
         return deque([GContext(builder, c) for c in configs])

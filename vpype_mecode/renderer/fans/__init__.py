@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Handles machine fans.
+Machine fan speed and control
 
 This module provides implementations for controlling the machine's fans.
 """

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Configuration management module.
+TOML and command-line configuration utilities.
 
 This module provides a robust system for managing and validating
 configuration settings. Its main purpose is to ensure consistency and

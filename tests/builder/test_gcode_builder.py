@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from vpype_mecode.builder import GBuilder
+from vpype_mecode.builder import GCodeBuilder
 from vpype_mecode.builder import Point
 from vpype_mecode.builder.enums import *
 from vpype_mecode.enums import *
@@ -12,11 +12,11 @@ from vpype_mecode.enums import *
 
 @pytest.fixture
 def gbuilder(mock_write):
-    return GBuilder()
+    return GCodeBuilder()
 
 @pytest.fixture
 def mock_write():
-    with patch.object(GBuilder, 'write') as mock:
+    with patch.object(GCodeBuilder, 'write') as mock:
         mock.last_statement = None
 
         def side_effect(statement):

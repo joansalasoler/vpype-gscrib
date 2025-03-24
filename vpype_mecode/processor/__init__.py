@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Document processing module.
+Vector graphics preprocessing for G-code generation.
 
 This module provides the core functionality and interface for processing
 and rendering `vpype` documents. It is used by the `vpype_mecode.renderer`
