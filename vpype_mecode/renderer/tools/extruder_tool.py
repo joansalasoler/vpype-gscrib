@@ -43,7 +43,7 @@ class ExtruderTool(BaseTool):
         """
 
         ctx.g.set_extrusion_mode(ExtrusionMode.ABSOLUTE)
-        ctx.g.set_axis_position(E=0.0)
+        ctx.g.set_axis_position(E=0.0, comment="Reset extruder position")
 
     def power_on(self, ctx: GContext):
         """Recover filament before tracing a path.

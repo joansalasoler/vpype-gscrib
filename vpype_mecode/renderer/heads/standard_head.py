@@ -113,7 +113,7 @@ class StandardHead(BaseHead):
         """
 
         if ctx.g.position.z != ctx.safe_z:
-            ctx.g.rapid(z=ctx.safe_z)
+            ctx.g.rapid(z=ctx.safe_z, comment="Park for service")
 
         if ctx.g.position.z != ctx.park_z:
             park_z = ctx.scale_length(ctx.park_z)
