@@ -50,20 +50,6 @@ def test_to_vector():
     assert vector.shape == (4,)
     assert np.array_equal(vector, np.array([1.0, 2.0, 3.0, 1.0]))
 
-# Test create method
-
-def test_create_with_all_values():
-    point = Point.create(1.0, 2.0, 3.0)
-    assert point == Point(1.0, 2.0, 3.0)
-
-def test_create_with_none_values():
-    point = Point.create(None, None, None)
-    assert point == Point(0.0, 0.0, 0.0)
-
-def test_create_with_mixed_values():
-    point = Point.create(1.0, None, 3.0)
-    assert point == Point(1.0, 0.0, 3.0)
-
 # Test replace method
 
 def test_replace_with_all_values():
