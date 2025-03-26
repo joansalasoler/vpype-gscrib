@@ -26,6 +26,13 @@ ideal for Z-height control. A better approach would allow roughing and
 finishing passes with different settings. Currently, this can be done by
 duplicating layers manually, but it's not convenient.
 
+## Procedural Heightmap System
+
+Consider implementing mathematical functions for height mapping to
+complement the current raster-based approach. This would allow wrapping
+paths around cylinders and other 3D shapes without needing to generate
+image files, while providing perfect mathematical precision.
+
 ## Z Height Adjustment by Pen Thickness
 
 Vpype supports setting pen thickness. This could be used to adjust
