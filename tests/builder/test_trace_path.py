@@ -46,7 +46,7 @@ class MockWriter(BaseWriter):
 
 def test_initialization(tracer):
     assert tracer._direction == Direction.CLOCKWISE
-    assert tracer._resolution == 0.01
+    assert tracer._resolution == 0.1
 
 def test_select_resolution(tracer):
     tracer.select_resolution(0.5)
