@@ -59,25 +59,25 @@ def test_custom_initialization():
     )
 
     assert len(builder._writers) >= 2  # File and stdout writers
-    assert builder.formatter._decimal_places == 3
-    assert builder.formatter._labels == {"X": "A", "Y": "B", "Z": "C"}
+    assert builder._formatter._decimal_places == 3
+    assert builder._formatter._labels == {"X": "A", "Y": "B", "Z": "C"}
 
 # Test distance modes
 
 def test_absolute_distance_mode(builder, mock_writer):
-    builder.absolute()
+    builder.set_distance_mode("absolute")
     assert not builder.is_relative
     assert "G90" in mock_writer.written_lines
 
 def test_relative_distance_mode(builder, mock_writer):
-    builder.relative()
+    builder.set_distance_mode("relative")
     assert builder.is_relative
     assert "G91" in mock_writer.written_lines
 
 def test_distance_mode_switching(builder, mock_writer):
-    builder.relative()
-    builder.absolute()
-    builder.relative()
+    builder.set_distance_mode("relative")
+    builder.set_distance_mode("absolute")
+    builder.set_distance_mode("relative")
     assert "G91" in mock_writer.written_lines[0]
     assert "G90" in mock_writer.written_lines[1]
     assert "G91" in mock_writer.written_lines[2]
@@ -141,7 +141,7 @@ def test_linear_move(builder, mock_writer):
     assert "G1 X100 Y200 Z300" in mock_writer.written_lines[1]
 
 def test_rapid_absolute(builder, mock_writer):
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.rapid_absolute(x=10, y=20)
     assert builder.position == Point(10, 20, None)
     assert "G90" in mock_writer.written_lines
@@ -153,7 +153,7 @@ def test_rapid_absolute(builder, mock_writer):
     assert "G0 Z30" in mock_writer.written_lines
 
 def test_move_absolute(builder, mock_writer):
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.move_absolute(x=10, y=20)
     assert builder.position == Point(10, 20, None)
     assert "G90" in mock_writer.written_lines
@@ -165,7 +165,7 @@ def test_move_absolute(builder, mock_writer):
     assert "G1 Z30" in mock_writer.written_lines
 
 def test_relative_moves(builder, mock_writer):
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.move(x=10, y=20)
     builder.move(x=5, y=15)
     assert "G91" in mock_writer.written_lines[0]
@@ -174,7 +174,7 @@ def test_relative_moves(builder, mock_writer):
     assert builder.position == Point(15, 35, 0)
 
 def test_absolute_moves(builder, mock_writer):
-    builder.absolute()
+    builder.set_distance_mode("absolute")
     builder.move(x=10, y=20)
     builder.move(x=5, y=15)
     assert "G90" in mock_writer.written_lines[0]
@@ -183,7 +183,7 @@ def test_absolute_moves(builder, mock_writer):
     assert builder.position == Point(5, 15, 0)
 
 def test_absolute_distance_context_manager(builder, mock_writer):
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.move(x=100, y=100)
     mock_writer.written_lines.clear()
 
@@ -200,7 +200,7 @@ def test_absolute_distance_context_manager(builder, mock_writer):
     assert "G91" in mock_writer.written_lines[3]
 
 def test_relative_distance_context_manager(builder, mock_writer):
-    builder.absolute()
+    builder.set_distance_mode("absolute")
     builder.move(x=100, y=100)
     mock_writer.written_lines.clear()
 
@@ -224,7 +224,7 @@ def test_translation(builder, mock_writer):
     assert "G1 X10 Y20" in mock_writer.written_lines
 
 def test_rotation(builder, mock_writer):
-    builder.rotate(math.pi / 2)  # 90 degrees
+    builder.rotate(90)  # 90 degrees
     builder.move(x=10, y=0)
     written_line = mock_writer.written_lines[-1]
     assert "G1" in written_line
@@ -253,7 +253,7 @@ def test_matrix_stack(builder, mock_writer):
 
 def test_combined_transformations(builder, mock_writer):
     builder.translate(10, 0)
-    builder.rotate(math.pi / 2)
+    builder.rotate(90)
     builder.scale(2)
     builder.move(x=5, y=0)
     assert builder.position == Point(5, 0, 0)
@@ -262,7 +262,7 @@ def test_combined_transformations(builder, mock_writer):
 def test_relative_with_transformations(builder, mock_writer):
     builder.translate(10, 0)
     builder.scale(3)
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.move(x=5, y=0)
     builder.move(x=5, y=10)
     assert builder.position == Point(10, 10, 0)

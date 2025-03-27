@@ -19,7 +19,7 @@ def transformer():
 def transformed():
     t = Transformer()
     t.translate(10, 20, 30)
-    t.rotate(math.pi / 2)
+    t.rotate(90)
     t.scale(2)
     return t
 
@@ -61,7 +61,7 @@ def test_multiple_push_pop(transformer):
     transformer.push_matrix()
     transformer.translate(10, 0, 0)
     transformer.push_matrix()
-    transformer.rotate(math.pi / 2)
+    transformer.rotate(90)
     transformer.pop_matrix()
     transformer.pop_matrix()
     assert_array_equal(transformer._current_matrix, np.eye(4))
@@ -96,7 +96,7 @@ def test_scale_non_uniform(transformer):
     assert point == Point(2, 3, 4)
 
 def test_rotate_z_90_degrees(transformer):
-    transformer.rotate(math.pi / 2, axis="z")
+    transformer.rotate(90, axis="z")
     point = transformer.apply_transform(Point(1, 0, 0))
     transformed_array = point.to_vector()[:3]
     expected_array = Point(0, 1, 0).to_vector()[:3]
@@ -104,7 +104,7 @@ def test_rotate_z_90_degrees(transformer):
     assert_array_almost_equal(transformed_array, expected_array)
 
 def test_rotate_x_90_degrees(transformer):
-    transformer.rotate(math.pi / 2, axis="x")
+    transformer.rotate(90, axis="x")
     point = transformer.apply_transform(Point(0, 1, 0))
     transformed_array = point.to_vector()[:3]
     expected_array = Point(0, 0, 1).to_vector()[:3]
@@ -112,7 +112,7 @@ def test_rotate_x_90_degrees(transformer):
     assert_array_almost_equal(transformed_array, expected_array)
 
 def test_rotate_y_90_degrees(transformer):
-    transformer.rotate(math.pi / 2, axis="y")
+    transformer.rotate(90, axis="y")
     point = transformer.apply_transform(Point(0, 0, 1))
     transformed_array = point.to_vector()[:3]
     expected_array = Point(1, 0, 0).to_vector()[:3]
@@ -157,7 +157,7 @@ def test_reflect_arbitrary_plane(transformer):
 def test_combined_transformations(transformer):
     point = Point(1, 0, 0)
     transformer.translate(1, 0, 0)
-    transformer.rotate(math.pi / 2, "z")
+    transformer.rotate(90, "z")
     transformer.scale(2)
 
     transformed_point = transformer.apply_transform(point)
@@ -169,7 +169,7 @@ def test_nested_transformations(transformer):
     point = Point(1, 0, 0)
     transformer.translate(1, 0, 0)
     transformer.push_matrix()
-    transformer.rotate(math.pi / 2, "z")
+    transformer.rotate(90, "z")
     transformer.scale(2)
     point1 = transformer.apply_transform(point)
     transformer.pop_matrix()
@@ -189,10 +189,10 @@ def test_identity_transformation(transformer):
 
 def test_multiple_rotations(transformer):
     origin = Point(1, 2, 3)
-    transformer.rotate(math.pi / 2, "z")
-    transformer.rotate(math.pi / 2, "z")
-    transformer.rotate(math.pi / 2, "z")
-    transformer.rotate(math.pi / 2, "z")
+    transformer.rotate(90, "z")
+    transformer.rotate(90, "z")
+    transformer.rotate(90, "z")
+    transformer.rotate(90, "z")
     point = transformer.apply_transform(origin)
     transformed_array = point.to_vector()[:3]
     expected_array = origin.to_vector()[:3]
@@ -200,7 +200,7 @@ def test_multiple_rotations(transformer):
 
 def test_reverse_transform(transformer):
     transformer.scale(2)
-    transformer.rotate(math.pi / 3)
+    transformer.rotate(60)
     transformer.translate(10, 20, 30)
     original = Point(1, 2, 3)
     transformed = transformer.apply_transform(original)
@@ -279,7 +279,7 @@ def test_reflect_invalid_normal(transformer):
 
 def test_invalid_rotation_axis(transformer):
     with pytest.raises(KeyError):
-        transformer.rotate(math.pi / 2, axis="w")
+        transformer.rotate(90, axis="w")
 
 def test_invalid_mirror_plane(transformer):
     with pytest.raises(ValueError):

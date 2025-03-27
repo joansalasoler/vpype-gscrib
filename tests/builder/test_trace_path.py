@@ -87,7 +87,7 @@ def test_circle(tracer, builder):
 
 def test_distance_modes(tracer, builder):
     # Test in absolute mode (default)
-    builder.absolute()
+    builder.set_distance_mode("absolute")
     builder.set_axis_position((0, 0, 0))
     builder.move(x=10, y=0)
     tracer.select_resolution(2.0)
@@ -97,7 +97,7 @@ def test_distance_modes(tracer, builder):
 
     # Reset and test in relative mode
     builder._writers[0].written_lines.clear()
-    builder.relative()
+    builder.set_distance_mode("relative")
     builder.set_axis_position((0, 0, 0))
     builder.move(x=10, y=0)
     tracer.arc(target=(-10, 10), center=(-10, 0))
