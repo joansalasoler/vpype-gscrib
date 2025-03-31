@@ -1,6 +1,6 @@
 # Machine Components for G-code Generation
 
-Vpype-Mecode allows users to configure the machine operation by combining
+Vpype-Gscrib allows users to configure the machine operation by combining
 different **renderer components**, or modes. These modes control essential
 aspects of machine behavior, including the bed, coolant, fan, toolhead
 movement, tool changes, and tool operations.
@@ -92,7 +92,7 @@ surface while keeping the material cool during the process.
 ```bash
 vpype \
   read drawing.svg \
-  mecode \
+  gscrib \
     --tool-type=spindle \
     --coolant-type=flood \
     --head-type=auto-leveling \
@@ -118,6 +118,6 @@ your machine's hardware and capabilities to avoid any issues. For a more
 detailed list of each mode's available options, refer to the full
 [Command-Line Reference](cli).
 
-If you're interested in extending Vpype-Mecode by implementing new modes,
+If you're interested in extending Vpype-Gscrib by implementing new modes,
 check out our [Development Guide](dev-guide.md) for instructions on how
 to create and integrate custom modes into your workflow.

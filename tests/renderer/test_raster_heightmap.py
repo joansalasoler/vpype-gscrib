@@ -4,9 +4,9 @@ from unittest.mock import patch
 from numpy import ndarray, float32
 from scipy.interpolate import RectBivariateSpline
 
-from vpype_mecode.excepts import ImageLoadError
-from vpype_mecode.heightmaps import RasterHeightMap
-from vpype_mecode.heightmaps.raster_heightmap import UINT8_MAX, UINT16_MAX
+from vpype_gscrib.excepts import ImageLoadError
+from vpype_gscrib.heightmaps import RasterHeightMap
+from vpype_gscrib.heightmaps.raster_heightmap import UINT8_MAX, UINT16_MAX
 
 
 # --------------------------------------------------------------------

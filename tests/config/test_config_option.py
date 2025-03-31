@@ -6,7 +6,7 @@ from click import BadParameter, Context, Command
 from click.core import ParameterSource
 from vpype_cli import LengthType
 
-from vpype_mecode.config import ConfigOption
+from vpype_gscrib.config import ConfigOption
 
 
 # --------------------------------------------------------------------

@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 import pytest
 from numpy import array
 from vpype import Document, LineCollection
-from vpype_mecode.config import RenderConfig
-from vpype_mecode.builder import GCodeBuilder
-from vpype_mecode.renderer import GRenderer
+from vpype_gscrib.config import RenderConfig
+from vpype_gscrib.gscrib import GCodeBuilder
+from vpype_gscrib.renderer import GRenderer
 
 
 # --------------------------------------------------------------------
@@ -65,10 +65,10 @@ def test_grenderer_initialization(grenderer):
 def test_begin_document(grenderer, mock_document):
     grenderer.begin_document(mock_document)
     assert grenderer._context == grenderer._document_context
-    assert grenderer._g.state.current_distance_mode is not None
-    assert grenderer._g.state.current_feed_mode is not None
-    assert grenderer._g.state.current_length_units is not None
-    assert grenderer._g.state.current_plane is not None
+    assert grenderer._g.state.distance_mode is not None
+    assert grenderer._g.state.feed_mode is not None
+    assert grenderer._g.state.length_units is not None
+    assert grenderer._g.state.plane is not None
 
 def test_begin_layer(grenderer, mock_layer):
     initial_context = grenderer._context

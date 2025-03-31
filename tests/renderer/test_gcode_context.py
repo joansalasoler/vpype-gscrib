@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import Mock
 from dataclasses import FrozenInstanceError
-from vpype_mecode.builder import GCodeBuilder
-from vpype_mecode.renderer import GContext
-from vpype_mecode.config import RenderConfig
-from vpype_mecode.builder.enums import LengthUnits
-from vpype_mecode.heightmaps import BaseHeightMap
+from vpype_gscrib.gscrib import GCodeBuilder
+from vpype_gscrib.renderer import GContext
+from vpype_gscrib.config import RenderConfig
+from vpype_gscrib.gscrib.enums import LengthUnits
+from vpype_gscrib.heightmaps import BaseHeightMap
 
 
 # --------------------------------------------------------------------
@@ -78,7 +78,7 @@ def test_scale_length_inches(mock_gbuilder):
     assert value_in_inches == pytest.approx(expected_value)
 
 def test_scaled_properties(mock_gbuilder, render_config):
-    for field_name in GContext._scale_properties:
+    for field_name in GContext._scale_speeds:
         setattr(render_config, field_name, 1000.0) # 1000px
         ctx = GContext(mock_gbuilder, render_config)
         scaled_value = getattr(ctx, field_name) # mm

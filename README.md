@@ -5,13 +5,9 @@ Plug-in that adds G-code generation capabilities to [`vpype`](https://github.com
 This plugin allows you to convert vector graphics into G-code commands
 suitable for CNC machines, plotters, and other G-code compatible devices.
 This plugin processes a vpype document and generates G-Code from it
-using a modified version of the [`mecode`](https://github.com/jminardi/mecode)
-library. The ouput can be sent to the teminal, a file or to a printer
-using `mecode`'s direct write mode.
-
-⚠️ **Notice**: This project is currently under active development and is
-mostly untested. Some features may be missing or not work as expected.
-Use with caution in production environments.
+using the [`Gscrib`](https://github.com/joansalasoler/gscrib) library.
+The ouput can be sent to the teminal, a file or to a connected device
+using `Gscrib`'s direct write mode.
 
 ## Features
 
@@ -29,7 +25,7 @@ Use with caution in production environments.
 ## Documentation
 
 Documentation for the latest version of the project can be found at
-[Read the Docs](https://vpype-mecode.readthedocs.io/en/latest/).
+[Read the Docs](https://vpype-gscrib.readthedocs.io/en/latest/).
 
 ## Examples
 
@@ -37,13 +33,13 @@ Here are some common usage examples:
 
 ```bash
 # Basic G-code generation from an SVG file
-vpype read input.svg mecode --outfile=output.gcode
+vpype read input.svg gscrib --output=output.gcode
 
 # Specify custom length units
-vpype read input.svg mecode --length_units=in --outfile=output.gcode
+vpype read input.svg gscrib --length-units=in --output=output.gcode
 
 # Load per layer rendering configurations from a file
-vpype read input.svg mecode --render_config=config.toml --outfile=output.gcode
+vpype read input.svg gscrib --config=config.toml --output=output.gcode
 
 # A more complete example using Vpype to optimize the G-Code output
 
@@ -53,7 +49,7 @@ vpype \
   linesimplify --tolerance=0.1mm \
   reloop --tolerance=0.1mm \
   linesort --two-opt --passes=250 \
-  mecode --render_config=config.toml --outfile=output.gcode
+  gscrib --config=config.toml --output=output.gcode
 ```
 
 ## Development setup
@@ -61,8 +57,8 @@ vpype \
 Here is how to clone the project for development:
 
 ```bash
-$ git clone https://github.com/joansalasoler/vpype-mecode.git
-$ cd vpype-mecode
+$ git clone https://github.com/joansalasoler/vpype-gscrib.git
+$ cd vpype-gscrib
 ```
 
 Create a virtual environment:
@@ -73,7 +69,7 @@ $ source venv/bin/activate
 $ pip install --upgrade pip
 ```
 
-Install `vpype-mecode` and its dependencies (including `vpype`):
+Install `vpype-gscrib` and its dependencies (including `vpype`):
 
 ```bash
 $ pip install -e .

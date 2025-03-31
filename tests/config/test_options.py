@@ -1,7 +1,7 @@
 import pytest
 
-from vpype_mecode.config import BuilderConfig, RenderConfig
-from vpype_mecode.vpype_options import command_options
+from vpype_gscrib.config import BuilderConfig, RenderConfig
+from vpype_gscrib.vpype_options import command_options
 
 
 # --------------------------------------------------------------------

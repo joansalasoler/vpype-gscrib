@@ -4,7 +4,5 @@ pydantic~=2.10.0
 pyserial~=3.5.0
 scikit-image~=0.25.0
 scipy~=1.15.0
-solidpython~=1.1.0
 typeguard~=4.4.0
 vpype~=1.14.0
-vpython~=7.6.0

@@ -5,17 +5,17 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="vpype-mecode",
+    name="vpype-gscrib",
     version="0.1.0",
     description="G-Code generator for Vpype",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="Joan Sala",
-    url="https://github.com/joansalasoler/vpype-mecode",
-    packages=["vpype_mecode"],
+    url="https://github.com/joansalasoler/vpype-gscrib",
+    packages=["vpype_gscrib"],
     classifiers=[
-        "Development Status :: 4 - Beta",
-        "License :: OSI Approved :: MIT License",
+        "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Topic :: Multimedia :: Graphics",
         "Environment :: Plugins",
     ],
@@ -26,6 +26,6 @@ setup(
     ],
     entry_points='''
             [vpype.plugins]
-            vpype_mecode=vpype_mecode.vpype_mecode:vpype_mecode
+            vpype_gscrib=vpype_gscrib.vpype_gscrib:vpype_gscrib
         ''',
 )

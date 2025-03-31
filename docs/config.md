@@ -1,4 +1,4 @@
-Configuration File for vpype-mecode
+Configuration File for vpype-gscrib
 ===================================
 
 ```ini

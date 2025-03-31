@@ -8,11 +8,13 @@ target-version = ["py38", "py39", "py310"]
 [tool.isort]
 profile = "black"
 line_length = 80
-src_paths = ["vpype_mecode"]
+src_paths = ["vpype_gscrib"]
 
 [tool.pytest.ini_options]
-typeguard-packages = "vpype_mecode"
-norecursedirs = "vpype_mecode/mecode"
+typeguard-packages = "vpype_gscrib"
+
+[tool.pylint]
+ignore-paths = '^docs/.*$'
 
 [tool.pylint.messages_control]
 disable = ["C", "R"]

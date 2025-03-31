@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path('..').resolve()))
 
 from docutils.parsers.rst import Directive, Parser
 from docutils.utils import new_document
-from vpype_mecode.builder.codes import gcode_table
+from vpype_gscrib.gscrib.codes import gcode_table
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -15,7 +15,7 @@ from vpype_mecode.builder.codes import gcode_table
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'vpype-mecode'
+project = 'vpype-gscrib'
 copyright = '2025, Joan Sala <contact@joansala.com>'
 author = 'Joan Sala'
 
@@ -41,7 +41,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'venv']
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-modindex_common_prefix = ["vpype_mecode."]
+modindex_common_prefix = ["vpype_gscrib."]
 
 # -- External Documentation Mappings -----------------------------------------
 

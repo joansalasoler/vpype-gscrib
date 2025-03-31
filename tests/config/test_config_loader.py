@@ -4,8 +4,8 @@ from click import BadParameter, Command
 from unittest.mock import MagicMock, patch
 from vpype import Document
 
-from vpype_mecode.config import ConfigOption, ConfigLoader
-from vpype_mecode.builder.enums import LengthUnits, TimeUnits
+from vpype_gscrib.config import ConfigOption, ConfigLoader
+from vpype_gscrib.gscrib.enums import LengthUnits, TimeUnits
 
 
 # --------------------------------------------------------------------
@@ -59,7 +59,7 @@ def test_validate_config_with_parameters(config_loader):
     assert result['work_speed'] == 100
     assert result['length_units'] == 'mm'
 
-@patch('vpype_mecode.config.config_loader.ConfigManager')
+@patch('vpype_gscrib.config.config_loader.ConfigManager')
 def test_read_config_file(mock_config_manager, config_loader, mock_document):
     manager_instance = mock_config_manager.return_value
     manager_instance.config = {}
@@ -74,7 +74,7 @@ def test_read_config_file(mock_config_manager, config_loader, mock_document):
     assert result[1] == document_config
     assert result[2] == document_config
 
-@patch('vpype_mecode.config.config_loader.ConfigManager')
+@patch('vpype_gscrib.config.config_loader.ConfigManager')
 def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_document):
     manager_instance = mock_config_manager.return_value
 
@@ -107,7 +107,7 @@ def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_d
     assert result[1].time_units == 'ms' # Inherit from document
     assert result[2].time_units == 'ms' # Inherit from document
 
-@patch('vpype_mecode.config.config_loader.ConfigManager')
+@patch('vpype_gscrib.config.config_loader.ConfigManager')
 def test_read_config_file_invalid(mock_config_manager, config_loader, mock_document):
     manager_instance = mock_config_manager.return_value
 

@@ -1,6 +1,6 @@
 # User Guide
 
-Thank you for choosing **Vpype-Mecode**. This guide will help you get
+Thank you for choosing **Vpype-Gscrib**. This guide will help you get
 started with converting vector graphics into G-code for CNC machines,
 plotters, laser engravers, and other compatible devices.
 
@@ -14,7 +14,7 @@ plotters, laser engravers, and other compatible devices.
 
 ## Introduction
 
-**Vpype-Mecode** extends [vpype](https://github.com/abey79/vpype) with
+**Vpype-Gscrib** extends [vpype](https://github.com/abey79/vpype) with
 G-code generation capabilities. It allows you to convert SVG files and
 other vector graphics into machine-compatible G-code, with support for
 multiple tool types, speed control, and per-layer configurations.
@@ -27,12 +27,6 @@ multiple tool types, speed control, and per-layer configurations.
 * Per-layer settings using TOML configuration files
 * Direct output to terminal, file, or machine
 
-```{warning}
-This project is currently under active development and is mostly
-untested. Some features may be missing or not work as expected. Use with
-caution in production environments.
-```
-
 ## Installation
 
 To install the latest development version:
@@ -40,8 +34,8 @@ To install the latest development version:
 **Clone the repository:**
 
 ```bash
-git clone https://github.com/joansalasoler/vpype-mecode.git
-cd vpype-mecode
+git clone https://github.com/joansalasoler/vpype-gscrib.git
+cd vpype-gscrib
 ```
 
 **Create and activate a virtual environment:**
@@ -68,10 +62,10 @@ Incorrect G-code can damage your machine, tools, or workpiece.
 
 ### Converting an SVG to G-code
 
-Use the `mecode` pipe to generate G-code from an SVG:
+Use the `gscrib` pipe to generate G-code from an SVG:
 
 ```bash
-vpype read drawing.svg mecode --output=output.gcode
+vpype read drawing.svg gscrib --output=output.gcode
 ```
 
 ### Specifying Length Units
@@ -79,7 +73,7 @@ vpype read drawing.svg mecode --output=output.gcode
 You can use metric (mm) or imperial (inches) units:
 
 ```bash
-vpype read drawing.svg mecode --length-units=in --output=output.gcode
+vpype read drawing.svg gscrib --length-units=in --output=output.gcode
 ```
 
 ## Advanced Usage & Optimization
@@ -93,7 +87,7 @@ vpype \
   linesimplify --tolerance=0.1mm \
   reloop --tolerance=0.1mm \
   linesort --two-opt --passes=250 \
-  mecode --output=output.gcode
+  gscrib --output=output.gcode
 ```
 
 **What Each Command Does:**
@@ -104,7 +98,7 @@ vpype \
 * **linesort**: Sorts paths to minimize travel moves.
 
 For a complete list of options to generate your G-code programs, check
-the [Vpype-Mecode Command-Line Reference](cli). You may also find
+the [Vpype-Gscrib Command-Line Reference](cli). You may also find
 [Vpype's Command-line Reference](https://vpype.readthedocs.io/en/latest/reference.html)
 and
 [Cookbook](https://vpype.readthedocs.io/en/latest/cookbook.html)
@@ -112,7 +106,7 @@ helpful for mastering this powerful tool.
 
 ## Component Types for G-code Generation
 
-Vpype-Mecode allows users to configure their machine's behavior during
+Vpype-Gscrib allows users to configure their machine's behavior during
 G-code generation by selecting different modes. These modes control
 various aspects of your machine's operation, including how the bed,
 coolant, fan, head and the tools themselves function.
@@ -189,7 +183,7 @@ height during machining:
 ```bash
 vpype \
   read drawing.svg \
-  mecode \
+  gscrib \
     --length-units=mm \
     --head-type=auto-leveling \
     --height-map-path=heightmap.png \
@@ -228,7 +222,7 @@ Here's an example of generating G-code with laser power modulation:
 ```bash
 vpype \
   read drawing.svg \
-  mecode \
+  gscrib \
     --tool-type=adaptive-beam \
     --power-mode=dynamic \
     --height-map-path=heightmap.png \
@@ -294,5 +288,5 @@ plunge-speed = "50mm"        # Very gentle pen lowering
 To apply a configuration file:
 
 ```bash
-vpype read drawing.svg mecode --config=config.toml --output=output.gcode
+vpype read drawing.svg gscrib --config=config.toml --output=output.gcode
 ```

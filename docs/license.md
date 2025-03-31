@@ -1,4 +1,4 @@
-License for vpype-mecode
+License for vpype-gscrib
 ========================
 
 Copyright (C) 2025 Joan Sala

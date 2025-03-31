@@ -1,6 +1,6 @@
 CLI Reference
 =============
 
-.. click:: vpype_mecode.vpype_mecode:vpype_mecode
-   :prog: vpype read input.svg mecode
+.. click:: vpype_gscrib.vpype_gscrib:vpype_gscrib
+   :prog: vpype read input.svg gscrib
    :nested: none

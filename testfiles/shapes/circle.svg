@@ -4,9 +4,9 @@
     <rdf:RDF>
       <cc:Work>
         <dc:format>image/svg+xml</dc:format>
-        <dc:source>vpype circle 50 50 50 write --page-size 100x100 --center circle.svg
+        <dc:source>vpype circle 50 50 50 linemerge write --page-size 100x100 --center circle.svg
 </dc:source>
-        <dc:date>2025-03-20T09:06:35.416290</dc:date>
+        <dc:date>2025-03-31T15:04:18.567036</dc:date>
       </cc:Work>
     </rdf:RDF>
   </metadata>

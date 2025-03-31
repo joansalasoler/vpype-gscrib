@@ -1,4 +1,4 @@
-Vpype-Mecode: G-Code Plugin for Vpype
+Vpype-Gscrib: G-Code Plugin for Vpype
 =====================================
 
 This `vpype` plugin provides a comprehensive toolkit and command line
@@ -8,7 +8,7 @@ for CNC machines, plotters, and other G-code compatible devices.
 Is This the Right Tool for You?
 -------------------------------
 
-**Vpype-Mecode** is designed for a wide range of users, from hobbyists
+**Vpype-Gscrib** is designed for a wide range of users, from hobbyists
 to professional CNC programmers. If you're working with vector-based
 designs and need precise, customizable control over G-code generation,
 this tool is made for you.
@@ -33,7 +33,7 @@ this tool is made for you.
 Aim of the Project
 ------------------
 
-The goal of **vpype-mecode** is to provide a seamless and flexible way
+The goal of **vpype-gscrib** is to provide a seamless and flexible way
 to generate G-code programs from vector-based designs.
 
 **Key Objectives:**
@@ -53,7 +53,7 @@ to generate G-code programs from vector-based designs.
   community to enhance the plugin's capabilities and adapt it to new
   use cases.
 
-By achieving these goals, **vpype-mecode** aims to be a valuable tool for
+By achieving these goals, **vpype-gscrib** aims to be a valuable tool for
 designers, engineers, and makers looking to bridge the gap between digital
 vector graphics and automated manufacturing.
 
@@ -81,21 +81,21 @@ API Reference
    :template: module.rst
    :recursive:
 
-   vpype_mecode.config
-   vpype_mecode.enums
-   vpype_mecode.excepts
-   vpype_mecode.heightmaps
-   vpype_mecode.processor
-   vpype_mecode.builder
-   vpype_mecode.builder.codes
-   vpype_mecode.builder.enums
-   vpype_mecode.builder.excepts
-   vpype_mecode.builder.formatters
-   vpype_mecode.builder.writers
-   vpype_mecode.renderer
-   vpype_mecode.renderer.beds
-   vpype_mecode.renderer.coolants
-   vpype_mecode.renderer.fans
-   vpype_mecode.renderer.heads
-   vpype_mecode.renderer.racks
-   vpype_mecode.renderer.tools
+   vpype_gscrib.config
+   vpype_gscrib.enums
+   vpype_gscrib.excepts
+   vpype_gscrib.heightmaps
+   vpype_gscrib.processor
+   vpype_gscrib.gscrib
+   vpype_gscrib.gscrib.codes
+   vpype_gscrib.gscrib.enums
+   vpype_gscrib.gscrib.excepts
+   vpype_gscrib.gscrib.formatters
+   vpype_gscrib.gscrib.writers
+   vpype_gscrib.renderer
+   vpype_gscrib.renderer.beds
+   vpype_gscrib.renderer.coolants
+   vpype_gscrib.renderer.fans
+   vpype_gscrib.renderer.heads
+   vpype_gscrib.renderer.racks
+   vpype_gscrib.renderer.tools
