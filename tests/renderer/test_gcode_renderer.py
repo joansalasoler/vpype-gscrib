@@ -4,7 +4,7 @@ import pytest
 from numpy import array
 from vpype import Document, LineCollection
 from vpype_gscrib.config import RenderConfig
-from vpype_gscrib.gscrib import GCodeBuilder
+from gscrib import GCodeBuilder
 from vpype_gscrib.renderer import GRenderer
 
 

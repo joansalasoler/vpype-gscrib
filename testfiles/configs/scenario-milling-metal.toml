@@ -5,8 +5,8 @@
 [document]
 
 # Length and time units
-length-units = "mm"
-time-units = "s"
+length-units = "millimeters"
+time-units = "seconds"
 
 # Component modes
 head-type = "standard"

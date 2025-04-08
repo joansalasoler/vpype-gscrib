@@ -35,8 +35,9 @@ from vpype import Document
 
 from vpype_gscrib import __version__
 from vpype_gscrib.vpype_options import command_options
-from vpype_gscrib.gscrib import GCodeBuilder
-from vpype_gscrib.gscrib.excepts import DeviceError
+from gscrib import GCodeBuilder
+from gscrib.enums import DirectWrite
+from gscrib.excepts import DeviceError
 from vpype_gscrib.excepts import VpypeGscribError
 from vpype_gscrib.processor import DocumentProcessor
 from vpype_gscrib.renderer import GRenderer
@@ -86,6 +87,12 @@ def vpype_gscrib(document: Document, **kwargs) -> Document:
 
         render_configs = _setup_render_configs(document, kwargs)
         builder_config = _setup_builder_config(kwargs)
+
+        # Ensure we have at least a writer connected
+
+        if builder_config.output is None:
+           if builder_config.direct_write == DirectWrite.OFF:
+                builder_config.print_lines = True
 
         # Initialize the G-Code renderer
 

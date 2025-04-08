@@ -19,6 +19,7 @@ setup(
         "Topic :: Multimedia :: Graphics",
         "Environment :: Plugins",
     ],
+    python_requires='>=3.10',
     setup_requires=["wheel"],
     install_requires=[
         'click',

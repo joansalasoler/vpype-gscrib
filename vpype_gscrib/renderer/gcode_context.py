@@ -19,7 +19,7 @@
 
 from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
-from vpype_gscrib.gscrib.gcode_builder import GCodeBuilder
+from gscrib.gcode_builder import GCodeBuilder
 from vpype_gscrib.config import RenderConfig
 from vpype_gscrib.heightmaps import BaseHeightMap, FlatHeightMap, RasterHeightMap
 from vpype_gscrib.enums import *

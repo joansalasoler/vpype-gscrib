@@ -23,7 +23,7 @@ from enum import Enum
 from typing import Dict, Any
 from typeguard import typechecked
 
-from vpype_gscrib.gscrib.enums import LengthUnits
+from gscrib.enums import LengthUnits
 from .custom_fields import LengthFieldInfo, PathFieldInfo
 
 
@@ -80,7 +80,8 @@ class BaseConfig(ABC):
 
         if isinstance(field_info, LengthFieldInfo):
             px_units = field_info._length_units_string
-            work_units = px_units.replace("px", units.value)
+            units_str = self._length_units_short(units)
+            work_units = px_units.replace("px", units_str)
             value = round(units.scale(value), 6)
             return f"{value} {work_units}"
 
@@ -94,3 +95,14 @@ class BaseConfig(ABC):
             return value.value
 
         return str(value)
+
+    def _length_units_short(self, units: LengthUnits) -> str:
+        """Short representation of the given length units."""
+
+        if units == LengthUnits.INCHES:
+            return "in"
+
+        if units == LengthUnits.MILLIMETERS:
+            return "mm"
+
+        return units.value

@@ -24,7 +24,7 @@ from click import Context, Option, Parameter, BadParameter
 from click.core import ParameterSource
 from vpype_cli import ChoiceType, LengthType
 
-from vpype_gscrib.gscrib.enums import LengthUnits
+from gscrib.enums import LengthUnits
 from .builder_config import BuilderConfig
 from .render_config import RenderConfig
 

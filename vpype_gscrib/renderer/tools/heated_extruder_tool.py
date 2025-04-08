@@ -19,8 +19,8 @@
 import math
 
 from vpype_gscrib.renderer import GContext
-from vpype_gscrib.gscrib.enums import ExtrusionMode, HaltMode
-from vpype_gscrib.gscrib.enums import TemperatureUnits
+from gscrib.enums import ExtrusionMode, HaltMode
+from gscrib.enums import TemperatureUnits
 from .base_tool import BaseTool
 
 
@@ -48,7 +48,7 @@ class HeatedExtruderTool(BaseTool):
         halt_mode = HaltMode.WAIT_FOR_HOTEND
 
         ctx.g.set_hotend_temperature(ctx.hotend_temperature)
-        ctx.g.halt_program(halt_mode, S=ctx.hotend_temperature)
+        ctx.g.halt(halt_mode, S=ctx.hotend_temperature)
         ctx.g.set_extrusion_mode(ExtrusionMode.ABSOLUTE)
         ctx.g.set_axis(E=0.0, comment="Reset extruder position")
 

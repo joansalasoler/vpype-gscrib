@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import Mock
 from dataclasses import FrozenInstanceError
-from vpype_gscrib.gscrib import GCodeBuilder
+from gscrib import GCodeBuilder
 from vpype_gscrib.renderer import GContext
 from vpype_gscrib.config import RenderConfig
-from vpype_gscrib.gscrib.enums import LengthUnits
+from gscrib.enums import LengthUnits
 from vpype_gscrib.heightmaps import BaseHeightMap
 
 

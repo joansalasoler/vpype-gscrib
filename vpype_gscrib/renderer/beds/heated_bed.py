@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from vpype_gscrib.gscrib.enums import HaltMode, TemperatureUnits
+from gscrib.enums import HaltMode, TemperatureUnits
 from vpype_gscrib.renderer.gcode_context import GContext
 from .base_bed import BaseBed
 
@@ -32,7 +32,7 @@ class HeatedBed(BaseBed):
     def turn_on(self, ctx: GContext):
         halt_mode = HaltMode.WAIT_FOR_BED
         ctx.g.set_bed_temperature(ctx.bed_temperature)
-        ctx.g.halt_program(halt_mode, S=ctx.bed_temperature)
+        ctx.g.halt(halt_mode, S=ctx.bed_temperature)
 
     def turn_off(self, ctx: GContext):
         ctx.g.set_bed_temperature(0)

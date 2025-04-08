@@ -87,7 +87,6 @@ vpype-gscrib/
 │   ├── __init__.py       # Package initialization
 │   ├── vpype_gscrib.py   # Command line interface (CLI)
 │   ├── vpype_options.py  # Command line options
-│   ├── gscrib            # Gscrib library
 │   ├── renderer          # Generates G-code from documents
 │   └── ...               # Other module files
 ├── tests/                # Tests directory
@@ -111,7 +110,7 @@ and run all the tests in the project. You can also run specific tests
 by referring to the [pytest documentation](https://docs.pytest.org/en/stable/).
 
 ```bash
-pytest
+python -m pytest
 ```
 
 ## Extending the Plugin

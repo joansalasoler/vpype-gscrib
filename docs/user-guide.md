@@ -73,7 +73,7 @@ vpype read drawing.svg gscrib --output=output.gcode
 You can use metric (mm) or imperial (inches) units:
 
 ```bash
-vpype read drawing.svg gscrib --length-units=in --output=output.gcode
+vpype read drawing.svg gscrib --length-units=inches --output=output.gcode
 ```
 
 ## Advanced Usage & Optimization
@@ -184,7 +184,7 @@ height during machining:
 vpype \
   read drawing.svg \
   gscrib \
-    --length-units=mm \
+    --length-units=millimeters \
     --head-type=auto-leveling \
     --height-map-path=heightmap.png \
     --height-map-scale=50.0 \
@@ -257,7 +257,7 @@ example.
 # unless specifically overridden in their [layer-X] section.
 
 [document]
-length-units = "mm"          # Using metric units
+length-units = "millimeters" # Using metric units
 tool-type = "marker"         # Using marker mode for pen plotting
 rack-type = "manual"         # Manual tool changes for different pens
 travel-speed = "3000mm"      # Speed for non-drawing moves

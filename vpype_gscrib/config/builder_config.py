@@ -21,7 +21,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from vpype_gscrib.gscrib.enums import DirectWrite
+from gscrib.enums import DirectWrite
 from .base_config import BaseConfig
 
 

@@ -26,10 +26,10 @@ from typeguard import typechecked
 from vpype import Document, LineCollection
 from vpype_gscrib.config import RenderConfig
 from vpype_gscrib.processor import DocumentRenderer
-from vpype_gscrib.gscrib.gcode_builder import GCodeBuilder
-from vpype_gscrib.gscrib.enums.types import DistanceMode, FeedMode
-from vpype_gscrib.gscrib.enums.types import HaltMode, Plane
-from vpype_gscrib.gscrib.enums.units import TemperatureUnits
+from gscrib.gcode_builder import GCodeBuilder
+from gscrib.enums.types import DistanceMode, FeedMode
+from gscrib.enums.types import HaltMode, Plane
+from gscrib.enums.units import TemperatureUnits
 from vpype_gscrib.enums import *
 
 from .gcode_context import GContext
@@ -169,9 +169,9 @@ class GRenderer(DocumentRenderer):
         self._g.set_time_units(time_units)
         self._g.set_plane(Plane.XY)
 
-        self._g.mirror(plane="zx")
-        self._g.translate(0, height)
-        self._g.scale(length_units.scale_factor)
+        self._g.transform.mirror(plane="zx")
+        self._g.transform.translate(0, height)
+        self._g.transform.scale(length_units.scale_factor)
 
         self._bed_type.turn_on(self._context)
 
@@ -311,7 +311,7 @@ class GRenderer(DocumentRenderer):
         self._head_type.park_for_service(self._context)
 
         self._write_user_footer()
-        self._g.halt_program(HaltMode.END_WITH_RESET)
+        self._g.halt(HaltMode.END_WITH_RESET)
         self._g.teardown()
 
     @typechecked

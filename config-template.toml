@@ -13,8 +13,8 @@ header-gcode = "header.gcode"   # Path to a G-code header file
 footer-gcode = "footer.gcode"   # Path to a G-code footer file
 
 # Length and time units
-length-units = "mm"             # mm (millimeters), in (inches)
-time-units = "s"                # s (seconds), ms (milliseconds)
+length-units = "millimeters"    # millimeters, inches
+time-units = "seconds"          # seconds, milliseconds
 
 # Component modes specify how to generate the G-Code
 bed-type = "off"                # off, heated

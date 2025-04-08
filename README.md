@@ -36,7 +36,7 @@ Here are some common usage examples:
 vpype read input.svg gscrib --output=output.gcode
 
 # Specify custom length units
-vpype read input.svg gscrib --length-units=in --output=output.gcode
+vpype read input.svg gscrib --length-units=inches --output=output.gcode
 
 # Load per layer rendering configurations from a file
 vpype read input.svg gscrib --config=config.toml --output=output.gcode
@@ -66,14 +66,15 @@ Create a virtual environment:
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-$ pip install --upgrade pip
 ```
 
 Install `vpype-gscrib` and its dependencies (including `vpype`):
 
 ```bash
+$ pip install --upgrade pip
 $ pip install -e .
 $ pip install -r requirements.txt
+$ pip install -r requirements.dev.txt
 ```
 
 ## Contributing

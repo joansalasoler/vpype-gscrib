@@ -28,7 +28,7 @@ from vpype_cli import TextType, IntRangeType, FloatRangeType
 from vpype_cli import IntegerType, LengthType, PathType
 
 from vpype_gscrib.config import ConfigOption
-from vpype_gscrib.gscrib.enums import *
+from gscrib.enums import *
 from vpype_gscrib.enums import *
 
 

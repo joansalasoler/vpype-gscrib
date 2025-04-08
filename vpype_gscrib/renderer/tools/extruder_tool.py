@@ -19,7 +19,7 @@
 import math
 
 from vpype_gscrib.renderer import GContext
-from vpype_gscrib.gscrib.enums import ExtrusionMode
+from gscrib.enums import ExtrusionMode
 from .base_tool import BaseTool
 
 

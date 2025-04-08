@@ -5,8 +5,8 @@
 [document]
 
 # Length and time units
-length-units = "in"
-time-units = "ms"
+length-units = "inches"
+time-units = "milliseconds"
 
 # Component modes
 head-type = "standard"

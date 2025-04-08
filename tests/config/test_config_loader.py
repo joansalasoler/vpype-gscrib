@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 from vpype import Document
 
 from vpype_gscrib.config import ConfigOption, ConfigLoader
-from vpype_gscrib.gscrib.enums import LengthUnits, TimeUnits
+from gscrib.enums import LengthUnits, TimeUnits
 
 
 # --------------------------------------------------------------------
@@ -49,7 +49,7 @@ def test_validate_config_empty(config_loader):
 def test_validate_config_with_parameters(config_loader):
     result = config_loader.validate_config({
         'work_speed': 100,
-        'length_units': 'mm',
+        'length_units': 'millimeters',
         'unknown_param': 'value'  # Should be ignored
     })
 
@@ -57,7 +57,7 @@ def test_validate_config_with_parameters(config_loader):
     assert 'length_units' in result
     assert 'unknown_param' not in result
     assert result['work_speed'] == 100
-    assert result['length_units'] == 'mm'
+    assert result['length_units'] == 'millimeters'
 
 @patch('vpype_gscrib.config.config_loader.ConfigManager')
 def test_read_config_file(mock_config_manager, config_loader, mock_document):
@@ -81,13 +81,13 @@ def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_d
     manager_instance.config = {
         'document': {
             'work_speed': 100,
-            'length_units': 'in',
-            'time_units': 'ms'
+            'length_units': 'inches',
+            'time_units': 'milliseconds'
         },
         'layer-1': {
             'work_speed': 200,
-            'length_units': 'mm',
-            'time_units': 's'
+            'length_units': 'millimeters',
+            'time_units': 'seconds'
         },
         'layer-2': {
             'work_speed': 300
@@ -98,14 +98,14 @@ def test_read_config_file_with_layers(mock_config_manager, config_loader, mock_d
 
     assert len(result) == 3  # Document + 2 layers
     assert result[0].work_speed == 100
-    assert result[0].length_units == 'in'
-    assert result[0].time_units == 'ms'
+    assert result[0].length_units == 'inches'
+    assert result[0].time_units == 'milliseconds'
     assert result[1].work_speed == 200 # Layers in reversed order
     assert result[2].work_speed == 300 # Layers in reversed order
-    assert result[1].length_units == 'in' # Inherit from document
-    assert result[2].length_units == 'in' # Inherit from document
-    assert result[1].time_units == 'ms' # Inherit from document
-    assert result[2].time_units == 'ms' # Inherit from document
+    assert result[1].length_units == 'inches' # Inherit from document
+    assert result[2].length_units == 'inches' # Inherit from document
+    assert result[1].time_units == 'milliseconds' # Inherit from document
+    assert result[2].time_units == 'milliseconds' # Inherit from document
 
 @patch('vpype_gscrib.config.config_loader.ConfigManager')
 def test_read_config_file_invalid(mock_config_manager, config_loader, mock_document):

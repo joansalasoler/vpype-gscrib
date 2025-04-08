@@ -23,7 +23,7 @@ import pydantic
 from pydantic import BaseModel, Field
 
 from vpype_gscrib.enums import *
-from vpype_gscrib.gscrib.enums import *
+from gscrib.enums import *
 from .base_config import BaseConfig
 from .custom_fields import LengthField, PathField
 
