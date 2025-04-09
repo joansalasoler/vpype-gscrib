@@ -6,7 +6,7 @@ with open("README.md") as f:
 
 setup(
     name="vpype_gscrib",
-    version="0.1.0",
+    version="0.1.1",
     description="G-Code generator for Vpype",
     long_description=readme,
     long_description_content_type="text/markdown",
