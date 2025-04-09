@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vpype-gscrib"
+name = "vpype_gscrib"
 version = "0.1.0"
 description = "G-Code generator for Vpype"
 authors = ["Joan Sala <contact@joansala.com>"]
