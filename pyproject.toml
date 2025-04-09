@@ -29,7 +29,7 @@ pylint = "~3.3.0"
 pytest = "~8.3.0"
 
 [build-system]
-requires = ["wheel"]
+requires = ["poetry-core", "wheel"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
