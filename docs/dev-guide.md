@@ -158,9 +158,9 @@ class RenderConfig(BaseModel, BaseConfig):
 This is the fun part! `GRenderer` delegates specific machine operations
 to specialized components in order to generate a G-code program. This
 modular approach allows different strategies to be swapped without
-modifying the renderer’s core logic. Each type of component has multiple
+modifying the renderer's core logic. Each type of component has multiple
 implementations, giving users flexibility in configuring their
-machine’s behavior.
+machine's behavior.
 
 Currently, the system supports the following component types:
 
@@ -230,7 +230,7 @@ class HeadType(BaseEnum):
 
 Now that the system recognizes your new type, you need to specify which
 class should be instantiated when that type is selected. This is done in
-the **component’s factory**, which maps each type to its implementation.
+the **component's factory**, which maps each type to its implementation.
 
 ```python
 class HeadFactory:
@@ -250,6 +250,43 @@ class HeadFactory:
 ```bash
 vpype read input.svg gscrib --head-type=custom --output=output.gcode
 ```
+
+### Generating G-code Inside Renderer Components
+
+All renderer component methods receive a [GCodeBuilder](https://gscrib.readthedocs.io/en/latest/api/gscrib.html#gscrib.GCodeBuilder)
+instance through the `ctx.g` attribute. This object, provided by the
+**Gscrib** library, is your main interface for generating G-code. Instead
+of writing raw G-code strings, you'll use high-level methods that handle
+syntax, state management, and safety for you.
+
+`GCodeBuilder` makes it easier to build G-code programs by abstracting
+away low-level details. It helps you keep track of things like the machine's
+position, feed rate, tool state, and more. It also supports advanced
+features such as path interpolation, and built-in safety checks.
+
+For example, a retract and plunge sequence could be written like this:,
+
+```python
+ctx.g.rapid(Z=ctx.safe_z)
+ctx.g.move(Z=ctx.work_z, F=ctx.plunge_speed)
+```
+
+You can also use it to generate more complex toolpaths like arcs and splines,
+apply transformations like scaling or rotation, and insert comments or
+conditional logic using standard Python syntax.
+
+Using **Gscrib** has several advantages:
+
+- **Safety**: It automatically validates commands to prevent unsafe
+  operations.
+- **Flexibility**: Use Python control structures to build dynamic,
+  reusable routines.
+- **Efficiency**: It simplifies repetitive tasks and reduces human error.
+- **Readability**: It produces clean, structured code that's easier to
+  maintain.
+
+To dive deeper into everything **Gscrib** can do, check out the official
+[Gscrib Documentation](https://gscrib.readthedocs.io).
 
 ## Contributing
 
