@@ -5,12 +5,13 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="vpype-gscrib",
+    name="vpype_gscrib",
     version="0.1.0",
     description="G-Code generator for Vpype",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="Joan Sala",
+    author_email="contact@joansala.com",
     url="https://github.com/joansalasoler/vpype-gscrib",
     packages=["vpype_gscrib"],
     classifiers=[
@@ -27,6 +28,6 @@ setup(
     ],
     entry_points='''
             [vpype.plugins]
-            vpype_gscrib=vpype_gscrib.vpype_gscrib:vpype_gscrib
+            gscrib=vpype_gscrib.vpype_gscrib:vpype_gscrib
         ''',
 )

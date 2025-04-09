@@ -28,6 +28,9 @@ pre-commit = "~4.1.0"
 pylint = "~3.3.0"
 pytest = "~8.3.0"
 
+[tool.poetry.plugins."vpype.plugins"]
+gscrib = "vpype_gscrib.vpype_gscrib:vpype_gscrib"
+
 [build-system]
 requires = ["poetry-core", "wheel"]
 build-backend = "poetry.core.masonry.api"

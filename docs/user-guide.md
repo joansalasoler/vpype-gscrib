@@ -29,29 +29,22 @@ multiple tool types, speed control, and per-layer configurations.
 
 ## Installation
 
-To install the latest development version:
-
-**Clone the repository:**
-
-```bash
-git clone https://github.com/joansalasoler/vpype-gscrib.git
-cd vpype-gscrib
-```
-
-**Create and activate a virtual environment:**
+Before you begin, ensure **Vpype** is installed by following the
+[official installation guide](https://vpype.readthedocs.io/en/latest/install.html). Once **Vpype** is installed, you can install the latest version
+of **Vpype-Gscrib** by running:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+pipx install vpype-gscrib
 ```
 
-**Install dependencies:**
+Verify the installation by running:
 
 ```bash
-pip install --upgrade pip  # Upgrade pip
-pip install -e .  # Install in development mode
-pip install -r requirements.txt  # Install additional dependencies
+vpype gscrib --help
 ```
+
+Want to add new modes to **Vpype-Gscrib**? Check out our [Development Guide](dev-guide.md)
+for step-by-step instructions on setting it up in development mode.
 
 ## Basic Usage
 
