@@ -34,7 +34,7 @@ Before you begin, ensure **Vpype** is installed by following the
 of **Vpype-Gscrib** by running:
 
 ```bash
-pipx install vpype-gscrib
+pipx inject vpype vpype-gscrib
 ```
 
 Verify the installation by running:
