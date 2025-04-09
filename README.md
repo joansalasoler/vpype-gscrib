@@ -52,6 +52,22 @@ vpype \
   gscrib --config=config.toml --output=output.gcode
 ```
 
+## Installation
+
+Before you begin, ensure **Vpype** is installed by following the
+[official installation guide](https://vpype.readthedocs.io/en/latest/install.html). Once **Vpype** is installed, you can install the latest version
+of **Vpype-Gscrib** by running:
+
+```bash
+pipx inject vpype vpype-gscrib
+```
+
+Verify the installation by running:
+
+```bash
+vpype gscrib --help
+```
+
 ## Development setup
 
 Here is how to clone the project for development:
