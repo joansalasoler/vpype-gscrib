@@ -193,23 +193,23 @@ specific document layer or the entire document being rendered.
 class CustomHead(BaseHead):
 
     def safe_retract(self, ctx):
-        ctx.g.rapid(Z=ctx.safe_z)
+        ctx.g.rapid(z=ctx.safe_z)
 
     def retract(self, ctx):
-        ctx.g.rapid(Z=ctx.safe_z)
+        ctx.g.rapid(z=ctx.safe_z)
 
     def plunge(self, ctx):
-        ctx.g.move(Z=ctx.plunge_z, F=ctx.travel_speed)
-        ctx.g.move(Z=ctx.work_z, F=ctx.plunge_speed)
+        ctx.g.move(z=ctx.plunge_z, F=ctx.travel_speed)
+        ctx.g.move(z=ctx.work_z, F=ctx.plunge_speed)
 
     def travel_to(self, ctx, x, y):
-        ctx.g.move(x, y, F=ctx.travel_speed)
+        ctx.g.move(x=x, y=y, F=ctx.travel_speed)
 
     def trace_to(self, ctx, x, y):
-        ctx.g.move(x, y, F=ctx.work_speed)
+        ctx.g.move(x=x, y=y, F=ctx.work_speed)
 
-    def park_for_service(self, ctx: GContext):
-        ctx.g.rapid(Z=ctx.park_z)
+    def park_for_service(self, ctx):
+        ctx.g.rapid(z=ctx.park_z)
         ctx.g.rapid_absolute(0, 0)
 ```
 
@@ -267,8 +267,8 @@ features such as path interpolation, and built-in safety checks.
 For example, a retract and plunge sequence could be written like this:,
 
 ```python
-ctx.g.rapid(Z=ctx.safe_z)
-ctx.g.move(Z=ctx.work_z, F=ctx.plunge_speed)
+ctx.g.rapid(z=ctx.safe_z)
+ctx.g.move(z=ctx.work_z, F=ctx.plunge_speed)
 ```
 
 You can also use it to generate more complex toolpaths like arcs and splines,

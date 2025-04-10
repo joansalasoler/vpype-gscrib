@@ -1,4 +1,10 @@
-# G-Code Plugin for Vpype
+[![PyPI version](https://img.shields.io/pypi/v/vpype-gscrib.svg)](https://pypi.org/project/vpype-gscrib/)
+[![Python versions](https://img.shields.io/pypi/pyversions/vpype-gscrib.svg)](https://pypi.org/project/vpype-gscrib/)
+[![Downloads](https://pepy.tech/badge/vpype-gscrib/month)](https://pepy.tech/project/vpype-gscrib)
+[![codecov](https://codecov.io/gh/joansalasoler/vpype-gscrib/branch/main/graph/badge.svg)](https://codecov.io/gh/joansalasoler/vpype-gscrib)
+[![License](https://img.shields.io/pypi/l/vpype-gscrib.svg)](https://pypi.org/project/vpype-gscrib/)
+
+# Vpype-Gscrib: G-Code Plugin for Vpype
 
 Plug-in that adds G-code generation capabilities to [`vpype`](https://github.com/abey79/vpype).
 

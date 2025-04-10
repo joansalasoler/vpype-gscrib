@@ -63,7 +63,7 @@ vpype read drawing.svg gscrib --output=output.gcode
 
 ### Specifying Length Units
 
-You can use metric (mm) or imperial (inches) units:
+You can use metric (millimeters) or imperial (inches) units:
 
 ```bash
 vpype read drawing.svg gscrib --length-units=inches --output=output.gcode
@@ -259,19 +259,19 @@ plunge-z = "1mm"             # Height at which to begin plunging
 
 # Settings for first layer (black fine liner)
 
-[layer-0]
+[layer-1]
 work-speed = "1200mm"        # Faster speed for simple lines
 plunge-speed = "500mm"       # Gentle pen lowering speed
 
 # Settings for second layer (red marker)
 
-[layer-1]
+[layer-2]
 work-speed = "800mm"         # Slower for better ink flow
 plunge-speed = "400mm"       # Gentler pen lowering for softer tip
 
 # Settings for third layer (thick marker)
 
-[layer-2]
+[layer-3]
 work-speed = "600mm"         # Even slower for thick lines
 plunge-speed = "50mm"        # Very gentle pen lowering
 ```
