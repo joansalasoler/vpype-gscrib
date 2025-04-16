@@ -12,7 +12,7 @@ keywords = ["Vpype", "G-code", "CNC", "3D printing", "CAM"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-gscrib = "~0.1.0"
+gscrib = "~1.0.0"
 numpy = "~2.2.0"
 opencv-python = "~4.11.0"
 pydantic = "~2.10.0"

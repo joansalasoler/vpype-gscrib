@@ -2,7 +2,7 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/vpype-gscrib.svg)](https://pypi.org/project/vpype-gscrib/)
 [![Downloads](https://pepy.tech/badge/vpype-gscrib/month)](https://pepy.tech/project/vpype-gscrib)
 [![codecov](https://codecov.io/gh/joansalasoler/vpype-gscrib/branch/main/graph/badge.svg)](https://codecov.io/gh/joansalasoler/vpype-gscrib)
-[![License](https://img.shields.io/pypi/l/vpype-gscrib.svg)](https://pypi.org/project/vpype-gscrib/)
+[![License](https://img.shields.io/pypi/l/gscrib.svg?color=brightgreen)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 # Vpype-Gscrib: G-Code Plugin for Vpype
 
