@@ -311,7 +311,7 @@ class GRenderer(DocumentRenderer):
         self._head_type.park_for_service(self._context)
 
         self._write_user_footer()
-        self._g.halt(HaltMode.END_WITH_RESET)
+        self._g.halt(HaltMode.END_WITHOUT_RESET)
         self._g.teardown()
 
     @typechecked
