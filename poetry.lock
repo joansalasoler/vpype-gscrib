@@ -147,13 +147,13 @@ typing = ["typing-extensions (>=4.12.2)"]
 
 [[package]]
 name = "gscrib"
-version = "1.0.0"
+version = "1.0.1"
 description = "Supercharge G-code with Python"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "gscrib-1.0.0-py3-none-any.whl", hash = "sha256:e7c1dab7c7ac9155178613ce0667e34b895f5ac4d815384df735de065e18cd75"},
-    {file = "gscrib-1.0.0.tar.gz", hash = "sha256:842dd67c4e83e352c84ce86eaecde6cf2c5ce26290a6d51581d3d329b9bc4ae2"},
+    {file = "gscrib-1.0.1-py3-none-any.whl", hash = "sha256:566f713b34013ea92af9d5102c7b6a3b22dd7c886234b121ee7a086e39d57216"},
+    {file = "gscrib-1.0.1.tar.gz", hash = "sha256:a8744a1c2cfcbd867852defda7312bbb9970ce02b4f1854cf8440b09dc5c3867"},
 ]
 
 [package.dependencies]
@@ -1209,4 +1209,4 @@ all = ["Pillow (>=9.0.1)", "PySide6 (>=6.4.0.1)", "glcontext (>=2.3.2)", "matplo
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "395677fe1c5eac738f77519d5060085b233aba136467d58381aba6b48ddda8d7"
+content-hash = "e1df0f95e0c3846a98f0c7f586eef9a4a96faddb9ae5ef64053e5e15f681869e"
