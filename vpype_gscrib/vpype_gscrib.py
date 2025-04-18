@@ -96,7 +96,12 @@ def vpype_gscrib(document: Document, **kwargs) -> Document:
 
         # Initialize the G-Code renderer
 
-        builder = GCodeBuilder(**builder_config.model_dump())
+        gscrib_config = builder_config.model_dump()
+
+        if builder_config.direct_write == DirectWrite.SOCKET:
+            gscrib_config["port"] = int(builder_config.port)
+
+        builder = GCodeBuilder(gscrib_config)
         renderer = GRenderer(builder, render_configs)
 
         # Process the document using the configured renderer
