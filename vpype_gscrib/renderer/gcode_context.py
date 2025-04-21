@@ -17,11 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pathlib import Path
 from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
 from gscrib.gcode_builder import GCodeBuilder
 from vpype_gscrib.config import RenderConfig
-from vpype_gscrib.heightmaps import BaseHeightMap, FlatHeightMap, RasterHeightMap
+from vpype_gscrib.heightmaps import BaseHeightMap, FlatHeightMap
+from vpype_gscrib.heightmaps import RasterHeightMap, SparseHeightMap
 from vpype_gscrib.enums import *
 
 
@@ -135,16 +137,47 @@ class GContext:
             setattr(self, name, value)
 
     def _build_height_map(self, config: RenderConfig):
-        """Builds a height map instance for a context."""
+        """Builds a height map instance for this context."""
 
         if self._config.height_map_path is None:
             return FlatHeightMap()
 
+        if self._is_sparse_data_file(config.height_map_path):
+            return self._build_sparse_height_map(config)
+
+        return self._build_raster_height_map(config)
+
+    def _build_raster_height_map(self, config: RenderConfig):
+        """Builds a raster height map instance for this context."""
+
+        scale_z = config.height_map_scale
+        scale_z_in_px = self._length_units.to_pixels(scale_z)
+
         height_map = RasterHeightMap.from_path(config.height_map_path)
+        height_map.set_tolerance(config.height_map_tolerance)
+        height_map.set_scale(scale_z_in_px)
+
+        return height_map
+
+    def _build_sparse_height_map(self, config: RenderConfig):
+        """Builds a sparse height map instance for this context."""
+
+        height_map = SparseHeightMap.from_path(config.height_map_path)
         height_map.set_tolerance(config.height_map_tolerance)
         height_map.set_scale(config.height_map_scale)
 
         return height_map
+
+    def _is_sparse_data_file(self, file_name: str) -> bool:
+        """Check if a file is a supported sparse data file."""
+
+        path = Path(file_name)
+        extensions = { '.csv', '.tsv', '.txt', '.dat' }
+
+        return (
+            not path.suffix or
+            path.suffix.lower() in extensions
+        )
 
     def __setattr__(self, name, value):
         """Ensure all the properties of this class are read only"""

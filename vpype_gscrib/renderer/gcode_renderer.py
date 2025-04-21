@@ -127,6 +127,8 @@ class GRenderer(DocumentRenderer):
         self._fan_type = FanFactory.create(context.fan_type)
         self._ctx_queue.rotate(-1)
 
+        self._g.set_resolution(context.resolution)
+
         return context
 
     def _previous_context(self) -> GContext:

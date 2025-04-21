@@ -20,6 +20,8 @@
 class VpypeGscribError(Exception):
     """Base exception for all vpype-gscrib specific errors."""
 
-
 class ImageLoadError(VpypeGscribError):
     """Exception raised when an image file cannot be loaded."""
+
+class FileLoadError(VpypeGscribError):
+    """Exception raised when a file cannot be loaded."""

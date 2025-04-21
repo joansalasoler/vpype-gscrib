@@ -48,6 +48,7 @@ def test_height_map_init(sample_uint8_image):
     assert isinstance(height_map._interpolator, RectBivariateSpline)
     assert height_map._height_map.dtype == float32
     assert height_map._scale_z == 1.0
+    assert height_map._tolerance == 0.378
 
 def test_init_with_uint8_image(sample_uint8_image):
     height_map = RasterHeightMap(sample_uint8_image)
@@ -82,6 +83,23 @@ def test_create_from_path_failure(mock_imread):
 
     with pytest.raises(ImageLoadError):
         RasterHeightMap.from_path('nonexistent_image.png')
+
+def test_set_scale(height_map):
+    height_map.set_scale(2.0)
+    assert height_map._scale_z == 2.0
+
+    with pytest.raises(ValueError):
+        height_map.set_scale(0)
+
+    with pytest.raises(ValueError):
+        height_map.set_scale(-1)
+
+def test_set_tolerance(height_map):
+    height_map.set_tolerance(0.05)
+    assert height_map._tolerance == 0.05
+
+    with pytest.raises(ValueError):
+        height_map.set_tolerance(-0.1)
 
 def test_get_height_at(height_map):
     height = height_map.get_height_at(5, 5)
@@ -131,3 +149,7 @@ def test_filter_points(height_map):
     assert numpy.array_equal(filtered[0], test_points[0])
     assert numpy.array_equal(filtered[1], test_points[2])
     assert numpy.array_equal(filtered[2], test_points[4])
+
+def test_sample_path_invalid_input(height_map):
+    with pytest.raises(ValueError):
+        height_map.sample_path([0, 0, 1])

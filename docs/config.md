@@ -64,6 +64,7 @@ height-map-tolerance = 0.01     # Heightmap sampling tolerance
 fan-speed = 255                 # min = 0, max = 255
 bed-temperature = 60            # Celsius degrees
 hotend-temperature = 120        # Celsius degrees
+resolution = "0.1mm"            # Interpolation step size
 
 # =====================================================================
 # Layer-Specific Settings
@@ -105,6 +106,7 @@ hotend-temperature = 120        # Celsius degrees
 # fan-speed = 255
 # bed-temperature = 60
 # hotend-temperature = 120
+# resolution = "0.1mm"
 
 [layer-2]
 
@@ -138,6 +140,7 @@ hotend-temperature = 120        # Celsius degrees
 # fan-speed = 255
 # bed-temperature = 60
 # hotend-temperature = 120
+# resolution = "0.1mm"
 
 [layer-3]
 
@@ -171,4 +174,5 @@ hotend-temperature = 120        # Celsius degrees
 # fan-speed = 255
 # bed-temperature = 60
 # hotend-temperature = 120
+# resolution = "0.1mm"
 ```

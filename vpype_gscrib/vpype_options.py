@@ -260,6 +260,14 @@ command_options = (
         operations, such as tool changes and program completion.
         """,
     ),
+    ConfigOption(
+        option_name="resolution",
+        type=LengthType(),
+        help="""
+        Sets the minimum length for segments when smoothing or breaking
+        down paths. Lower resolutions create more accurate paths.
+        """,
+    ),
 
     # ------------------------------------------------------------------
     # G-Code Transform Options
@@ -269,9 +277,8 @@ command_options = (
         option_name="height-map-path",
         type=PathType(exists=True, dir_okay=False, resolve_path=True),
         help="""
-        Path to a heightmap image file that defines surface variations
-        across the work area. The image is interpreted as a grid of
-        values that can be used to dynamically adjust various parameters
+        Path to a height map file (image or CSV-like) defining surface
+        variations across the work area for adjusting various parameters
         during operation, such as tool height or power levels.
         """,
     ),
@@ -279,18 +286,19 @@ command_options = (
         option_name="height-map-scale",
         type=FloatRangeType(min=0.0),
         help="""
-        Scaling factor applied to normalized heightmap values (0.0 to 1.0)
-        to convert them into actual work units. For example, a scale of 10
-        means a heightmap value of 1.0 becomes 10 units.
+        Scaling factor applied to Z values in the height map. If the
+        height map was read from an image file, Z values are normalized
+        in the range 0 to 1, and this scale can be used to convert them
+        into actual work units.
         """,
     ),
     ConfigOption(
         option_name="height-map-tolerance",
-        type=FloatRangeType(min=0.0),
+        type=LengthType(min=0.0),
         help="""
         Minimum height difference threshold used when sampling points
         from the height map. Points with height differences below this
-        value will be filtered out. Measured in work units.
+        value will be filtered out.
         """,
     ),
 

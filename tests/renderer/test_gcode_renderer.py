@@ -69,6 +69,7 @@ def test_begin_document(grenderer, mock_document):
     assert grenderer._g.state.feed_mode is not None
     assert grenderer._g.state.length_units is not None
     assert grenderer._g.state.plane is not None
+    assert grenderer._g.state.resolution is not None
 
 def test_begin_layer(grenderer, mock_layer):
     initial_context = grenderer._context

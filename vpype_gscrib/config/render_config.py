@@ -96,8 +96,11 @@ class RenderConfig(BaseModel, BaseConfig):
 
     # Heightmap transformation parameters
     height_map_path: Optional[str] = PathField(None)
-    height_map_scale: float = Field(50.0, gt=0)
-    height_map_tolerance: float = Field(0.01, ge=0)
+    height_map_scale: float = Field(1.0, gt=0)
+    height_map_tolerance: float = LengthField("0.1mm", "px", ge=0)
+
+    # Path interpolation parameters
+    resolution: float = LengthField("0.1mm", "px", gt=0)
 
     @pydantic.model_validator(mode="after")
     @classmethod

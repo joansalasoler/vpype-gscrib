@@ -90,8 +90,7 @@ class AutoLevelingHead(StandardHead):
 
         This method calculates the work Z position by adding the
         configured work_z offset to the height map value at the current
-        XY position. Notice that the height map value, which is provided
-        in work units is scaled down to pixels.
+        XY position.
 
         Args:
             ctx (GContext): The G-code generation context
@@ -102,7 +101,5 @@ class AutoLevelingHead(StandardHead):
             float: The work Z position
         """
 
-        z_in_units = ctx.height_map.get_height_at(x, y)
-        z_in_pixels = ctx.length_units.to_pixels(z_in_units)
-
+        z_in_pixels = ctx.height_map.get_height_at(x, y)
         return ctx.work_z + z_in_pixels

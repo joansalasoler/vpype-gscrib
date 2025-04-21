@@ -20,73 +20,69 @@ from numbers import Real
 from typing import Sequence, Union
 
 import numpy
-import cv2 as cv
 
-from typeguard import typechecked
+from numpy import ndarray
 from numpy.typing import ArrayLike
-from numpy import float32, uint16, ndarray
-from scipy.interpolate import BivariateSpline, RectBivariateSpline
-from skimage import draw
+from scipy.interpolate import LinearNDInterpolator
+from typeguard import typechecked
 
-from vpype_gscrib.excepts import ImageLoadError
-from .base_heightmap import BaseHeightMap
-
-
-UINT8_MAX = 255.0
-UINT16_MAX = 65535.0
+from vpype_gscrib.excepts import FileLoadError
+from .raster_heightmap import BaseHeightMap
 
 
-class RasterHeightMap(BaseHeightMap):
-    """Interpolates height map data from images.
+class SparseHeightMap(BaseHeightMap):
+    """Interpolates height map data from sparse point data.
 
-    This class processes grayscale image data into a normalized height
-    map and provides methods for height interpolation at specific
-    coordinates and along paths.
+    This class reads scattered (x, y, z) probe data from a CSV file into
+    a height map and provides methods for height interpolation at
+    specific coordinates and along paths.
 
     Example:
-        >>> height_map = RasterHeightMap.from_path('terrain.png')
-        >>> height_map.set_scale(2.0)
+        >>> height_map = SparseHeightMap.from_path('heights.csv')
         >>> height = height_map.get_height_at(100, 100)
     """
 
     __slots__ = (
         "_scale_z",
         "_tolerance",
-        "_height_map",
+        "_resolution",
         "_interpolator"
     )
 
-    @typechecked
-    def __init__(self, image_data: ndarray) -> None:
+    def __init__(self, sparse_data: ndarray) -> None:
         self._scale_z = 1.0
         self._tolerance = 0.378
-        self._height_map = self._to_height_map(image_data)
-        self._interpolator = self._create_interpolator(self._height_map)
+        self._interpolator = self._create_interpolator(sparse_data)
 
     @classmethod
-    def from_path(cls, path: str) -> "RasterHeightMap":
-        """Create a HeightMap instance from an image file.
+    def from_path(cls, path: str) -> "SparseHeightMap":
+        """Create a HeightMap instance from a CSV file.
 
         Args:
-            path (str): Path to the grayscale image file
+            path (str): Path to the CSV file with X, Y, Z columns
 
         Returns:
-            HeightMap: New HeightMap instance
+            SparseHeightMap: New HeightMap instance
 
         Raises:
-            ImageLoadError: If the image file cannot be read.
+            FileLoadError: If the CSV file cannot be read
         """
 
-        flags = cv.IMREAD_GRAYSCALE | cv.IMREAD_ANYDEPTH
-        image_data = cv.imread(path, flags)
+        try:
+            delimiter = "\t" if path.lower().endswith(".tsv") else ","
+            sparse_data = numpy.loadtxt(path, delimiter=delimiter)
 
-        if image_data is None:
-            raise ImageLoadError(
-                f"Could not load heightmap from '{path}'. "
-                f"File does not exist or is not a valid image."
+            if len(sparse_data) < 4:
+                raise ValueError("At least 4 points are required")
+
+            if sparse_data.shape[1] != 3:
+                raise ValueError("CSV file must have exactly 3 columns")
+
+            return cls(sparse_data)
+        except Exception as e:
+            raise FileLoadError(
+                f"Could not load heightmap from '{path}': {str(e)}"
             )
-
-        return cls(image_data)
 
     @typechecked
     def set_scale(self, scale_z: float) -> None:
@@ -138,7 +134,7 @@ class RasterHeightMap(BaseHeightMap):
             float: Interpolated height scaled by the scale factor.
         """
 
-        return self._scale_z * self._interpolator(y, x)[0, 0]
+        return self._scale_z * self._interpolator(y, x)
 
     @typechecked
     def sample_path(self, line: Union[Sequence[float], ArrayLike]) -> ndarray:
@@ -176,8 +172,12 @@ class RasterHeightMap(BaseHeightMap):
     def _interpolate_line(self, line: ndarray) -> ndarray:
         """Get interpolated points along a straight line."""
 
-        line_points = [round(i) for i in line]
-        rows, cols = draw.line(*line_points)
+        x1, y1, x2, y2 = line
+        distance = numpy.hypot(x2 - x1, y2 - y1)
+        num_segments = max(int(distance / self._tolerance), 1)
+
+        rows = numpy.linspace(x1, x2, num_segments + 1)
+        cols = numpy.linspace(y1, y2, num_segments + 1)
 
         return numpy.array([
             (x, y, self.get_height_at(x, y))
@@ -202,20 +202,11 @@ class RasterHeightMap(BaseHeightMap):
 
         return numpy.array(lines)
 
-    def _to_height_map(self, image_data: ndarray) -> ndarray:
-        """Creates a normalized heightmap from an image array."""
-
-        height_map = numpy.empty(image_data.shape, dtype=float32)
-        max_value = (UINT16_MAX if image_data.dtype == uint16 else UINT8_MAX)
-        return numpy.divide(image_data, max_value, out=height_map)
-
-    def _create_interpolator(self, height_map: ndarray) -> BivariateSpline:
+    def _create_interpolator(self, sparse_data: ndarray) -> LinearNDInterpolator:
         """Create a bivariate spline interpolator for a heightmap."""
 
-        width, height = height_map.shape
+        x = sparse_data[:, 0]
+        y = sparse_data[:, 1]
+        z = sparse_data[:, 2]
 
-        return RectBivariateSpline(
-            numpy.arange(width),
-            numpy.arange(height),
-            height_map
-        )
+        return LinearNDInterpolator(list(zip(x, y)), z)
