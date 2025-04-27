@@ -97,8 +97,8 @@ vpype \
     --coolant-type=flood \
     --head-type=auto-leveling \
     --rack-type=manual \
-    --height-map-path=map.png \
-    --height-map-tolerance=0.01 \
+    --height-map-path=map.csv \
+    --height-map-tolerance=0.01mm \
     --height-map-scale=50.0 \
     --output=output.gcode
 ```
@@ -109,8 +109,8 @@ vpype \
 * **--head-type=auto-leveling** — Use a heightmap to adjust Z-height
 * **--coolant-type=flood** — Apply flood coolant
 * **--rack-type=manual** — Requires manual tool changes
-* **--height-map-path=map.png** — Height map for Z-height compensation
-* **--height-map-tolerance=0.01** — Tolerance for height adjustments
+* **--height-map-path=map.csv** — Height map for Z-height compensation
+* **--height-map-tolerance=0.01mm** — Tolerance for height adjustments
 * **--height-map-scale=50.0** — Scaling of the height map
 
 When combining modes, ensure that the selected modes are compatible with

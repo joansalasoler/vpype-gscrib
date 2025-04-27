@@ -146,11 +146,6 @@ variations. Whether you're engraving on a curved object, compensating
 for an uneven machine bed, or creating intricate textures, height maps
 unlock new creative and technical possibilities.
 
-A grayscale height map image is used to define surface variations:
-
-* **Darker pixels represent lower areas**
-* **Lighter pixels represent higher areas**
-
 ### What Can You Do with Height Maps
 
 * **Consistent depth**: Ensure uniform cutting, even if the material
@@ -168,6 +163,22 @@ A grayscale height map image is used to define surface variations:
 * **Dynamic tool modulation**: Adjust not just height, but also laser
   intensity, or other tool parameters based on image data.
 
+### Reading Height Maps
+
+Height maps can be provided in two primary formats, CSV files and grayscale
+images (.tiff, .png, etc). Each format has its unique advantages, depending
+on the level of precision needed and the specific application.
+
+* **CSV files** store height data as (x, y, z) coordinates in a tabular
+  format. Each row represents a single point on the surface with its
+  corresponding height value. This method is useful for **precise**
+  **height adjustments** and can handle **sparse data**.
+
+* **Grayscale images** define surface variations based on pixel brightness,
+  where **darker pixels** represent lower areas and **lighter pixels**
+  represent higher areas. The pixel data is interpreted as a 2D grid where
+  each pixel's brightness is mapped to a specific height value.
+
 ### Using Height Maps for Z Compensation
 
 Here's an example of using a height map to dynamically adjust the Z
@@ -179,8 +190,7 @@ vpype \
   gscrib \
     --length-units=millimeters \
     --head-type=auto-leveling \
-    --height-map-path=heightmap.png \
-    --height-map-scale=50.0 \
+    --height-map-path=heightmap.csv \
     --output=output.gcode
 ```
 
@@ -192,11 +202,6 @@ across the surface.
 
 * **--head-type=auto-leveling**: Enables Z-axis height map compensation.
 * **--height-map-path**: Grayscale image defining height variations.
-* **--height-map-scale**: Scale factor for height adjustments.
-
-In this example, a scale factor of `50.0` means that a white pixel on
-the height map image raises the tool by 50 mm, while black pixels result
-in no height change.
 
 ### Using Height Maps for Laser Power Modulation
 
