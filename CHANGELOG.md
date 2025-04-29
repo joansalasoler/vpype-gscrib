@@ -1,5 +1,13 @@
 # Change log
 
+## 1.1.0 (2025-04-29)
+
+* Upgrades Gscrib to version 1.1.0.
+* Adds support for sparse heightmaps (.csv and similar formats).
+* Adds command-line option to set resolution for interpolated moves.
+* Displays Gscrib version in output headers.
+* Sets default heightmap Z scale to 1.0.
+
 ## 1.0.1 (2025-04-18)
 
 * End G-code programs with M02 instead of M30.
