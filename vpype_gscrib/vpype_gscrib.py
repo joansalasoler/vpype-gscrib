@@ -67,6 +67,14 @@ from vpype_gscrib.config import ConfigLoader, BuilderConfig, RenderConfig
 )
 @vpype_cli.global_processor
 def vpype_gscrib(document: Document, **kwargs) -> Document:
+    return process_document(document, **kwargs)
+
+
+# ---------------------------------------------------------------------
+# Main document processor
+# ---------------------------------------------------------------------
+
+def process_document(document: Document, **kwargs) -> Document:
     """Main entry point for the `gscrib` command.
 
     Args:
@@ -158,7 +166,7 @@ def _setup_render_configs(document: Document, params) -> List[RenderConfig]:
     """Create and validate the rendering configurations, either from
     the command line parameters or a TOML file."""
 
-    config_path = params["config"]
+    config_path = params.get("config", None)
 
     if config_path is None:
         return [RenderConfig.model_validate(params),]
