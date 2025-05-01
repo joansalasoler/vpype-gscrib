@@ -101,5 +101,5 @@ class AutoLevelingHead(StandardHead):
             float: The work Z position
         """
 
-        z_in_pixels = ctx.height_map.get_height_at(x, y)
+        z_in_pixels = ctx.height_map.get_depth_at(x, y)
         return ctx.work_z + z_in_pixels

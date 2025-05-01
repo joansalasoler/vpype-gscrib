@@ -19,20 +19,23 @@ def height_map(sample_uint8_image):
 
 @pytest.fixture
 def sample_uint8_image():
-    image_data = numpy.zeros((10, 10), dtype=numpy.uint8)
+    height, width = 10, 20
+    image_data = numpy.zeros((height, width), dtype=numpy.uint8)
 
-    for i in range(10):
-        for j in range(10):
+    for i in range(height):
+        for j in range(width):
             image_data[i, j] = (i + j) * 12 % 256
 
     return image_data
 
+
 @pytest.fixture
 def sample_uint16_image():
-    image_data = numpy.zeros((10, 10), dtype=numpy.uint16)
+    height, width = 10, 20
+    image_data = numpy.zeros((height, width), dtype=numpy.uint16)
 
-    for i in range(10):
-        for j in range(10):
+    for i in range(height):
+        for j in range(width):
             image_data[i, j] = (i + j) * 3000 % 65536
 
     return image_data
@@ -49,6 +52,8 @@ def test_height_map_init(sample_uint8_image):
     assert height_map._height_map.dtype == float32
     assert height_map._scale_z == 1.0
     assert height_map._tolerance == 0.378
+    assert height_map.get_width() == 20
+    assert height_map.get_height() == 10
 
 def test_init_with_uint8_image(sample_uint8_image):
     height_map = RasterHeightMap(sample_uint8_image)
@@ -101,18 +106,18 @@ def test_set_tolerance(height_map):
     with pytest.raises(ValueError):
         height_map.set_tolerance(-0.1)
 
-def test_get_height_at(height_map):
-    height = height_map.get_height_at(5, 5)
+def test_get_depth_at(height_map):
+    height = height_map.get_depth_at(5, 5)
 
     assert isinstance(height, float)
     assert height <= 1.0
     assert height >= 0.0
 
-def test_get_height_at_with_scale(height_map):
+def test_get_depth_at_with_scale(height_map):
     scale_factor = 2.5
-    height = height_map.get_height_at(5, 5)
+    height = height_map.get_depth_at(5, 5)
     height_map.set_scale(scale_factor)
-    scaled_height = height_map.get_height_at(5, 5)
+    scaled_height = height_map.get_depth_at(5, 5)
 
     assert height_map._scale_z == scale_factor
     assert scaled_height == scale_factor * height

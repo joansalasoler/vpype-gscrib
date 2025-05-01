@@ -21,8 +21,8 @@ def sample_data():
     return numpy.array([
         [0.0, 0.0, 0.0],
         [0.0, 1.0, 1.0],
-        [1.0, 0.0, 1.0],
-        [1.0, 1.0, 2.0]
+        [1.0, 0.0, 2.0],
+        [1.0, 1.0, 3.0]
     ])
 
 
@@ -81,23 +81,23 @@ def test_set_tolerance(height_map):
     with pytest.raises(ValueError):
         height_map.set_tolerance(-0.1)
 
-def test_get_height_at(height_map):
-    assert height_map.get_height_at(0, 0) == pytest.approx(0.0)
-    assert height_map.get_height_at(0, 1) == pytest.approx(1.0)
-    assert height_map.get_height_at(1, 0) == pytest.approx(1.0)
-    assert height_map.get_height_at(1, 1) == pytest.approx(2.0)
+def test_get_depth_at(height_map):
+    assert height_map.get_depth_at(0, 0) == pytest.approx(0.0)
+    assert height_map.get_depth_at(0, 1) == pytest.approx(1.0)
+    assert height_map.get_depth_at(1, 0) == pytest.approx(2.0)
+    assert height_map.get_depth_at(1, 1) == pytest.approx(3.0)
 
-def test_get_height_at_with_scale(height_map):
+def test_get_depth_at_with_scale(height_map):
     height_map.set_scale(2.0)
-    assert height_map.get_height_at(0, 0) == pytest.approx(0.0)
-    assert height_map.get_height_at(1, 1) == pytest.approx(4.0)
+    assert height_map.get_depth_at(0, 0) == pytest.approx(0.0)
+    assert height_map.get_depth_at(1, 1) == pytest.approx(6.0)
 
 def test_sample_path(height_map):
     line = numpy.array([0, 0, 1, 1])
     points = height_map.sample_path(line)
     assert len(points) >= 2
     assert_array_almost_equal(points[0], [0, 0, 0])
-    assert_array_almost_equal(points[-1], [1, 1, 2])
+    assert_array_almost_equal(points[-1], [1, 1, 3])
 
     height_map.set_tolerance(0.5)
     points_high = height_map.sample_path(line)

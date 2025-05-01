@@ -46,7 +46,7 @@ class RasterHeightMap(BaseHeightMap):
     Example:
         >>> height_map = RasterHeightMap.from_path('terrain.png')
         >>> height_map.set_scale(2.0)
-        >>> height = height_map.get_height_at(100, 100)
+        >>> height = height_map.get_depth_at(100, 100)
     """
 
     __slots__ = (
@@ -126,17 +126,41 @@ class RasterHeightMap(BaseHeightMap):
 
         self._tolerance = tolerance
 
+    def get_width(self) -> int:
+        """Get the width of the height map.
+
+        Returns:
+            int: Width of the image in pixels.
+        """
+
+        return self._height_map.shape[1]
+
+    def get_height(self) -> int:
+        """Get the height of the height map.
+
+        Returns:
+            int: Height of the image in pixels.
+        """
+
+        return self._height_map.shape[0]
+
     @typechecked
-    def get_height_at(self, x: Real, y: Real) -> float:
-        """Get the interpolated height value at specific coordinates.
+    def get_depth_at(self, x: Real, y: Real) -> float:
+        """Get the interpolated elevation value at specific coordinates.
 
         Args:
             x (float): X-coordinate in the height map.
             y (float): Y-coordinate in the height map.
 
         Returns:
-            float: Interpolated height scaled by the scale factor.
+            float: Interpolated elevation scaled by the scale factor.
         """
+
+        if x < 0 or x >= self.get_width():
+            return 0.0
+
+        if y < 0 or y >= self.get_height():
+            return 0.0
 
         return self._scale_z * self._interpolator(y, x)[0, 0]
 
@@ -180,7 +204,7 @@ class RasterHeightMap(BaseHeightMap):
         rows, cols = draw.line(*line_points)
 
         return numpy.array([
-            (x, y, self.get_height_at(x, y))
+            (x, y, self.get_depth_at(x, y))
             for x, y in zip(rows, cols)
         ])
 
@@ -212,10 +236,10 @@ class RasterHeightMap(BaseHeightMap):
     def _create_interpolator(self, height_map: ndarray) -> BivariateSpline:
         """Create a bivariate spline interpolator for a heightmap."""
 
-        width, height = height_map.shape
+        height, width = height_map.shape
 
         return RectBivariateSpline(
-            numpy.arange(width),
             numpy.arange(height),
+            numpy.arange(width),
             height_map
         )

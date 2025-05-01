@@ -20,6 +20,7 @@ from numbers import Real
 from typing import Sequence, Union
 
 import numpy
+import cv2 as cv
 
 from numpy import ndarray
 from numpy.typing import ArrayLike
@@ -39,7 +40,7 @@ class SparseHeightMap(BaseHeightMap):
 
     Example:
         >>> height_map = SparseHeightMap.from_path('heights.csv')
-        >>> height = height_map.get_height_at(100, 100)
+        >>> height = height_map.get_depth_at(100, 100)
     """
 
     __slots__ = (
@@ -123,18 +124,18 @@ class SparseHeightMap(BaseHeightMap):
         self._tolerance = tolerance
 
     @typechecked
-    def get_height_at(self, x: Real, y: Real) -> float:
-        """Get the interpolated height value at specific coordinates.
+    def get_depth_at(self, x: Real, y: Real) -> float:
+        """Get the interpolated elevation value at specific coordinates.
 
         Args:
             x (float): X-coordinate in the height map.
             y (float): Y-coordinate in the height map.
 
         Returns:
-            float: Interpolated height scaled by the scale factor.
+            float: Interpolated elevation scaled by the scale factor.
         """
 
-        return self._scale_z * self._interpolator(y, x)
+        return self._scale_z * self._interpolator(x, y)
 
     @typechecked
     def sample_path(self, line: Union[Sequence[float], ArrayLike]) -> ndarray:
@@ -169,6 +170,59 @@ class SparseHeightMap(BaseHeightMap):
 
         return filtered
 
+    def save_image(self, path: str) -> None:
+        """Save the sparse height map as a raster image.
+
+        Args:
+            path (str): Path where the image will be saved
+
+        Raises:
+            IOError: If the image cannot be written
+        """
+
+        points = self._interpolator.points
+        width = int(numpy.ceil(points[:, 0].max()))
+        height = int(numpy.ceil(points[:, 1].max()))
+        raster = self._to_image(width, height)
+
+        if not cv.imwrite(path, raster):
+            raise IOError(f"Failed to save image to {path}")
+
+    def _to_image(self, width: int, height: int) -> ndarray:
+        """Convert the sparse height map to a raster image.
+
+        Args:
+            width (int): Width of the output image in pixels
+            height (int): Height of the output image in pixels
+
+        Returns:
+            ndarray: 8-bit single channel image where pixel values
+                     represent heights scaled to 0-255 range
+        """
+
+        # Get bounds from interpolator points
+        points = self._interpolator.points
+        x_min = points[:, 0].min()
+        y_min = points[:, 1].min()
+
+        # Create a grid of points, shifted to positive space
+        x = numpy.linspace(x_min, x_min + width - 1, width)
+        y = numpy.linspace(y_min, y_min + height - 1, height)
+        xs, ys = numpy.meshgrid(x, y)
+
+        # Get interpolated height map from the grid
+        points = numpy.vstack((xs.flatten(), ys.flatten())).T
+        heights = self._interpolator(points)
+        height_map = heights.reshape((height, width))
+
+        # Normalize the height map values
+        max_value = numpy.max(height_map)
+        min_value = numpy.min(height_map)
+        height_range = max(1, max_value - min_value)
+        height_map = ((height_map - min_value) * 255 / height_range)
+
+        return height_map.astype(numpy.uint8)
+
     def _interpolate_line(self, line: ndarray) -> ndarray:
         """Get interpolated points along a straight line."""
 
@@ -180,7 +234,7 @@ class SparseHeightMap(BaseHeightMap):
         cols = numpy.linspace(y1, y2, num_segments + 1)
 
         return numpy.array([
-            (x, y, self.get_height_at(x, y))
+            (x, y, self.get_depth_at(x, y))
             for x, y in zip(rows, cols)
         ])
 
@@ -209,4 +263,4 @@ class SparseHeightMap(BaseHeightMap):
         y = sparse_data[:, 1]
         z = sparse_data[:, 2]
 
-        return LinearNDInterpolator(list(zip(x, y)), z)
+        return LinearNDInterpolator(list(zip(x, y)), z, fill_value=0.0)

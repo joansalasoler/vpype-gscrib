@@ -31,8 +31,8 @@ class FlatHeightMap(BaseHeightMap):
     """No-op height map implementation."""
 
     @typechecked
-    def get_height_at(self, x: Real, y: Real) -> float:
-        """Get the interpolated height value at specific coordinates.
+    def get_depth_at(self, x: Real, y: Real) -> float:
+        """Get the interpolated elevation value at specific coordinates.
 
         Args:
             x (float): X-coordinate in the height map.
