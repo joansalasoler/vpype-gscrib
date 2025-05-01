@@ -1,5 +1,14 @@
 # Change log
 
+## 1.1.1 (2025-05-01)
+
+* Rename HeightMap.get_height_at to HeightMap.get_depth_at.
+* Adds width/height accessors for raster heightmap images.
+* Adds an export to image method for sparse heightmaps.
+* Fix: Raster interpolation out-of-range values.
+* Fix: Sparse heightmaps returning NaN.
+* Fix: Sparse heightmaps transposing rows/cols.
+
 ## 1.1.0 (2025-04-29)
 
 * Upgrades Gscrib to version 1.1.0.
