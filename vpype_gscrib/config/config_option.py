@@ -20,14 +20,22 @@ import inspect
 from enum import Enum
 from typing import Any
 
+import vpype_cli
 from click import Context, Option, Parameter, BadParameter
 from click.core import ParameterSource
-from vpype_cli import ChoiceType, LengthType
+from vpype_cli import LengthType
 
 from gscrib.enums import LengthUnits
 from .builder_config import BuilderConfig
 from .render_config import RenderConfig
 
+
+class ChoiceType(vpype_cli.ChoiceType):
+    def convert(self, value, param, ctx):
+        if isinstance(value, str):
+            value = value.replace("-", "_")
+
+        return super().convert(value, param, ctx)
 
 class ConfigOption(Option):
     """
@@ -83,9 +91,8 @@ class ConfigOption(Option):
         if isinstance(option_type, LengthType):
             kwargs["callback"] = self._enforce_units
 
-        if isinstance(option_type, type):
-            if issubclass(option_type, Enum):
-                kwargs["type"] = ChoiceType(option_type)
+        if isinstance(option_type, type) and issubclass(option_type, Enum):
+            kwargs["type"] = ChoiceType(option_type, case_sensitive = False)
 
         kwargs["help"] = self._format_help_text(
             help_text, default_value, option_type)
