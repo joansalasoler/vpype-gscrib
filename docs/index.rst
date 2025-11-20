@@ -84,7 +84,6 @@ API Reference
    vpype_gscrib.config
    vpype_gscrib.enums
    vpype_gscrib.excepts
-   vpype_gscrib.heightmaps
    vpype_gscrib.processor
    vpype_gscrib.renderer
    vpype_gscrib.renderer.beds

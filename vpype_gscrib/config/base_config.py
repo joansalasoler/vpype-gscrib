@@ -74,8 +74,8 @@ class BaseConfig(ABC):
 
         field_info = None
 
-        if hasattr(self, "model_fields"):
-            model_fields = getattr(self, "model_fields")
+        if hasattr(type(self), "model_fields"):
+            model_fields = getattr(type(self), "model_fields")
             field_info = model_fields[field_name]
 
         if isinstance(field_info, LengthFieldInfo):

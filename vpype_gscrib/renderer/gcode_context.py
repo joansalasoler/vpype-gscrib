@@ -21,9 +21,9 @@ from pathlib import Path
 from dataclasses import asdict, FrozenInstanceError
 from typeguard import typechecked
 from gscrib.gcode_builder import GCodeBuilder
+from gscrib.heightmaps import BaseHeightMap, FlatHeightMap
+from gscrib.heightmaps import RasterHeightMap, SparseHeightMap
 from vpype_gscrib.config import RenderConfig
-from vpype_gscrib.heightmaps import BaseHeightMap, FlatHeightMap
-from vpype_gscrib.heightmaps import RasterHeightMap, SparseHeightMap
 from vpype_gscrib.enums import *
 
 
