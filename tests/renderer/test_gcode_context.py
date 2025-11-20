@@ -2,13 +2,13 @@ import pytest
 from unittest.mock import Mock, MagicMock, patch
 from dataclasses import FrozenInstanceError
 from gscrib import GCodeBuilder
-from vpype_gscrib.heightmaps import FlatHeightMap
-from vpype_gscrib.heightmaps import SparseHeightMap
-from vpype_gscrib.heightmaps import RasterHeightMap
+from gscrib.enums import LengthUnits
+from gscrib.heightmaps import BaseHeightMap
+from gscrib.heightmaps import FlatHeightMap
+from gscrib.heightmaps import SparseHeightMap
+from gscrib.heightmaps import RasterHeightMap
 from vpype_gscrib.renderer import GContext
 from vpype_gscrib.config import RenderConfig
-from gscrib.enums import LengthUnits
-from vpype_gscrib.heightmaps import BaseHeightMap
 
 
 # --------------------------------------------------------------------
@@ -93,7 +93,7 @@ def test_height_map_no_path(mock_gbuilder, render_config):
     context = GContext(mock_gbuilder, render_config)
     assert isinstance(context._height_map, FlatHeightMap)
 
-@patch("vpype_gscrib.heightmaps.SparseHeightMap.from_path")
+@patch("gscrib.heightmaps.SparseHeightMap.from_path")
 def test_build_height_map_sparse(from_path, mock_gbuilder, render_config):
     heightmap = MagicMock(spec=SparseHeightMap)
     from_path.return_value = heightmap
@@ -105,7 +105,7 @@ def test_build_height_map_sparse(from_path, mock_gbuilder, render_config):
     heightmap.set_tolerance.assert_called_with(tolerance)
     heightmap.set_scale.assert_called_with(scale)
 
-@patch("vpype_gscrib.heightmaps.RasterHeightMap.from_path")
+@patch("gscrib.heightmaps.RasterHeightMap.from_path")
 def test_build_height_map_raster(from_path, mock_gbuilder, render_config):
     heightmap = MagicMock(spec=RasterHeightMap)
     from_path.return_value = heightmap

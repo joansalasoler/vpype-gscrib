@@ -13,9 +13,8 @@ from . import enums
 from . import excepts
 from . import processor
 from . import renderer
-from . import heightmaps
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 __all__ = [
     "config",
@@ -23,5 +22,4 @@ __all__ = [
     "excepts",
     "processor",
     "renderer",
-    "heightmaps",
 ]

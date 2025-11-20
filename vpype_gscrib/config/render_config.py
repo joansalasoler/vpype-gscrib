@@ -103,12 +103,11 @@ class RenderConfig(BaseModel, BaseConfig):
     resolution: float = LengthField("0.1mm", "px", gt=0)
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def validate_field_values(cls, model: BaseConfig) -> BaseConfig:
+    def validate_field_values(self) -> BaseConfig:
         """Validate field values are consistent."""
 
-        cls.validate_ge(model, "plunge_z", "work_z")
-        cls.validate_ge(model, "safe_z", "work_z")
-        cls.validate_ge(model, "park_z", "safe_z")
+        self.validate_ge(self, "plunge_z", "work_z")
+        self.validate_ge(self, "safe_z", "work_z")
+        self.validate_ge(self, "park_z", "safe_z")
 
-        return model
+        return self

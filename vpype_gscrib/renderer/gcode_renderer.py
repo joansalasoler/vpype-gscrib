@@ -399,7 +399,7 @@ class GRenderer(DocumentRenderer):
         self._g.comment(SECTION_SEPARATOR)
 
         for key, value in document_values.items():
-            self._g.comment(f"@set {key} = {value}")
+            self._g.annotate(key, value)
 
     def _write_layer_config_info(self,
         current_ctx: GContext, previous_ctx: GContext):
@@ -421,7 +421,7 @@ class GRenderer(DocumentRenderer):
             self._g.comment(SECTION_SEPARATOR)
 
             for key, value in changed_settings.items():
-                self._g.comment(f"@set {key} = {value}")
+                self._g.annotate(key, value)
 
     def _write_include_file(self, path: str) -> None:
         """Write an include file as G-code comments."""

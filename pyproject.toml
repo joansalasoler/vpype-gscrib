@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vpype_gscrib"
-version = "1.1.1"
+version = "1.2.0"
 description = "G-Code generator for Vpype"
 authors = ["Joan Sala <contact@joansala.com>"]
 license = "GPL-3.0"
@@ -11,22 +11,38 @@ documentation = "https://vpype-gscrib.readthedocs.io"
 keywords = ["Vpype", "G-code", "CNC", "3D printing", "CAM"]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
-gscrib = "~1.1.0"
-numpy = "~2.2.0"
-opencv-python = "~4.11.0"
-pydantic = "~2.10.0"
-pyserial = "~3.5.0"
-scikit-image = "~0.25.0"
-scipy = "~1.15.0"
-typeguard = "~4.4.0"
-vpype = "~1.14.0"
+python = ">=3.10,<3.14"
+gscrib = ">=1.2.0,<2.0"
+numpy = ">=2.2.0,<3"
+opencv-python = ">=4.10.0,<5.0"
+pydantic = ">=2.8.0,<3.0"
+pyserial = ">=3.5.0,<4.0"
+scikit-image = ">=0.23.0,<1.0"
+scipy = ">=1.14.0,<2.0"
+typeguard = ">=4.3.0,<5.0"
+vpype = ">=1.14.0,<2.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 mock = "~5.2.0"
-pre-commit = "~4.1.0"
-pylint = "~3.3.0"
-pytest = "~8.3.0"
+pre-commit = "~4.2.0"
+pylint = "~3.3.7"
+pytest = "~8.4.1"
+tox = "~4.32.0"
+
+[tool.poetry.group.docs.dependencies]
+vpython = "~7.6.0"
+Sphinx = "~8.1.0"
+sphinx-click = "~6.0.0"
+sphinx-copybutton = "~0.5.2"
+sphinx-rtd-theme = "~3.0.2"
+sphinxcontrib-applehelp = "~2.0.0"
+sphinxcontrib-devhelp = "~2.0.0"
+sphinxcontrib-htmlhelp = "~2.1.0"
+sphinxcontrib-jquery = "~4.1.0"
+sphinxcontrib-jsmath = "~1.0.1"
+sphinxcontrib-qthelp = "~2.0.0"
+sphinxcontrib-serializinghtml = "~2.0.0"
+myst-parser = "~4.0.1"
 
 [tool.poetry.plugins."vpype.plugins"]
 gscrib = "vpype_gscrib.vpype_gscrib:vpype_gscrib"
