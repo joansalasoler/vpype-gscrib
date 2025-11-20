@@ -14,7 +14,7 @@ from . import excepts
 from . import processor
 from . import renderer
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 __all__ = [
     "config",

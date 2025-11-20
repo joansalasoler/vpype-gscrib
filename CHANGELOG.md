@@ -1,5 +1,13 @@
 # Change log
 
+## 1.2.0 (2025-11-20)
+
+* Adds support for Python 3.13.
+* Adds support for Gscrib 1.2.0.
+* Adds support for Vpype 1.15.0.
+* Adds `tox` for multi-version testing with Poetry.
+* Relaxes dependency constraints and upgrades multiple dependencies.
+
 ## 1.1.1 (2025-05-01)
 
 * Rename HeightMap.get_height_at to HeightMap.get_depth_at.
