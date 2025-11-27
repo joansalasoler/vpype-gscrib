@@ -1,3 +1,10 @@
+.. admonition:: Support Gscrib
+   :class: tip
+
+   Love **Vpype-Gscrib**? If you find it useful and want to help
+   Vpype-Gscrib and its docs grow and improve, consider sponsoring on
+   `GitHub <https://github.com/sponsors/joansalasoler>`_ ❤️
+
 Vpype-Gscrib: G-Code Plugin for Vpype
 =====================================
 
